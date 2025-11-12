@@ -33,8 +33,8 @@ export default defineConfig({
     outDir: 'dist-react'
   },
   base: './',
-  server: {
-    port: 4000,
-    strictPort: true 
-  }
-}):
+  // server: {
+  //   port: 4000,
+  //   strictPort: true 
+  // }
+})
