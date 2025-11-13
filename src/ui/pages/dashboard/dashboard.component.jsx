@@ -1,4 +1,4 @@
-// import { useState } from 'react'
+import { useState } from 'react'
 // import Paper from '@mui/material/Paper';
 // import { styled } from '@mui/material/styles';
 // import Stack from '@mui/material/Stack';
@@ -11,6 +11,9 @@ import { useNavigate } from "react-router-dom";
 
 function Dashboard() {
     const navigate = useNavigate();
+    const user = JSON.parse(localStorage.getItem("user"));
+    const [User,setUser] = useState(user);
+    console.log("user: ", User)
     const handleLogout = () => {
         console.log("button pressed: ", localStorage)
         localStorage.clear();
@@ -19,7 +22,7 @@ function Dashboard() {
     };
     return (
         <button onClick={handleLogout}>
-            Abhilekh Dowerah
+            {User.name}
         </button>
     )
 }

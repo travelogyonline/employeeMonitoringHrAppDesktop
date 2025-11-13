@@ -15,7 +15,7 @@ const DemoPaper = styled(Paper)(({ theme }) => ({
     textAlign: 'center',
 }));
 
-function Login() {
+function Login({isAuthenticated}) {
     const navigate = useNavigate();
     const [userid, setUserid] = useState();
     const [password, setPassword] = useState();
@@ -55,9 +55,7 @@ function Login() {
                 } else {
                     setUserIdProps({})
                     setPasswordProps({})
-                    localStorage.setItem("user", JSON.stringify(response.data.data));
-                    console.log(localStorage)
-                    navigate("/dashboard");
+                    isAuthenticated(response.data.data)
                 }
             })
             .catch((error) => {
