@@ -9,21 +9,15 @@ import { useState } from 'react'
 import { useNavigate } from "react-router-dom";
 
 
-function Dashboard() {
+function Dashboard({ isAuthenticated }) {
     const navigate = useNavigate();
-    const user = JSON.parse(localStorage.getItem("user"));
-    const [User,setUser] = useState(user);
-    console.log("user: ", User)
-    const handleLogout = () => {
-        console.log("button pressed: ", localStorage)
-        localStorage.clear();
-        console.log("After clear: ", localStorage)
-        navigate("/");
-    };
     return (
-        <button onClick={handleLogout}>
-            {User.name}
-        </button>
+        <div>
+            {/* {Object.values(user).map(item => (
+                <div key={item.id}>{item}</div>
+            ))} */}
+            Hello
+        </div>
     )
 }
 

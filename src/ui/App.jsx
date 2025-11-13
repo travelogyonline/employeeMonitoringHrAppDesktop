@@ -6,17 +6,11 @@ import './App.css'
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  useEffect(() => {
-    localStorage.setItem("user", JSON.stringify(isAuthenticated));
-  }, [isAuthenticated]);
   return (
     <>
       <Routes>
-        <Route path="/" element={isAuthenticated ? <Navigate to="/dashboard" /> : <Login isAuthenticated={user => {
-          setIsAuthenticated(user)
-        }} />} />
-        <Route path="/dashboard" element={isAuthenticated ? <Dashboard /> : <Navigate to="/" />} />
+        <Route path="/" element={isAuthenticated ? <Navigate to="/dashboard" /> : <Login isAuthenticated={user => {setIsAuthenticated(user)}} />} />
+        <Route path="/dashboard" element={isAuthenticated ? <Dashboard  isAuthenticated={user => {setIsAuthenticated(user)}} /> : <Navigate to="/" />} />
       </Routes>
     </>
   )
