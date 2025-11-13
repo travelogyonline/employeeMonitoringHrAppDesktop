@@ -3,7 +3,10 @@ import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
 import style from './login.module.css'
+import { useNavigate } from "react-router-dom";
+import axios from 'axios';
 
 const DemoPaper = styled(Paper)(({ theme }) => ({
     width: 400,
@@ -13,7 +16,54 @@ const DemoPaper = styled(Paper)(({ theme }) => ({
 }));
 
 function Login() {
-
+    const navigate = useNavigate();
+    const [userid, setUserid] = useState();
+    const [password, setPassword] = useState();
+    const [userIdProps, setUserIdProps] = useState({});
+    const [passwordProps, setPasswordProps] = useState({});
+    const handleUserNameOnChange = (e) => {
+        setUserid(e.target.value)
+    }
+    const handlePasswordOnChange = (e) => {
+        setPassword(e.target.value)
+    }
+    const handleOnSubmit = e => {
+        const payload = {
+            email: userid,
+            password: password
+        }
+        const config = {
+            method: 'post',
+            maxBodyLength: Infinity,
+            url: 'http://localhost:5000/api/authenticate',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: payload
+        };
+        axios.request(config)
+            .then((response) => {
+                console.log(response.data);
+                if (!response.data.status) {
+                    if (response.data.issueWith === 'email') {
+                        setUserIdProps({ error: true, helperText: response.data.message })
+                        setPasswordProps({})
+                    } else {
+                        setPasswordProps({ error: true, helperText: response.data.message })
+                        setUserIdProps({})
+                    }
+                } else {
+                    setUserIdProps({})
+                    setPasswordProps({})
+                    localStorage.setItem("user", JSON.stringify(response.data.data));
+                    console.log(localStorage)
+                    navigate("/dashboard");
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
     return (
         <div>
             <DemoPaper square={false} elevation={3}>
@@ -22,23 +72,23 @@ function Login() {
                 <p>Enter your credentials to log in</p>
                 <Stack spacing={2}>
                     <TextField
-                        // error
-                        // helperText="Incorrect User ID"
+                        {...userIdProps}
                         required
                         id="userId"
                         label="User ID"
+                        onChange={handleUserNameOnChange}
                         fullWidth
                     />
                     <TextField
-                        // error
-                        // helperText="Incorrect Password"
+                        {...passwordProps}
                         required
                         id="password"
                         label="Password"
                         type="password"
+                        onChange={handlePasswordOnChange}
                         fullWidth
-                    // autoComplete="current-password"
                     />
+                    <Button variant="contained" onClick={handleOnSubmit}>Login</Button>
                 </Stack>
             </DemoPaper>
             <div>
@@ -48,4 +98,5 @@ function Login() {
     )
 }
 
-export default Login
+
+export default Login;
