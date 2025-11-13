@@ -7,8 +7,10 @@ const __dirname = path.dirname(__filename);
 
 function createWindow() {
   const win = new BrowserWindow({
-    width: 1200,
-    height: 800,
+    width: 900,
+
+    height: 600,
+    autoHideMenuBar: true,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       nodeIntegration: false,
@@ -19,7 +21,7 @@ function createWindow() {
   if (process.env.NODE_ENV === 'development') {
     // Load React dev server
     win.loadURL('http://localhost:5173');
-    win.webContents.openDevTools();
+    // win.webContents.openDevTools();
   } else {
     // Load production build
     const indexPath = path.join(__dirname, '../dist-react/index.html');

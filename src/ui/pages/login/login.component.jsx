@@ -73,7 +73,7 @@ function Login({isAuthenticated}) {
                         {...userIdProps}
                         required
                         id="userId"
-                        label="User ID"
+                        label="Email ID"
                         onChange={handleUserNameOnChange}
                         fullWidth
                     />
@@ -86,7 +86,7 @@ function Login({isAuthenticated}) {
                         onChange={handlePasswordOnChange}
                         fullWidth
                     />
-                    <Button variant="contained" onClick={handleOnSubmit}>Login</Button>
+                    <Button variant="contained" onClick={handleOnSubmit} type="submit">Login</Button>
                 </Stack>
             </DemoPaper>
             <div>
