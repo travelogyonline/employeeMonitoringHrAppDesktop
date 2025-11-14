@@ -7,3 +7,9 @@ contextBridge.exposeInMainWorld("electronAPI", {
     sendToMain: (channel, data) => ipcRenderer.send(channel, data),
     invoke: (channel, data) => ipcRenderer.invoke(channel, data),
 });
+
+contextBridge.exposeInMainWorld("electronStore", {
+  set: (key, value) => ipcRenderer.invoke("store:set", key, value),
+  get: (key) => ipcRenderer.invoke("store:get", key),
+  delete: (key) => ipcRenderer.invoke("store:delete", key),
+});

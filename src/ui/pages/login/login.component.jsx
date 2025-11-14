@@ -55,24 +55,9 @@ function Login({ isAuthenticated }) {
                 } else {
                     setUserIdProps({})
                     setPasswordProps({})
-                    console.log("user: ", response.data.data._id);
-                    let config = {
-                        method: 'post',
-                        maxBodyLength: Infinity,
-                        url: `http://localhost:5000/api/login/in/${response.data.data._id}`,
-                        headers: {}
-                    };
-
-                    axios.request(config)
-                        .then((response) => {
-                            window.electronAPI.sendToMain("react-message", {
-                                userId: response.data.data._id
-                            });
-                            isAuthenticated(response.data.data)
-                        })
-                        .catch((error) => {
-                            console.log(error);
-                        });
+                    console.log("user: ", response.data.data);
+                    window.electronStore.set("user", response.data.data);
+                    isAuthenticated(response.data.data)
                 }
             })
             .catch((error) => {

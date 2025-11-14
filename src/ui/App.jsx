@@ -6,11 +6,19 @@ import './App.css'
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  useEffect( () => {
+    async function getUser () {
+      const user = await window.electronStore.get("user");
+      if(user) setIsAuthenticated(user);
+    }
+    getUser();
+  }, []);
+  console.log("isAuthenticated: ", isAuthenticated)
   return (
     <>
       <Routes>
-        <Route path="/" element={isAuthenticated ? <Navigate to="/dashboard" /> : <Login isAuthenticated={user => {setIsAuthenticated(user)}} />} />
-        <Route path="/dashboard" element={isAuthenticated ? <Dashboard  user={isAuthenticated} isAuthenticated={user => {setIsAuthenticated(user)}} /> : <Navigate to="/" />} />
+        <Route path="/" element={isAuthenticated ? <Navigate to="/dashboard" /> : <Login isAuthenticated={user => { setIsAuthenticated(user) }} />} />
+        <Route path="/dashboard" element={isAuthenticated ? <Dashboard user={isAuthenticated} isAuthenticated={user => { setIsAuthenticated(user) }} /> : <Navigate to="/" />} />
       </Routes>
     </>
   )

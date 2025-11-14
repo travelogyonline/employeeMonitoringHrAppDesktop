@@ -1,10 +1,50 @@
-import { app, BrowserWindow, ipcMain, desktopCapturer, nativeImage, screen, Tray, Menu } from 'electron';
+import { app, BrowserWindow, ipcMain, desktopCapturer, nativeImage, screen, Tray, Menu, powerMonitor } from 'electron';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import axios from 'axios';
+import Store from "electron-store";
 
 let tray = null;
 let win = null;
 let user = null;
+
+const store = new Store();
+
+ipcMain.handle("store:set", (event, key, value) => {
+  store.set(key, value);
+  return true;
+});
+
+ipcMain.handle("store:get", (event, key) => {
+  return store.get(key);
+});
+
+ipcMain.handle("store:delete", (event, key) => {
+  store.delete(key);
+  return true;
+});
+
+
+const handleLogout = () => {
+    if(!user) return;
+    console.log("user: ",user)
+    const {userId} = user;
+    const config = {
+        method: 'patch',
+        maxBodyLength: Infinity,
+        url: `http://localhost:5000/api/login/out/${userId}`,
+        headers: {}
+    };
+
+    axios.request(config)
+        .then((response) => {
+            console.log(JSON.stringify(response.data));
+            isAuthenticated(false)
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+}
 
 ipcMain.on("react-message", (event, data) => {
     user = data;
@@ -74,6 +114,7 @@ app.whenReady().then(() => {
         { label: "Open App", click: () => win.show() },
         {
             label: "Quit Completely", click: () => {
+                handleLogout();
                 app.isQuiting = true;
                 app.quit();
             }
@@ -85,6 +126,26 @@ app.whenReady().then(() => {
     tray.on("click", () => {
         win.show();
         win.focus();
+    });
+
+    powerMonitor.on("suspend", () => {
+        console.log("System is going to sleep");
+    });
+
+    // When system is locked
+    powerMonitor.on("lock-screen", () => {
+        console.log("System is locked");
+    });
+
+    // Optional: when system wakes or unlocks
+    powerMonitor.on("resume", () => {
+        console.log("System resumed");
+        win.show();
+    });
+
+    powerMonitor.on("unlock-screen", () => {
+        console.log("Screen unlocked");
+        win.show();
     });
 });
 

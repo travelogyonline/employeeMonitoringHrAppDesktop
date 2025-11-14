@@ -1,5 +1,6 @@
 import style from './dashboard.module.css'
 import { useState, useEffect } from 'react';
+import axios from 'axios';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
@@ -32,6 +33,23 @@ function Dashboard({ isAuthenticated, user }) {
     };
     const handleModelOpen = () => setmodelOpen(true);
     const handleModelClose = () => setmodelOpen(false);
+    const handleLogout = async () => {
+        console.log("inside logout: ", user)
+        if (user.login !== 'false') {
+            const config = {
+                method: 'patch',
+                maxBodyLength: Infinity,
+                url: `http://localhost:5000/api/login/out/${user._id}`,
+            };
+
+            axios.request(config)
+                .catch((error) => {
+                    console.log(error);
+                });
+        }
+        await window.electronStore.delete("user");
+        isAuthenticated(false);
+    }
     const uploadScreenshot = async (img) => {
         try {
             if (!img) return;
@@ -48,7 +66,6 @@ function Dashboard({ isAuthenticated, user }) {
             });
 
             const result = await upload.json();
-            console.log("UPLOAD SUCCESS:", result);
 
         } catch (err) {
             console.error(err);
@@ -81,8 +98,8 @@ function Dashboard({ isAuthenticated, user }) {
             </div>
             <div>
                 <div>
-                    <Button variant="contained" onClick={handleCapture}>
-                        📸 Take Screenshot
+                    <Button variant="contained" onClick={handleLogout}>
+                        📸 Logout
                     </Button>
 
                     {image && (
