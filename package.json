@@ -29,6 +29,7 @@
     "@mui/icons-material": "^7.3.5",
     "@mui/material": "^7.3.5",
     "axios": "^1.13.2",
+    "fs": "^0.0.1-security",
     "os-utils": "^0.0.14",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",

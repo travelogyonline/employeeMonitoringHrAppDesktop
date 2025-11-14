@@ -1,14 +1,13 @@
 import style from './dashboard.module.css'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
+import Button from "@mui/material/Button";
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
-import { BorderAllRounded } from '@mui/icons-material';
 
 const modelStyle = {
     position: 'absolute',
@@ -17,7 +16,6 @@ const modelStyle = {
     transform: 'translate(-50%, -50%)',
     width: 400,
     bgcolor: 'background.paper',
-    // border: '2px solid #000',
     borderRadius: '12px',
     boxShadow: 24,
     p: 4,
@@ -26,8 +24,47 @@ const modelStyle = {
 
 function Dashboard({ isAuthenticated, user }) {
     const [modelOpen, setmodelOpen] = useState(false);
+    const [image, setImage] = useState(null);
+    const handleCapture = async () => {
+        const img = await window.electronAPI.captureScreen();
+        setImage(img);
+        uploadScreenshot(img); // pass latest screenshot
+    };
     const handleModelOpen = () => setmodelOpen(true);
     const handleModelClose = () => setmodelOpen(false);
+    const uploadScreenshot = async (img) => {
+        try {
+            if (!img) return;
+
+            const response = await fetch(img);
+            const blob = await response.blob();
+
+            const formData = new FormData();
+            formData.append("image", blob, "screenshot.png");
+
+            const upload = await fetch("http://localhost:5000/api/screenshot/" + user._id, {
+                method: "POST",
+                body: formData
+            });
+
+            const result = await upload.json();
+            console.log("UPLOAD SUCCESS:", result);
+
+        } catch (err) {
+            console.error(err);
+        }
+    };
+    useEffect(() => {
+        // Take screenshot immediately after login
+        handleCapture();
+
+        // Then repeat every 10 minutes
+        const interval = setInterval(() => {
+            handleCapture();
+        }, 10 * 60 * 1000); // 10 min
+
+        return () => clearInterval(interval);
+    }, []);
     return (
         <div>
             <div className={style.header}>
@@ -37,9 +74,22 @@ function Dashboard({ isAuthenticated, user }) {
                     </Typography>
                 </div>
                 <div>
-                    <Typography variant="h5" gutterBottom className={style.headerText} onClick={handleModelOpen} sx={{cursor: 'pointer'}}>
+                    <Typography variant="h5" gutterBottom className={style.headerText} onClick={handleModelOpen} sx={{ cursor: 'pointer' }}>
                         {user.name}
                     </Typography>
+                </div>
+            </div>
+            <div>
+                <div>
+                    <Button variant="contained" onClick={handleCapture}>
+                        📸 Take Screenshot
+                    </Button>
+
+                    {image && (
+                        <div style={{ marginTop: 20 }}>
+                            <img src={image} alt="Screenshot" />
+                        </div>
+                    )}
                 </div>
             </div>
             <Modal

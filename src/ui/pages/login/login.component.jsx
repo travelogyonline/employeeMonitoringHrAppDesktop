@@ -15,7 +15,7 @@ const DemoPaper = styled(Paper)(({ theme }) => ({
     textAlign: 'center',
 }));
 
-function Login({isAuthenticated}) {
+function Login({ isAuthenticated }) {
     const navigate = useNavigate();
     const [userid, setUserid] = useState();
     const [password, setPassword] = useState();
@@ -55,7 +55,24 @@ function Login({isAuthenticated}) {
                 } else {
                     setUserIdProps({})
                     setPasswordProps({})
-                    isAuthenticated(response.data.data)
+                    console.log("user: ", response.data.data._id);
+                    let config = {
+                        method: 'post',
+                        maxBodyLength: Infinity,
+                        url: `http://localhost:5000/api/login/in/${response.data.data._id}`,
+                        headers: {}
+                    };
+
+                    axios.request(config)
+                        .then((response) => {
+                            window.electronAPI.sendToMain("react-message", {
+                                userId: response.data.data._id
+                            });
+                            isAuthenticated(response.data.data)
+                        })
+                        .catch((error) => {
+                            console.log(error);
+                        });
                 }
             })
             .catch((error) => {

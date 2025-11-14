@@ -6,7 +6,6 @@ import './App.css'
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  console.log("is Authenticated: ", isAuthenticated)
   return (
     <>
       <Routes>
