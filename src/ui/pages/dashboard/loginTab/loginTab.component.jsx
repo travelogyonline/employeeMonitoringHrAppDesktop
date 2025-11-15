@@ -8,6 +8,7 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
+import EmployeeRecords from '../employeeRecords/employeeRecords.component';
 
 function LoginTab({ isAuthenticated, user }) {
     const [login, setLogin] = useState('');
@@ -50,14 +51,26 @@ function LoginTab({ isAuthenticated, user }) {
             });
     }
     return (
-        <div>
-            {login !== 'false' &&
-                <div>
-                    <h1>{user.name} loged in!</h1>
-                </div>}
-            <Button variant="contained" onClick={handleLoginButton}>{login !== 'false' ? "Logout" : "Login"}</Button>
-        </div>
-    )
+    <Box sx={{ mt: 5, textAlign: "center" }}>
+        {login !== "false" && (
+            <EmployeeRecords user={user} />
+        )}
+
+        <Button
+            variant="contained"
+            size="large"
+            sx={{
+                mt: 4,
+                px: 4,
+                fontWeight: 600,
+                borderRadius: 2
+            }}
+            onClick={handleLoginButton}
+        >
+            {login !== "false" ? "Punch Out or Take Break" : "Start Working"}
+        </Button>
+    </Box>
+);
 }
 
 export default LoginTab;
