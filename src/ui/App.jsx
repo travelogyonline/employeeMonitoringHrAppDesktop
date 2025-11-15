@@ -12,8 +12,7 @@ function App() {
       if(user) setIsAuthenticated(user);
     }
     getUser();
-  }, []);
-  console.log("isAuthenticated: ", isAuthenticated)
+  }, [window.electronStore.get("user")]);
   return (
     <>
       <Routes>

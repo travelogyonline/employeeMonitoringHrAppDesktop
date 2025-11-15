@@ -5,6 +5,7 @@ import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import Button from "@mui/material/Button";
+import LoginTab from './loginTab/loginTab.component.jsx';
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
@@ -34,7 +35,7 @@ function Dashboard({ isAuthenticated, user }) {
     const handleModelOpen = () => setmodelOpen(true);
     const handleModelClose = () => setmodelOpen(false);
     const handleLogout = async () => {
-        console.log("inside logout: ", user)
+        console.log("is log in : ", user._id)
         if (user.login !== 'false') {
             const config = {
                 method: 'patch',
@@ -42,13 +43,18 @@ function Dashboard({ isAuthenticated, user }) {
                 url: `http://localhost:5000/api/login/out/${user._id}`,
             };
 
-            axios.request(config)
+            await axios.request(config)
+                .then((res) => {
+                })
                 .catch((error) => {
                     console.log(error);
                 });
         }
-        await window.electronStore.delete("user");
-        isAuthenticated(false);
+        async function handleResponse() {
+            await window.electronStore.delete("user");
+            isAuthenticated(false);
+        }
+        handleResponse();
     }
     const uploadScreenshot = async (img) => {
         try {
@@ -95,18 +101,19 @@ function Dashboard({ isAuthenticated, user }) {
                         {user.name}
                     </Typography>
                 </div>
+                <Button variant="contained" onClick={handleLogout}>
+                    📸 Logout
+                </Button>
             </div>
             <div>
                 <div>
-                    <Button variant="contained" onClick={handleLogout}>
-                        📸 Logout
-                    </Button>
+                    <LoginTab isAuthenticated={isAuthenticated} user={user} />
 
-                    {image && (
+                    {/* {image && (
                         <div style={{ marginTop: 20 }}>
                             <img src={image} alt="Screenshot" />
                         </div>
-                    )}
+                    )} */}
                 </div>
             </div>
             <Modal

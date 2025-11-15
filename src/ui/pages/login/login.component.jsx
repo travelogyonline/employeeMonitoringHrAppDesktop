@@ -43,7 +43,6 @@ function Login({ isAuthenticated }) {
         };
         axios.request(config)
             .then((response) => {
-                console.log(response.data);
                 if (!response.data.status) {
                     if (response.data.issueWith === 'email') {
                         setUserIdProps({ error: true, helperText: response.data.message })
@@ -55,9 +54,11 @@ function Login({ isAuthenticated }) {
                 } else {
                     setUserIdProps({})
                     setPasswordProps({})
-                    console.log("user: ", response.data.data);
-                    window.electronStore.set("user", response.data.data);
-                    isAuthenticated(response.data.data)
+                    async function handleFunction(){
+                        await window.electronStore.set("user", response.data.data);
+                        isAuthenticated(response.data.data)
+                    }
+                    handleFunction();
                 }
             })
             .catch((error) => {
