@@ -3,11 +3,9 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "main": "src/electron/main.js",
+  "main": "dist-electron/main.js",
   "scripts": {
     "dev": "vite",
-    "build-react": "vite build",
-    "build-electron": "electron-builder",
     "start-electron": "cross-env NODE_ENV=development electron .",
     "dev:react": "vite",
     "dev:electron": "electron .",

@@ -1,6 +1,6 @@
 {
     "appId": "com.travelogy.employee-monitoring-app",
-    "files": ["dist-react","dist-electron"],
+    "files": ["dist-react","dist-electron","!src"],
     "icon": "./windows.png",
     "mac": {
         "target": "dmg"

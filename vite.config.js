@@ -1,3 +1,4 @@
+// vite.config.js
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import electron from 'vite-plugin-electron';
@@ -7,10 +8,11 @@ export default defineConfig({
   plugins: [
     electron([
       {
+        // Main Process
         entry: 'src/electron/main.js',
         vite: {
           build: {
-            outDir: 'dist-electron', 
+            outDir: 'dist-electron',
             rollupOptions: {
               output: {
                 entryFileNames: 'main.js',
@@ -20,6 +22,23 @@ export default defineConfig({
         },
         onstart(options) {
           options.startup();
+        },
+      },
+      // **ADD THIS BLOCK FOR THE PRELOAD SCRIPT**
+      {
+        // Preload Script (Renderer-side Node API setup)
+        entry: 'src/electron/preload.js', // <-- Use your preload path
+        onstart: () => { }, // No need to start this script
+        vite: {
+          build: {
+            outDir: 'dist-electron',
+            rollupOptions: {
+              output: {
+                // Keep the original name for the preload script
+                entryFileNames: 'preload.js',
+              },
+            },
+          },
         },
       },
     ]),
@@ -33,8 +52,4 @@ export default defineConfig({
     outDir: 'dist-react'
   },
   base: './',
-  // server: {
-  //   port: 4000,
-  //   strictPort: true 
-  // }
 })

@@ -9,6 +9,7 @@ import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import EmployeeRecords from '../employeeRecords/employeeRecords.component';
+import { BASE_API_URL } from '../../../data';
 
 function LoginTab({ isAuthenticated, user }) {
     const [login, setLogin] = useState('');
@@ -21,7 +22,7 @@ function LoginTab({ isAuthenticated, user }) {
         let config = {
             method: apiHelper === 'in' ? 'post' : 'patch',
             maxBodyLength: Infinity,
-            url: `http://localhost:5000/api/login/${apiHelper}/${user._id}`,
+            url: `${BASE_API_URL}api/login/${apiHelper}/${user._id}`,
             headers: {}
         };
 
@@ -30,7 +31,7 @@ function LoginTab({ isAuthenticated, user }) {
                 const config = {
                     method: 'get',
                     maxBodyLength: Infinity,
-                    url: `http://localhost:5000/api/user/${response.data.data.userId}`,
+                    url: `${BASE_API_URL}api/user/${response.data.data.userId}`,
                 };
 
                 axios.request(config)

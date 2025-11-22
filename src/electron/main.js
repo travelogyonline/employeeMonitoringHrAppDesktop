@@ -3,6 +3,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import axios from 'axios';
 import Store from "electron-store";
+import {BASE_API_URL} from './data.js';
 
 let tray = null;
 let win = null;
@@ -32,7 +33,7 @@ const handleLogout = () => {
     const config = {
         method: 'patch',
         maxBodyLength: Infinity,
-        url: `http://localhost:5000/api/login/out/${userId}`,
+        url: `${BASE_API_URL}api/login/out/${userId}`,
         headers: {}
     };
 

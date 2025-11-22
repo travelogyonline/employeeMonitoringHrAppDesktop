@@ -10,6 +10,7 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
+import { BASE_API_URL } from '../../data.jsx';
 
 const modelStyle = {
     position: 'absolute',
@@ -40,7 +41,7 @@ function Dashboard({ isAuthenticated, user }) {
             const config = {
                 method: 'patch',
                 maxBodyLength: Infinity,
-                url: `http://localhost:5000/api/login/out/${user._id}`,
+                url: `${BASE_API_URL}api/login/out/${user._id}`,
             };
 
             await axios.request(config)
@@ -66,7 +67,7 @@ function Dashboard({ isAuthenticated, user }) {
             const formData = new FormData();
             formData.append("image", blob, "screenshot.png");
 
-            const upload = await fetch("http://localhost:5000/api/screenshot/" + user._id, {
+            const upload = await fetch(BASE_API_URL + "api/screenshot/" + user._id, {
                 method: "POST",
                 body: formData
             });

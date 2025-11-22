@@ -13,6 +13,7 @@ import LoginIcon from "@mui/icons-material/Login";
 import LogoutIcon from "@mui/icons-material/Logout";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import TimerIcon from "@mui/icons-material/Timer";
+import { BASE_API_URL } from "../../../data";
 
 function EmployeeRecords({ user }) {
     const [firstLogin, setFirstLogin] = useState("--:--");
@@ -28,7 +29,7 @@ function EmployeeRecords({ user }) {
         const fetchLogs = async () => {
             try {
                 const response = await axios.post(
-                    `http://localhost:5000/api/login/date/${user._id}`,
+                    `${BASE_API_URL}api/login/date/${user._id}`,
                     { date: today }
                 );
 

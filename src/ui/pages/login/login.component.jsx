@@ -7,6 +7,7 @@ import Button from '@mui/material/Button';
 import style from './login.module.css'
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
+import { BASE_API_URL } from '../../data';
 
 const DemoPaper = styled(Paper)(({ theme }) => ({
     width: 400,
@@ -35,7 +36,7 @@ function Login({ isAuthenticated }) {
         const config = {
             method: 'post',
             maxBodyLength: Infinity,
-            url: 'http://localhost:5000/api/authenticate',
+            url: BASE_API_URL+'api/authenticate',
             headers: {
                 'Content-Type': 'application/json'
             },
