@@ -27,16 +27,9 @@ const modelStyle = {
 
 function Dashboard({ isAuthenticated, user }) {
     const [modelOpen, setmodelOpen] = useState(false);
-    const [image, setImage] = useState(null);
-    const handleCapture = async () => {
-        const img = await window.electronAPI.captureScreen();
-        setImage(img);
-        uploadScreenshot(img); // pass latest screenshot
-    };
     const handleModelOpen = () => setmodelOpen(true);
     const handleModelClose = () => setmodelOpen(false);
     const handleLogout = async () => {
-        console.log("is log in : ", user._id)
         if (user.login !== 'false') {
             const config = {
                 method: 'patch',
@@ -57,38 +50,7 @@ function Dashboard({ isAuthenticated, user }) {
         }
         handleResponse();
     }
-    const uploadScreenshot = async (img) => {
-        try {
-            if (!img) return;
-
-            const response = await fetch(img);
-            const blob = await response.blob();
-
-            const formData = new FormData();
-            formData.append("image", blob, "screenshot.png");
-
-            const upload = await fetch(BASE_API_URL + "api/screenshot/" + user._id, {
-                method: "POST",
-                body: formData
-            });
-
-            const result = await upload.json();
-
-        } catch (err) {
-            console.error(err);
-        }
-    };
-    useEffect(() => {
-        // Take screenshot immediately after login
-        handleCapture();
-
-        // Then repeat every 10 minutes
-        const interval = setInterval(() => {
-            handleCapture();
-        }, 10 * 60 * 1000); // 10 min
-
-        return () => clearInterval(interval);
-    }, []);
+    
     return (
         <div>
             <div className={style.header}>
@@ -109,12 +71,6 @@ function Dashboard({ isAuthenticated, user }) {
             <div>
                 <div>
                     <LoginTab isAuthenticated={isAuthenticated} user={user} />
-
-                    {/* {image && (
-                        <div style={{ marginTop: 20 }}>
-                            <img src={image} alt="Screenshot" />
-                        </div>
-                    )} */}
                 </div>
             </div>
             <Modal

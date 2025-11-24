@@ -3,53 +3,48 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import axios from 'axios';
 import Store from "electron-store";
-import {BASE_API_URL} from './data.js';
+import { BASE_API_URL } from './data.js';
 
 let tray = null;
 let win = null;
-let user = null;
+let isResumedFromSleep = false;
 
 const store = new Store();
 
 ipcMain.handle("store:set", (event, key, value) => {
-  store.set(key, value);
-  return true;
+    store.set(key, value);
+    return true;
 });
 
 ipcMain.handle("store:get", (event, key) => {
-  return store.get(key);
+    return store.get(key);
 });
 
 ipcMain.handle("store:delete", (event, key) => {
-  store.delete(key);
-  return true;
+    store.delete(key);
+    return true;
 });
 
 
+
 const handleLogout = () => {
-    if(!user) return;
-    console.log("user: ",user)
-    const {userId} = user;
+    const user = store.get('user');
+    if (!user) return;
+    if (user.login === 'false') return;
+
     const config = {
         method: 'patch',
         maxBodyLength: Infinity,
-        url: `${BASE_API_URL}api/login/out/${userId}`,
+        url: `${BASE_API_URL}api/login/out/${user._id}`,
         headers: {}
     };
 
     axios.request(config)
-        .then((response) => {
-            console.log(JSON.stringify(response.data));
-            isAuthenticated(false)
-        })
-        .catch((error) => {
-            console.log(error);
-        });
 }
 
-ipcMain.on("react-message", (event, data) => {
-    user = data;
-    console.log("Received from React:", data);
+ipcMain.on("message", (event, msg) => {
+    console.log("receiving data from react: ", msg);
+    isResumedFromSleep = msg;
 });
 
 const __filename = fileURLToPath(import.meta.url);
@@ -57,19 +52,29 @@ const __dirname = path.dirname(__filename);
 
 ipcMain.handle('capture-screen', async () => {
     const { width, height } = screen.getPrimaryDisplay().size;
+
     const sources = await desktopCapturer.getSources({
         types: ["screen"],
-        thumbnailSize: { width, height }   // FULL SIZE
+        thumbnailSize: { width, height }
     });
 
-    // Get first screen
     const primarySource = sources[0];
 
-    const thumbnail = primarySource.thumbnail.toPNG();
+    // ORIGINAL full-size PNG buffer
+    const originalBuffer = primarySource.thumbnail.toPNG();
 
-    // Return image as base64 to React
-    const imageBase64 = nativeImage.createFromBuffer(thumbnail).toDataURL();
-    return imageBase64;
+    // CREATE nativeImage from the original buffer
+    const img = nativeImage.createFromBuffer(originalBuffer);
+
+    // RESIZE & COMPRESS
+    const resized = img
+        .resize({ width: 1280 }) // shrink width → auto adjust height
+        .toJPEG(60); // 60% quality (PNG does not have “quality”, JPEG does)
+
+    // Convert resized compressed image to Base64
+    const base64 = nativeImage.createFromBuffer(resized).toDataURL();
+
+    return base64;
 });
 
 function createWindow() {
@@ -81,35 +86,35 @@ function createWindow() {
             preload: path.join(__dirname, 'preload.js'),
             nodeIntegration: false,
             contextIsolation: true,
+            // devTools: false,
         },
     });
 
     if (process.env.NODE_ENV === 'development') {
-        // Load React dev server
         win.loadURL('http://localhost:5173');
-        win.webContents.openDevTools();
     } else {
-        // Load production build
         const indexPath = path.join(__dirname, '../dist-react/index.html');
         win.loadFile(indexPath);
     }
 
-    // Instead of closing the app → hide to tray
     win.on("close", (event) => {
         if (app.isQuiting) {
             return;
         }
-
-        // Otherwise → hide to tray instead of closing
         event.preventDefault();
         win.hide();
+        console.log("windows is hiding in tray");
     });
+}
+function updateReactStateFromMain(data) {
+    if (!win || !win.webContents) return;
+    win.webContents.send('update-data', data);
 }
 
 app.whenReady().then(() => {
     createWindow();
 
-    tray = new Tray(path.join(__dirname, "icon.png"));  // Add your tray icon here
+    tray = new Tray(path.join(__dirname, "icon.png"));
 
     const trayMenu = Menu.buildFromTemplate([
         { label: "Open App", click: () => win.show() },
@@ -131,21 +136,38 @@ app.whenReady().then(() => {
 
     powerMonitor.on("suspend", () => {
         console.log("System is going to sleep");
+        isResumedFromSleep = false;
+        handleLogout();
     });
 
-    // When system is locked
     powerMonitor.on("lock-screen", () => {
         console.log("System is locked");
+        store.set("pendingStatus", "false");
+        handleLogout();
     });
 
-    // Optional: when system wakes or unlocks
     powerMonitor.on("resume", () => {
-        console.log("System resumed");
-        win.show();
+        console.log("isResumedFromSleep: ", isResumedFromSleep)
+        function isRendererResumed() {
+            if (isResumedFromSleep) {
+                updateReactStateFromMain('false');
+                console.log("Screen resumed from sleep");
+                win.show();
+                return;
+            }
+            setTimeout(() => {
+                isRendererResumed();
+            }, 500);
+        }
     });
 
     powerMonitor.on("unlock-screen", () => {
-        console.log("Screen unlocked");
+        const flag = store.get("pendingStatus");
+        console.log("Screen unlocked: ", flag);
+        if (flag) {
+            updateReactStateFromMain(flag);
+            store.delete("pendingStatus");
+        }
         win.show();
     });
 });

@@ -14,7 +14,6 @@ function App() {
     }
     getUser();
   }, [window.electronStore.get("user")]);
-  console.log("BAse api url: ", BASE_API_URL)
   return (
     <>
       <Routes>
