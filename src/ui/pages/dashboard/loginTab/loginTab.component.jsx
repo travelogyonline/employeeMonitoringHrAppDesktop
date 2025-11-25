@@ -14,22 +14,20 @@ function LoginTab({ isAuthenticated, user }) {
     const [image, setImage] = useState(null);
 
     const handleCapture = async () => {
+        if(login==='false') return
         const img = await window.electronAPI.captureScreen();
         setImage(img);
-        uploadScreenshot(img); // pass latest screenshot
+        uploadScreenshot(img); 
     };
     useEffect(() => {
-        // window.electronAPI.rendererReady();
         window.electronAPI.sendMessage(true);
     }, []);
     useEffect(() => {
-        // Take screenshot immediately after login
         handleCapture();
 
-        // Then repeat every 10 minutes
         const interval = setInterval(() => {
             handleCapture();
-        }, 10 * 60 * 1000); // 10 min
+        }, 10 * 60 * 1000); 
 
         return () => clearInterval(interval);
     }, []);

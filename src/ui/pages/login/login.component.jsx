@@ -36,7 +36,7 @@ function Login({ isAuthenticated }) {
         const config = {
             method: 'post',
             maxBodyLength: Infinity,
-            url: BASE_API_URL+'api/authenticate',
+            url: BASE_API_URL + 'api/authenticate',
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -55,7 +55,7 @@ function Login({ isAuthenticated }) {
                 } else {
                     setUserIdProps({})
                     setPasswordProps({})
-                    async function handleFunction(){
+                    async function handleFunction() {
                         await window.electronStore.set("user", response.data.data);
                         isAuthenticated(response.data.data)
                     }
@@ -93,9 +93,6 @@ function Login({ isAuthenticated }) {
                     <Button variant="contained" onClick={handleOnSubmit} type="submit">Login</Button>
                 </Stack>
             </DemoPaper>
-            <div>
-
-            </div>
         </div>
     )
 }

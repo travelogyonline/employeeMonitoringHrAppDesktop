@@ -159,6 +159,7 @@ app.whenReady().then(() => {
                 isRendererResumed();
             }, 500);
         }
+        isRendererResumed();
     });
 
     powerMonitor.on("unlock-screen", () => {

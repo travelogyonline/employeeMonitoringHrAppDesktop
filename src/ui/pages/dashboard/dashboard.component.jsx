@@ -1,5 +1,5 @@
 import style from './dashboard.module.css'
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
@@ -65,7 +65,7 @@ function Dashboard({ isAuthenticated, user }) {
                     </Typography>
                 </div>
                 <Button variant="contained" onClick={handleLogout}>
-                    📸 Logout
+                    Logout
                 </Button>
             </div>
             <div>

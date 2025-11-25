@@ -5,8 +5,7 @@ import {
     Typography,
     Card,
     CardContent,
-    Grid,
-    Button
+    Grid
 } from "@mui/material";
 
 import LoginIcon from "@mui/icons-material/Login";
@@ -54,20 +53,16 @@ function EmployeeRecords({ user }) {
                 totalMs += Math.max(0, logout - login);
             });
 
-            // First login
             setFirstLogin(new Date(logs[0].login).toLocaleTimeString());
 
-            // Last login
             const last = logs[logs.length - 1];
             setLastLogin(new Date(last.login).toLocaleTimeString());
 
-            // Total worked time
             const totalSec = Math.floor(totalMs / 1000);
             const hrs = Math.floor(totalSec / 3600);
             const mins = Math.floor((totalSec % 3600) / 60);
             setTotalTime(`${hrs}h ${mins}m`);
 
-            // Active session
             if (!last.logout) {
                 const activeMs = now - new Date(last.login);
                 const s = Math.floor(activeMs / 1000);
@@ -100,7 +95,6 @@ function EmployeeRecords({ user }) {
 
             <Grid container spacing={3} justifyContent="center" sx={{ maxWidth: 900 }}>
 
-                {/* First Login */}
                 <Grid item xs={12} sm={6} md={4}>
                     <Card elevation={3} sx={{ borderRadius: 3 }}>
                         <CardContent>
@@ -117,7 +111,6 @@ function EmployeeRecords({ user }) {
                     </Card>
                 </Grid>
 
-                {/* Last Login */}
                 <Grid item xs={12} sm={6} md={4}>
                     <Card elevation={3} sx={{ borderRadius: 3 }}>
                         <CardContent>
@@ -134,7 +127,6 @@ function EmployeeRecords({ user }) {
                     </Card>
                 </Grid>
 
-                {/* Total Time Worked */}
                 <Grid item xs={12} sm={6} md={4}>
                     <Card elevation={3} sx={{ borderRadius: 3 }}>
                         <CardContent>
@@ -151,7 +143,6 @@ function EmployeeRecords({ user }) {
                     </Card>
                 </Grid>
 
-                {/* Active Session */}
                 <Grid item xs={12} sm={6} md={4}>
                     <Card elevation={3} sx={{ borderRadius: 3 }}>
                         <CardContent>
