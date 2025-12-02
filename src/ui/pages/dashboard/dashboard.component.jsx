@@ -11,6 +11,7 @@ import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import { BASE_API_URL } from '../../data.jsx';
+import ChangePasswordModal from './ChangePasswordModal.jsx';
 
 const modelStyle = {
     position: 'absolute',
@@ -26,6 +27,7 @@ const modelStyle = {
 
 
 function Dashboard({ isAuthenticated, user }) {
+    const [passwordModal, setPasswordModal] = useState(false);
     const [modelOpen, setmodelOpen] = useState(false);
     const handleModelOpen = () => setmodelOpen(true);
     const handleModelClose = () => setmodelOpen(false);
@@ -50,7 +52,7 @@ function Dashboard({ isAuthenticated, user }) {
         }
         handleResponse();
     }
-    
+
     return (
         <div>
             <div className={style.header}>
@@ -82,13 +84,29 @@ function Dashboard({ isAuthenticated, user }) {
                 <Box sx={modelStyle}>
                     <Typography variant="h4" gutterBottom>{user.staffName}</Typography>
                     <Typography className={style.role} variant="subtitle1" gutterBottom>{user.role}</Typography>
+
                     <Typography variant="subtitle2" gutterBottom>Email</Typography>
                     <Typography variant="body1" gutterBottom>{user.staffEmail}</Typography>
 
                     <Typography variant="subtitle2" gutterBottom>Phone</Typography>
                     <Typography variant="body1" gutterBottom>{user.staffPhone}</Typography>
+
+                    {/* ➤ NEW BUTTON AT BOTTOM */}
+                    <Box sx={{ mt: 3, textAlign: "center" }}>
+                        <Button variant="contained" color="primary" onClick={() => setPasswordModal(true)}>
+                            Change Password
+                        </Button>
+                    </Box>
                 </Box>
             </Modal>
+
+            {/* ➤ PASSWORD CHANGE POPUP */}
+            <ChangePasswordModal
+                open={passwordModal}
+                handleClose={() => setPasswordModal(false)}
+                user={user}
+            />
+
         </div>
     );
 }
