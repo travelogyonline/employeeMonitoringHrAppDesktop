@@ -90,7 +90,7 @@ function EmployeeRecords({ user }) {
             }}
         >
             <Typography variant="h5" sx={{ fontWeight: 600, mb: 3 }}>
-                {user.name} — Work Overview
+                {user.staffName} — Work Overview
             </Typography>
 
             <Grid container spacing={3} justifyContent="center" sx={{ maxWidth: 900 }}>

@@ -61,7 +61,7 @@ function Dashboard({ isAuthenticated, user }) {
                 </div>
                 <div>
                     <Typography variant="h5" gutterBottom className={style.headerText} onClick={handleModelOpen} sx={{ cursor: 'pointer' }}>
-                        {user.name}
+                        {user.staffName}
                     </Typography>
                 </div>
                 <Button variant="contained" onClick={handleLogout}>
@@ -80,16 +80,13 @@ function Dashboard({ isAuthenticated, user }) {
                 aria-describedby="modal-modal-description"
             >
                 <Box sx={modelStyle}>
-                    <Typography variant="h4" gutterBottom>{user.name}</Typography>
+                    <Typography variant="h4" gutterBottom>{user.staffName}</Typography>
                     <Typography className={style.role} variant="subtitle1" gutterBottom>{user.role}</Typography>
                     <Typography variant="subtitle2" gutterBottom>Email</Typography>
-                    <Typography variant="body1" gutterBottom>{user.email}</Typography>
+                    <Typography variant="body1" gutterBottom>{user.staffEmail}</Typography>
 
                     <Typography variant="subtitle2" gutterBottom>Phone</Typography>
-                    <Typography variant="body1" gutterBottom>{user.phone}</Typography>
-
-                    <Typography variant="subtitle2" gutterBottom>Age</Typography>
-                    <Typography variant="body1" gutterBottom>{user.age}</Typography>
+                    <Typography variant="body1" gutterBottom>{user.staffPhone}</Typography>
                 </Box>
             </Modal>
         </div>

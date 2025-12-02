@@ -3,7 +3,6 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import Login from './pages/login/login.component.jsx'
 import Dashboard from './pages/dashboard/dashboard.component.jsx';
 import './App.css'
-import { BASE_API_URL } from './data.jsx';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);

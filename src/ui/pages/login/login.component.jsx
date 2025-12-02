@@ -17,7 +17,6 @@ const DemoPaper = styled(Paper)(({ theme }) => ({
 }));
 
 function Login({ isAuthenticated }) {
-    const navigate = useNavigate();
     const [userid, setUserid] = useState();
     const [password, setPassword] = useState();
     const [userIdProps, setUserIdProps] = useState({});
@@ -30,7 +29,7 @@ function Login({ isAuthenticated }) {
     }
     const handleOnSubmit = e => {
         const payload = {
-            email: userid,
+            staffEmail: userid,
             password: password
         }
         const config = {
