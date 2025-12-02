@@ -1,5 +1,5 @@
 import style from './dashboard.module.css'
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
@@ -27,16 +27,9 @@ const modelStyle = {
 
 function Dashboard({ isAuthenticated, user }) {
     const [modelOpen, setmodelOpen] = useState(false);
-    const [image, setImage] = useState(null);
-    const handleCapture = async () => {
-        const img = await window.electronAPI.captureScreen();
-        setImage(img);
-        uploadScreenshot(img); // pass latest screenshot
-    };
     const handleModelOpen = () => setmodelOpen(true);
     const handleModelClose = () => setmodelOpen(false);
     const handleLogout = async () => {
-        console.log("is log in : ", user._id)
         if (user.login !== 'false') {
             const config = {
                 method: 'patch',
@@ -57,38 +50,7 @@ function Dashboard({ isAuthenticated, user }) {
         }
         handleResponse();
     }
-    const uploadScreenshot = async (img) => {
-        try {
-            if (!img) return;
-
-            const response = await fetch(img);
-            const blob = await response.blob();
-
-            const formData = new FormData();
-            formData.append("image", blob, "screenshot.png");
-
-            const upload = await fetch(BASE_API_URL + "api/screenshot/" + user._id, {
-                method: "POST",
-                body: formData
-            });
-
-            const result = await upload.json();
-
-        } catch (err) {
-            console.error(err);
-        }
-    };
-    useEffect(() => {
-        // Take screenshot immediately after login
-        handleCapture();
-
-        // Then repeat every 10 minutes
-        const interval = setInterval(() => {
-            handleCapture();
-        }, 10 * 60 * 1000); // 10 min
-
-        return () => clearInterval(interval);
-    }, []);
+    
     return (
         <div>
             <div className={style.header}>
@@ -99,22 +61,16 @@ function Dashboard({ isAuthenticated, user }) {
                 </div>
                 <div>
                     <Typography variant="h5" gutterBottom className={style.headerText} onClick={handleModelOpen} sx={{ cursor: 'pointer' }}>
-                        {user.name}
+                        {user.staffName}
                     </Typography>
                 </div>
                 <Button variant="contained" onClick={handleLogout}>
-                    📸 Logout
+                    Logout
                 </Button>
             </div>
             <div>
                 <div>
                     <LoginTab isAuthenticated={isAuthenticated} user={user} />
-
-                    {/* {image && (
-                        <div style={{ marginTop: 20 }}>
-                            <img src={image} alt="Screenshot" />
-                        </div>
-                    )} */}
                 </div>
             </div>
             <Modal
@@ -124,16 +80,13 @@ function Dashboard({ isAuthenticated, user }) {
                 aria-describedby="modal-modal-description"
             >
                 <Box sx={modelStyle}>
-                    <Typography variant="h4" gutterBottom>{user.name}</Typography>
+                    <Typography variant="h4" gutterBottom>{user.staffName}</Typography>
                     <Typography className={style.role} variant="subtitle1" gutterBottom>{user.role}</Typography>
                     <Typography variant="subtitle2" gutterBottom>Email</Typography>
-                    <Typography variant="body1" gutterBottom>{user.email}</Typography>
+                    <Typography variant="body1" gutterBottom>{user.staffEmail}</Typography>
 
                     <Typography variant="subtitle2" gutterBottom>Phone</Typography>
-                    <Typography variant="body1" gutterBottom>{user.phone}</Typography>
-
-                    <Typography variant="subtitle2" gutterBottom>Age</Typography>
-                    <Typography variant="body1" gutterBottom>{user.age}</Typography>
+                    <Typography variant="body1" gutterBottom>{user.staffPhone}</Typography>
                 </Box>
             </Modal>
         </div>

@@ -1,0 +1,19 @@
+appId: com.company.travelbuddy
+productName: Travel Buddy
+
+directories:
+  output: dist
+  buildResources: build
+
+files:
+  - dist-react/**
+  - dist-electron/**
+  - package.json
+
+win:
+  target:
+    - portable
+  icon: build/icon.ico
+
+portable:
+  artifactName: "TravelBuddy.exe"
