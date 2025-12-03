@@ -115,7 +115,7 @@ function LoginTab({ isAuthenticated, user }) {
                 }}
                 onClick={handleLoginButton}
             >
-                {login !== "false" ? "Punch Out or Take Break" : "Start Working"}
+                {login !== "false" ? "Go Offline!" : "Go Online!"}
             </Button>
         </Box>
     );

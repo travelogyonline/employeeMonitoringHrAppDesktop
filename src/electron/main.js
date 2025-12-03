@@ -26,7 +26,7 @@ ipcMain.handle("store:delete", (event, key) => {
 });
 
 function startIdleChecker() {
-    const IDLE_LIMIT = 20 * 60; 
+    const IDLE_LIMIT = 15 * 60;
     // const IDLE_LIMIT = 5;
 
     setInterval(() => {
@@ -35,7 +35,7 @@ function startIdleChecker() {
         if (idle >= IDLE_LIMIT) {
             updateReactStateFromMain('false');
             handleLogout();
-            win.setAlwaysOnTop(true, 'screen-saver'); 
+            win.setAlwaysOnTop(true, 'screen-saver');
             win.focus();
             win.show();
             setTimeout(() => {
@@ -190,7 +190,12 @@ app.whenReady().then(() => {
             if (isResumedFromSleep) {
                 updateReactStateFromMain('false');
                 console.log("Screen resumed from sleep");
+                win.setAlwaysOnTop(true, 'screen-saver');
+                win.focus();
                 win.show();
+                setTimeout(() => {
+                    win.setAlwaysOnTop(false);
+                }, 100);
                 return;
             }
             setTimeout(() => {
