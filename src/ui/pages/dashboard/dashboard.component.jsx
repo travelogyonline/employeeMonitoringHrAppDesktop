@@ -1,17 +1,29 @@
-import style from './dashboard.module.css'
+import style from './dashboard.module.css';
+import logo from '../../assets/logo.png';
 import { useState } from 'react';
-import axios from 'axios';
-import Typography from '@mui/material/Typography';
-import Modal from '@mui/material/Modal';
-import Box from '@mui/material/Box';
-import Button from "@mui/material/Button";
-import LoginTab from './loginTab/loginTab.component.jsx';
+import LoginTab from './pages/loginTab/loginTab.component.jsx';
+import ChangePasswordModal from './ChangePasswordModal.jsx';
+import Profile from './pages/profile/profile.jsx';
+import { BASE_API_URL } from '../../data.jsx';
+import {
+    Typography,
+    Modal,
+    Box,
+    Button,
+    List,
+    ListItemButton,
+    ListItemIcon,
+    ListItemText,
+    Divider
+} from "@mui/material";
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import LogoutIcon from '@mui/icons-material/Logout';
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
-import { BASE_API_URL } from '../../data.jsx';
-import ChangePasswordModal from './ChangePasswordModal.jsx';
+import axios from 'axios';
 
 const modelStyle = {
     position: 'absolute',
@@ -27,10 +39,12 @@ const modelStyle = {
 
 
 function Dashboard({ isAuthenticated, user }) {
+    const [page, setPage] = useState("dashboard");
     const [passwordModal, setPasswordModal] = useState(false);
     const [modelOpen, setmodelOpen] = useState(false);
     const handleModelOpen = () => setmodelOpen(true);
     const handleModelClose = () => setmodelOpen(false);
+    console.log("user: ", user)
     const handleLogout = async () => {
         if (user.login !== 'false') {
             const config = {
@@ -54,25 +68,55 @@ function Dashboard({ isAuthenticated, user }) {
     }
 
     return (
-        <div>
-            <div className={style.header}>
-                <div>
-                    <Typography variant="h4" gutterBottom className={style.headerText}>
-                        Travelogy
-                    </Typography>
+        <div className={style.container}>
+            <div className={style.innerContainer}>
+                <div className={style.sidebar}>
+                    <div className={style.logoContainer}>
+                        <img src={logo} alt="Logo" className={style.logo} />
+                    </div>
+                    <List sx={{ width: "100%", padding: 0 }}>
+                        <ListItemButton onClick={() => setPage('dashboard')}>
+                            <ListItemIcon>
+                                <DashboardIcon />
+                            </ListItemIcon>
+                            <ListItemText
+                                sx={{ color: '#5d5949' }}
+                                primary="Dashboard"
+                                primaryTypographyProps={{ variant: "h6" }}
+                            />
+                        </ListItemButton>
+
+                        <Divider />
+
+                        <ListItemButton onClick={() => setPage('profile')}>
+                            <ListItemIcon>
+                                <AccountCircleIcon />
+                            </ListItemIcon>
+                            <ListItemText
+                                sx={{ color: '#5d5949' }}
+                                primary="Profile"
+                                primaryTypographyProps={{ variant: "h6" }}
+                            />
+                        </ListItemButton>
+
+                        <Divider />
+
+                        <ListItemButton onClick={handleLogout}>
+                            <ListItemIcon>
+                                <LogoutIcon />
+                            </ListItemIcon>
+                            <ListItemText
+                                sx={{ color: '#5d5949' }}
+                                primary="Logout"
+                                primaryTypographyProps={{ variant: "h6" }}
+                            />
+                        </ListItemButton>
+
+                    </List>
                 </div>
-                <div>
-                    <Typography variant="h5" gutterBottom className={style.headerText} onClick={handleModelOpen} sx={{ cursor: 'pointer' }}>
-                        {user.staffName}
-                    </Typography>
-                </div>
-                <Button variant="contained" onClick={handleLogout}>
-                    Logout
-                </Button>
-            </div>
-            <div>
-                <div>
-                    <LoginTab isAuthenticated={isAuthenticated} user={user} />
+                <div className={style.content}>
+                    {page === 'dashboard' && <LoginTab isAuthenticated={isAuthenticated} user={user} />}
+                    {page === 'profile' && <Profile user={user} />}
                 </div>
             </div>
             <Modal

@@ -1,13 +1,14 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import Box from '@mui/material/Box';
 import Button from "@mui/material/Button";
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
-import EmployeeRecords from '../employeeRecords/employeeRecords.component';
-import { BASE_API_URL } from '../../../data';
+import EmployeeRecords from './components/employeeRecords.component.jsx';
+import { BASE_API_URL } from '../../../../data';
+import style from './loginTab.module.css';
+import EmployeeCard from './components/employeeCard/employeeCard.component.jsx';
 
 function LoginTab({ isAuthenticated, user }) {
     const [login, setLogin] = useState('');
@@ -99,11 +100,10 @@ function LoginTab({ isAuthenticated, user }) {
         }
     };
     return (
-        <Box sx={{ mt: 5, textAlign: "center" }}>
-            {login !== "false" && (
-                <EmployeeRecords user={user} />
-            )}
-
+        <div className={style.container}>
+            <div>
+                <EmployeeCard />
+            </div>
             <Button
                 variant="contained"
                 size="large"
@@ -117,7 +117,11 @@ function LoginTab({ isAuthenticated, user }) {
             >
                 {login !== "false" ? "Go Offline!" : "Go Online!"}
             </Button>
-        </Box>
+            
+            {login !== "false" && (
+                <EmployeeRecords user={user} />
+            )}
+        </div>
     );
 }
 

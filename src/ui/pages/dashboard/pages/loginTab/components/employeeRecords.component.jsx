@@ -12,7 +12,7 @@ import LoginIcon from "@mui/icons-material/Login";
 import LogoutIcon from "@mui/icons-material/Logout";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import TimerIcon from "@mui/icons-material/Timer";
-import { BASE_API_URL } from "../../../data";
+import { BASE_API_URL } from "../../../../../data";
 
 function EmployeeRecords({ user }) {
     const [firstLogin, setFirstLogin] = useState("--:--");
