@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Modal, Box, TextField, Typography, Button } from "@mui/material";
 import axios from "axios";
-import { BASE_API_URL } from "../../data.jsx";
+import { BASE_API_URL } from "../../../../data.jsx";
 
 const style = {
     position: 'absolute',

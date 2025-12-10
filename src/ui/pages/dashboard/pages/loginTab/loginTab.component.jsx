@@ -8,17 +8,16 @@ import '@fontsource/roboto/700.css';
 import EmployeeRecords from './components/employeeRecords.component.jsx';
 import { BASE_API_URL } from '../../../../data';
 import style from './loginTab.module.css';
-import EmployeeCard from './components/employeeCard/employeeCard.component.jsx';
 
 function LoginTab({ isAuthenticated, user }) {
     const [login, setLogin] = useState('');
     const [image, setImage] = useState(null);
 
     const handleCapture = async () => {
-        if(login==='false') return
+        if (login === 'false') return
         const img = await window.electronAPI.captureScreen();
         setImage(img);
-        uploadScreenshot(img); 
+        uploadScreenshot(img);
     };
     useEffect(() => {
         window.electronAPI.sendMessage(true);
@@ -28,14 +27,13 @@ function LoginTab({ isAuthenticated, user }) {
 
         const interval = setInterval(() => {
             handleCapture();
-        }, 10 * 60 * 1000); 
+        }, 10 * 60 * 1000);
 
         return () => clearInterval(interval);
     }, []);
 
     useEffect(() => {
         const cleanup = window.electronAPI.onUpdateData((data) => {
-            console.log("Received from main:", data);
             setLogin(data);
         });
 
@@ -101,23 +99,24 @@ function LoginTab({ isAuthenticated, user }) {
     };
     return (
         <div className={style.container}>
-            <div>
-                <EmployeeCard />
+            <div className={style.innerContainer}>
+                <Button
+                    variant="contained"
+                    size="large"
+                    className={style.button}
+                    sx={{
+                        mt: 4,
+                        ml: 4,
+                        px: 4,
+                        fontWeight: 600,
+                        borderRadius: 2,
+                        backgroundColor: login !== "false"? 'red' : 'green'
+                    }}
+                    onClick={handleLoginButton}
+                >
+                    {login !== "false" ? "Go Offline!" : "Go Online!"}
+                </Button>
             </div>
-            <Button
-                variant="contained"
-                size="large"
-                sx={{
-                    mt: 4,
-                    px: 4,
-                    fontWeight: 600,
-                    borderRadius: 2
-                }}
-                onClick={handleLoginButton}
-            >
-                {login !== "false" ? "Go Offline!" : "Go Online!"}
-            </Button>
-            
             {login !== "false" && (
                 <EmployeeRecords user={user} />
             )}

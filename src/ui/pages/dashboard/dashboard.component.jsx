@@ -2,7 +2,6 @@ import style from './dashboard.module.css';
 import logo from '../../assets/logo.png';
 import { useState } from 'react';
 import LoginTab from './pages/loginTab/loginTab.component.jsx';
-import ChangePasswordModal from './ChangePasswordModal.jsx';
 import Profile from './pages/profile/profile.jsx';
 import { BASE_API_URL } from '../../data.jsx';
 import {
@@ -19,11 +18,14 @@ import {
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
+import EmployeeSearch from './pages/AppBar/EmployeeSearch.jsx';
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import axios from 'axios';
+import Friends from './pages/friends/friends.component.jsx';
+import PeopleIcon from '@mui/icons-material/People';
 
 const modelStyle = {
     position: 'absolute',
@@ -40,11 +42,9 @@ const modelStyle = {
 
 function Dashboard({ isAuthenticated, user }) {
     const [page, setPage] = useState("dashboard");
-    const [passwordModal, setPasswordModal] = useState(false);
     const [modelOpen, setmodelOpen] = useState(false);
-    const handleModelOpen = () => setmodelOpen(true);
+    const [friend, setFriend] = useState(null)
     const handleModelClose = () => setmodelOpen(false);
-    console.log("user: ", user)
     const handleLogout = async () => {
         if (user.login !== 'false') {
             const config = {
@@ -98,6 +98,17 @@ function Dashboard({ isAuthenticated, user }) {
                                 primaryTypographyProps={{ variant: "h6" }}
                             />
                         </ListItemButton>
+                        <Divider />
+                        <ListItemButton onClick={() => setPage('friend')}>
+                            <ListItemIcon>
+                                <PeopleIcon />
+                            </ListItemIcon>
+                            <ListItemText
+                                sx={{ color: '#5d5949' }}
+                                primary="Friends"
+                                primaryTypographyProps={{ variant: "h6" }}
+                            />
+                        </ListItemButton>
 
                         <Divider />
 
@@ -115,8 +126,17 @@ function Dashboard({ isAuthenticated, user }) {
                     </List>
                 </div>
                 <div className={style.content}>
+                    <div className={style.appBar}>
+                        <div className={style.appBarText}>
+                            <Typography variant="h6" gutterBottom>
+                                {user.staffName}
+                            </Typography>
+                        </div>
+                        <EmployeeSearch setFriend={e => { setFriend(e); setPage('friend') }} />
+                    </div>
                     {page === 'dashboard' && <LoginTab isAuthenticated={isAuthenticated} user={user} />}
                     {page === 'profile' && <Profile user={user} />}
+                    {page === 'friend' && <Friends friend={friend} user={user} />}
                 </div>
             </div>
             <Modal
@@ -143,14 +163,6 @@ function Dashboard({ isAuthenticated, user }) {
                     </Box>
                 </Box>
             </Modal>
-
-            {/* ➤ PASSWORD CHANGE POPUP */}
-            <ChangePasswordModal
-                open={passwordModal}
-                handleClose={() => setPasswordModal(false)}
-                user={user}
-            />
-
         </div>
     );
 }

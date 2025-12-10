@@ -1,6 +1,12 @@
 .container {
-    background-color: green;
     height: 100%;
     width: 100%;
     padding: 20px;
+}
+.innerContainer{
+    display: flex;
+}
+.button{
+    height: 30px;
+    margin: 20px;
 }

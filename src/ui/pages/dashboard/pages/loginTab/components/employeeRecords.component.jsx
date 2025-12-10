@@ -42,37 +42,41 @@ function EmployeeRecords({ user }) {
         };
 
         const calculateStats = (logs) => {
-            if (logs.length === 0) return;
+    if (logs.length === 0) return;
 
-            const now = new Date();
-            let totalMs = 0;
+    const now = new Date();
+    let totalMs = 0;
 
-            logs.forEach((s) => {
-                const login = new Date(s.login);
-                const logout = s.logout ? new Date(s.logout) : now;
-                totalMs += Math.max(0, logout - login);
-            });
+    logs.forEach((s) => {
+        const login = new Date(s.login);
+        const logout = s.logout ? new Date(s.logout) : now;
+        totalMs += Math.max(0, logout - login);
+    });
 
-            setFirstLogin(new Date(logs[0].login).toLocaleTimeString());
+    setFirstLogin(new Date(logs[0].login).toLocaleTimeString());
 
-            const last = logs[logs.length - 1];
-            setLastLogin(new Date(last.login).toLocaleTimeString());
+    const last = logs[logs.length - 1];
+    setLastLogin(new Date(last.login).toLocaleTimeString());
 
-            const totalSec = Math.floor(totalMs / 1000);
-            const hrs = Math.floor(totalSec / 3600);
-            const mins = Math.floor((totalSec % 3600) / 60);
-            setTotalTime(`${hrs}h ${mins}m`);
+    const totalSec = Math.floor(totalMs / 1000);
+    const hrs = Math.floor(totalSec / 3600);
+    const mins = Math.floor((totalSec % 3600) / 60);
+    setTotalTime(`${hrs}h ${mins}m`);
 
-            if (!last.logout) {
-                const activeMs = now - new Date(last.login);
-                const s = Math.floor(activeMs / 1000);
-                const mm = Math.floor((s % 3600) / 60);
-                const ss = s % 60;
-                setActiveSession(`${mm}m ${ss}s`);
-            } else {
-                setActiveSession("0m 0s");
-            }
-        };
+    // 🔥 Active session in hours, minutes, seconds
+    if (!last.logout) {
+        const activeMs = now - new Date(last.login);
+        const s = Math.floor(activeMs / 1000);
+
+        const hh = Math.floor(s / 3600);
+        const mm = Math.floor((s % 3600) / 60);
+        const ss = s % 60;
+
+        setActiveSession(`${hh}h ${mm}m ${ss}s`);
+    } else {
+        setActiveSession("0h 0m 0s");
+    }
+};
 
         fetchLogs();
         const interval = setInterval(fetchLogs, 1000);
@@ -82,83 +86,42 @@ function EmployeeRecords({ user }) {
     return (
         <Box
             sx={{
-                width: "100%",
                 mt: 3,
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
             }}
         >
-            <Typography variant="h5" sx={{ fontWeight: 600, mb: 3 }}>
-                {user.staffName} — Work Overview
-            </Typography>
 
-            <Grid container spacing={3} justifyContent="center" sx={{ maxWidth: 900 }}>
+            <Grid container spacing={3} sx={{ maxWidth: 900 }}>
 
-                <Grid item xs={12} sm={6} md={4}>
+                <Grid item xs={12} sm={6}>
                     <Card elevation={3} sx={{ borderRadius: 3 }}>
                         <CardContent>
                             <Box display="flex" alignItems="center" gap={1}>
                                 <LoginIcon color="primary" />
                                 <Typography variant="subtitle1" fontWeight={600}>
-                                    First Login Today
+                                    First Login Today: {firstLogin}
                                 </Typography>
                             </Box>
-                            <Typography variant="h6" sx={{ mt: 1 }}>
-                                {firstLogin}
-                            </Typography>
-                        </CardContent>
-                    </Card>
-                </Grid>
-
-                <Grid item xs={12} sm={6} md={4}>
-                    <Card elevation={3} sx={{ borderRadius: 3 }}>
-                        <CardContent>
                             <Box display="flex" alignItems="center" gap={1}>
                                 <LogoutIcon color="warning" />
                                 <Typography variant="subtitle1" fontWeight={600}>
-                                    Last Login Today
+                                    Last Login Today: {lastLogin}
                                 </Typography>
                             </Box>
-                            <Typography variant="h6" sx={{ mt: 1 }}>
-                                {lastLogin}
-                            </Typography>
-                        </CardContent>
-                    </Card>
-                </Grid>
-
-                <Grid item xs={12} sm={6} md={4}>
-                    <Card elevation={3} sx={{ borderRadius: 3 }}>
-                        <CardContent>
                             <Box display="flex" alignItems="center" gap={1}>
                                 <AccessTimeIcon color="success" />
                                 <Typography variant="subtitle1" fontWeight={600}>
-                                    Total Time Worked Today
+                                    Total Time Worked Today: {totalTime}
                                 </Typography>
                             </Box>
-                            <Typography variant="h6" sx={{ mt: 1 }}>
-                                {totalTime}
-                            </Typography>
-                        </CardContent>
-                    </Card>
-                </Grid>
-
-                <Grid item xs={12} sm={6} md={4}>
-                    <Card elevation={3} sx={{ borderRadius: 3 }}>
-                        <CardContent>
                             <Box display="flex" alignItems="center" gap={1}>
                                 <TimerIcon color="secondary" />
                                 <Typography variant="subtitle1" fontWeight={600}>
-                                    Current Active Session
+                                    Current Active Session: {activeSession}
                                 </Typography>
                             </Box>
-                            <Typography variant="h6" sx={{ mt: 1 }}>
-                                {activeSession}
-                            </Typography>
                         </CardContent>
                     </Card>
                 </Grid>
-
             </Grid>
         </Box>
     );

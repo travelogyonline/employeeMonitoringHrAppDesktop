@@ -50,7 +50,6 @@ function Login({ isAuthenticated }) {
 
     return (
         <div className={style.wrapper}>
-            <div className={style.pattern}></div>
 
             <div className={style.cardWrapper}>
                 <DemoPaper>

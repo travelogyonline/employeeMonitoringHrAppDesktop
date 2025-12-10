@@ -41,3 +41,12 @@
 .read-the-docs {
   color: #888;
 }
+.oldversionContainer{
+  background-color: black;
+  color: white;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

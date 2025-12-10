@@ -1,27 +1,11 @@
 .wrapper {
     height: 100vh;
-    width: 100%;
+    width: 100vw;
     background: linear-gradient(to bottom, #ffffff 55%, #67c556 55%);
     position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
-}
-
-/* Pattern box (no image—safe to render) */
-.pattern {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 55%;
-    width: 100%;
-    background: rgba(0,0,0,0.03);
-}
-
-.cardWrapper {
-    position: absolute;
-    top: 47%;
-    transform: translateY(-50%);
 }
 
 .header {
