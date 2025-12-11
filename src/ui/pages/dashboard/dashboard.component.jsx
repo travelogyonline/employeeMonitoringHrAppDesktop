@@ -26,6 +26,7 @@ import '@fontsource/roboto/700.css';
 import axios from 'axios';
 import Friends from './pages/friends/friends.component.jsx';
 import PeopleIcon from '@mui/icons-material/People';
+import UserProfileBar from './pages/AppBar/userBar.jsx';
 
 const modelStyle = {
     position: 'absolute',
@@ -127,10 +128,8 @@ function Dashboard({ isAuthenticated, user }) {
                 </div>
                 <div className={style.content}>
                     <div className={style.appBar}>
-                        <div className={style.appBarText}>
-                            <Typography variant="h6" gutterBottom>
-                                {user.staffName}
-                            </Typography>
+                        <div className={style.appBarText} onClick={() => { setFriend(user); setPage('friend') }}>
+                            <UserProfileBar user={user} />
                         </div>
                         <EmployeeSearch setFriend={e => { setFriend(e); setPage('friend') }} />
                     </div>

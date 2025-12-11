@@ -12,12 +12,14 @@ import {
 import SendIcon from "@mui/icons-material/Send";
 import axios from "axios";
 import { BASE_API_URL } from "../../../../data";
-import Thoughts from "../AppBar/thoughts";
+import Thoughts from "./thoughts";
+import ProfileAvatar from "./profilePicture";
 
 export default function Friends({ friend, user }) {
     if (!friend) return (<h1>Please search a friend</h1>)
     const [client, setClient] = useState(null);
-    function refresh () {
+   
+    function refresh() {
         let config = {
             method: 'get',
             maxBodyLength: Infinity,
@@ -36,9 +38,6 @@ export default function Friends({ friend, user }) {
     useEffect(() => {
         refresh();
     }, [friend]);
-
-    console.log("client: ", client)
-    console.log("user: ", user)
 
     const dummyMessages = [
         { from: "me", text: "Hi there!" },
@@ -65,11 +64,7 @@ export default function Friends({ friend, user }) {
                 >
                     {/* Left Section */}
                     <Box sx={{ textAlign: "center", minWidth: 120 }}>
-                        <Avatar
-                            sx={{ width: 120, height: 120, margin: "auto", fontSize: 40 }}
-                        >
-                            {client?.staffName?.charAt(0)}
-                        </Avatar>
+                        <ProfileAvatar client={client} user={user} />
 
                         <Typography variant="h5" sx={{ mt: 2, fontWeight: 600 }}>
                             {client?.staffName}
@@ -113,7 +108,7 @@ export default function Friends({ friend, user }) {
             >
                 {friend._id === user._id ?
                     <>
-                        <Thoughts user={user} updateUser={()=>refresh()}/>
+                        <Thoughts user={user} updateUser={() => refresh()} />
                     </>
                     :
                     <>
