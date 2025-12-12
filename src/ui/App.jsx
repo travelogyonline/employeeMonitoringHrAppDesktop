@@ -4,6 +4,8 @@ import Login from './pages/login/login.component.jsx'
 import Dashboard from './pages/dashboard/dashboard.component.jsx';
 import './App.css'
 import { BASE_API_URL, APP_VERSION } from './data.jsx';
+import { UserStore } from './store/userStore.jsx';
+import { DpStore } from './store/userStore.jsx';
 import axios from 'axios';
 import quit from './assets/quit.png';
 import { Box, Paper, Typography, Button, Alert, AlertTitle, Divider } from "@mui/material";
@@ -14,12 +16,15 @@ import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import CloudDownloadIcon from "@mui/icons-material/CloudDownload"
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [hostUser, setHostUser] = useState(false);
+  const [hostDp, setHostDp] = useState(null);
   const [doesVersionMatched, setDoesVersionMatched] = useState(false);
   useEffect(() => {
     async function getUser() {
       const user = await window.electronStore.get("user");
-      if (user) setIsAuthenticated(user);
+      const dp = await window.electronStore.get("dp");
+      if (user) setHostUser(user);
+      if (dp) setHostDp(dp);
     }
     getUser();
   }, [window.electronStore.get("user")]);
@@ -36,10 +41,14 @@ function App() {
     <>
       {
         doesVersionMatched ?
-          <Routes>
-            <Route path="/" element={isAuthenticated ? <Navigate to="/dashboard" /> : <Login isAuthenticated={user => { setIsAuthenticated(user) }} />} />
-            <Route path="/dashboard" element={isAuthenticated ? <Dashboard user={isAuthenticated} isAuthenticated={user => { setIsAuthenticated(user) }} /> : <Navigate to="/" />} />
-          </Routes>
+          <UserStore.Provider value={[hostUser, setHostUser]}>
+            <DpStore.Provider value={[hostDp, setHostDp]}>
+              <Routes>
+                <Route path="/" element={hostUser ? <Navigate to="/dashboard" /> : <Login setUser={user => { setHostUser(user) }} />} />
+                <Route path="/dashboard" element={hostUser ? <Dashboard setUser={user => { setHostUser(user) }} /> : <Navigate to="/" />} />
+              </Routes>
+            </DpStore.Provider>
+          </UserStore.Provider>
           :
           <div className="oldversionContainer">
             <Box

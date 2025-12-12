@@ -1,31 +1,16 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import Avatar from "@mui/material/Avatar";
 import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
 import axios from "axios";
-import { BASE_API_URL } from "../../../../data";
+import { BASE_API_URL } from "../../../../../data";
+import { DpStore } from "../../../../../store/userStore";
 
 export default function ProfileAvatar({ client, user }) {
-    const [profilePic, setProfilePic] = useState(null)
+    const [hostDp,setHostDp] = useContext(DpStore);
 
     const clientUserId = client?._id;
     const hostUserId = user?._id;
-
-    const fetchDp = async () => {
-        try {
-            const res = await axios.get(`${BASE_API_URL}api/dp/${clientUserId}`);
-            if (res.data?.data?.length > 0) {
-                setProfilePic(res.data.data[0].profilePicture);
-            } else {
-                setProfilePic(null)
-            }
-        } catch (err) {
-        }
-    };
-
-    useEffect(() => {
-        fetchDp();
-    });
 
     const handleUpload = async (event) => {
         const file = event.target.files[0];
@@ -35,11 +20,13 @@ export default function ProfileAvatar({ client, user }) {
         data.append("image", file);
 
         try {
-            await axios.post(`http://localhost:5000/api/dp/${clientUserId}`, data, {
+            await axios.post(`${BASE_API_URL}api/dp/${clientUserId}`, data, {
                 headers: { "Content-Type": "multipart/form-data" },
-            });
-
-            fetchDp();
+            })
+                .then(async res=>{
+                    setHostDp(res.data.data.profilePicture);
+                    await window.electronStore.set("dp", res.data.data.profilePicture);
+                })
         } catch (err) {
             console.log("DP upload error:", err);
         }
@@ -48,7 +35,7 @@ export default function ProfileAvatar({ client, user }) {
     return (
         <div style={{ position: "relative", width: 140, margin: "auto" }}>
             <Avatar
-                src={profilePic || ""}
+                src={hostDp || ""}
                 sx={{
                     width: 120,
                     height: 120,
@@ -57,7 +44,7 @@ export default function ProfileAvatar({ client, user }) {
                     bgcolor: "#1976d2",
                 }}
             >
-                {!profilePic && client?.staffName?.charAt(0)}
+                {!hostDp && client?.staffName?.charAt(0)}
             </Avatar>
 
             {/* EDIT BUTTON */}

@@ -1,7 +1,7 @@
 import style from './dashboard.module.css';
 import logo from '../../assets/logo.png';
-import { useState } from 'react';
-import LoginTab from './pages/loginTab/loginTab.component.jsx';
+import { useContext, useState } from 'react';
+import LandingPage from './pages/landing/landingPage.component.jsx';
 import Profile from './pages/profile/profile.jsx';
 import { BASE_API_URL } from '../../data.jsx';
 import {
@@ -18,7 +18,7 @@ import {
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
-import EmployeeSearch from './pages/AppBar/EmployeeSearch.jsx';
+import EmployeeSearch from './components/component/EmployeeSearch.jsx';
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
@@ -26,7 +26,9 @@ import '@fontsource/roboto/700.css';
 import axios from 'axios';
 import Friends from './pages/friends/friends.component.jsx';
 import PeopleIcon from '@mui/icons-material/People';
-import UserProfileBar from './pages/AppBar/userBar.jsx';
+import UserProfileBar from './components/component/userBar.jsx';
+import { UserStore } from '../../store/userStore.jsx';
+import AppBar from './components/AppBar/appBar.jsx';
 
 const modelStyle = {
     position: 'absolute',
@@ -41,17 +43,18 @@ const modelStyle = {
 };
 
 
-function Dashboard({ isAuthenticated, user }) {
+function Dashboard({ setUser }) {
+    const [hostUser, setHostUser] = useContext(UserStore);
     const [page, setPage] = useState("dashboard");
     const [modelOpen, setmodelOpen] = useState(false);
     const [friend, setFriend] = useState(null)
     const handleModelClose = () => setmodelOpen(false);
     const handleLogout = async () => {
-        if (user.login !== 'false') {
+        if (hostUser.login !== 'false') {
             const config = {
                 method: 'patch',
                 maxBodyLength: Infinity,
-                url: `${BASE_API_URL}api/login/out/${user._id}`,
+                url: `${BASE_API_URL}api/login/out/${hostUser._id}`,
             };
 
             await axios.request(config)
@@ -63,7 +66,7 @@ function Dashboard({ isAuthenticated, user }) {
         }
         async function handleResponse() {
             await window.electronStore.delete("user");
-            isAuthenticated(false);
+            setUser(false);
         }
         handleResponse();
     }
@@ -127,15 +130,10 @@ function Dashboard({ isAuthenticated, user }) {
                     </List>
                 </div>
                 <div className={style.content}>
-                    <div className={style.appBar}>
-                        <div className={style.appBarText} onClick={() => { setFriend(user); setPage('friend') }}>
-                            <UserProfileBar user={user} />
-                        </div>
-                        <EmployeeSearch setFriend={e => { setFriend(e); setPage('friend') }} />
-                    </div>
-                    {page === 'dashboard' && <LoginTab isAuthenticated={isAuthenticated} user={user} />}
-                    {page === 'profile' && <Profile user={user} />}
-                    {page === 'friend' && <Friends friend={friend} user={user} />}
+                    <AppBar setFriend={setFriend} setPage={setPage}/>
+                    {page === 'dashboard' && <LandingPage />}
+                    {page === 'profile' && <Profile user={hostUser} />}
+                    {page === 'friend' && <Friends friend={friend} user={hostUser} />}
                 </div>
             </div>
             <Modal
@@ -145,14 +143,14 @@ function Dashboard({ isAuthenticated, user }) {
                 aria-describedby="modal-modal-description"
             >
                 <Box sx={modelStyle}>
-                    <Typography variant="h4" gutterBottom>{user.staffName}</Typography>
-                    <Typography className={style.role} variant="subtitle1" gutterBottom>{user.role}</Typography>
+                    <Typography variant="h4" gutterBottom>{hostUser.staffName}</Typography>
+                    <Typography className={style.role} variant="subtitle1" gutterBottom>{hostUser.role}</Typography>
 
                     <Typography variant="subtitle2" gutterBottom>Email</Typography>
-                    <Typography variant="body1" gutterBottom>{user.staffEmail}</Typography>
+                    <Typography variant="body1" gutterBottom>{hostUser.staffEmail}</Typography>
 
                     <Typography variant="subtitle2" gutterBottom>Phone</Typography>
-                    <Typography variant="body1" gutterBottom>{user.staffPhone}</Typography>
+                    <Typography variant="body1" gutterBottom>{hostUser.staffPhone}</Typography>
 
                     {/* ➤ NEW BUTTON AT BOTTOM */}
                     <Box sx={{ mt: 3, textAlign: "center" }}>

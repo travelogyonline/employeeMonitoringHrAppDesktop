@@ -1,0 +1,20 @@
+.appBar {
+  padding: 10px 0;
+  padding-right: 20px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.appBarText {
+  color: black;
+  padding-left: 10px;
+}
+
+.innerContainer {
+  display: flex;
+}
+
+.button {
+  height: 30px;
+  margin: 20px;
+}

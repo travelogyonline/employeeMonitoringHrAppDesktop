@@ -13,7 +13,7 @@ import {
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import EditNoteIcon from "@mui/icons-material/EditNote";
 
-import { BASE_API_URL } from "../../../../data";
+import { BASE_API_URL } from "../../../../../data";
 
 export default function Thoughts({ user, updateUser }) {
   const [thought, setThought] = useState("");

@@ -1,34 +1,14 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import axios from "axios";
+import { DpStore, UserStore } from "../../../../store/userStore";
 
-export default function UserProfileBar({ user }) {
-    const [profilePic, setProfilePic] = useState("");
-
-    console.log("user inside profile bar: ", user)
-
-    const userId = user?._id;
-    const name = user?.staffName || "User";
-
-    useEffect(() => {
-        if (!userId) return;
-
-        const fetchDp = async () => {
-            try {
-                const res = await axios.get(`http://localhost:5000/api/dp/${userId}`);
-
-                if (res.data?.data?.length > 0) {
-                    setProfilePic(res.data.data[0].profilePicture);
-                }
-            } catch (err) {
-                console.log("Error fetching profile pic:", err);
-            }
-        };
-
-        fetchDp();
-    }, [userId]);
+export default function UserProfileBar() {
+    const [hostUser, setHostUser] = useContext(UserStore);
+    const [hostDp, setHostDp] = useContext(DpStore);
+    const name = hostUser?.staffName || "User";
 
     return (
         <Box
@@ -47,7 +27,7 @@ export default function UserProfileBar({ user }) {
             }}
         >
             <Avatar
-                src={profilePic}
+                src={hostDp}
                 sx={{
                     width: 36,
                     height: 36,
@@ -55,7 +35,7 @@ export default function UserProfileBar({ user }) {
                     bgcolor: "#1976d2",
                 }}
             >
-                {!profilePic && name.charAt(0)}
+                {!hostDp && name.charAt(0)}
             </Avatar>
 
             <Box sx={{ display: "flex", flexDirection: "column", lineHeight: 1 }}>

@@ -12,8 +12,8 @@ import {
 import SendIcon from "@mui/icons-material/Send";
 import axios from "axios";
 import { BASE_API_URL } from "../../../../data";
-import Thoughts from "./thoughts";
-import ProfileAvatar from "./profilePicture";
+import Thoughts from "./components/thoughts";
+import ProfileAvatar from "./components/profilePicture";
 
 export default function Friends({ friend, user }) {
     if (!friend) return (<h1>Please search a friend</h1>)

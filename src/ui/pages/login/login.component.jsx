@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
 import Stack from '@mui/material/Stack';
@@ -7,6 +7,7 @@ import Button from '@mui/material/Button';
 import style from './login.module.css';
 import axios from 'axios';
 import { BASE_API_URL } from '../../data';
+import { DpStore } from '../../store/userStore';
 
 const DemoPaper = styled(Paper)(({ theme }) => ({
     width: 420,
@@ -16,7 +17,8 @@ const DemoPaper = styled(Paper)(({ theme }) => ({
     boxShadow: '0px 8px 25px rgba(0,0,0,0.15)'
 }));
 
-function Login({ isAuthenticated }) {
+function Login({ setUser }) {
+    const [hostDp, setHostDp] = useContext(DpStore);
     const [userid, setUserid] = useState("");
     const [password, setPassword] = useState("");
     const [userIdProps, setUserIdProps] = useState({});
@@ -40,7 +42,20 @@ function Login({ isAuthenticated }) {
                     setPasswordProps({});
                     async function handleFunction() {
                         await window.electronStore.set("user", response.data.data);
-                        isAuthenticated(response.data.data);
+                        setUser(response.data.data);
+                        try {
+                            const res = await axios.get(`${BASE_API_URL}api/dp/${response.data.data._id}`);
+
+                            if (res.data?.data?.length > 0) {
+                                setHostDp(res.data.data[0].profilePicture);
+                                await window.electronStore.set("dp", res.data.data[0].profilePicture);
+                            } else {
+                                setHostDp(null)
+                                await window.electronStore.set("dp", null);
+                            }
+                        } catch (err) {
+                            console.log("Error fetching profile pic:", err);
+                        }
                     }
                     handleFunction();
                 }
