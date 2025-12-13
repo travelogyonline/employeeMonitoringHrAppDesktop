@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   Box,
   Avatar,
@@ -10,9 +10,13 @@ import {
 } from "@mui/material";
 import ProfileInfoSection from "./ProfileInfoSection";
 import ChangePasswordModal from "./ChangePasswordModal.jsx";
+import StatusPill from "./component/statusPill.jsx";
+import  { UserStore, DpStore } from "../../../../store/userStore.jsx";
 
-const Profile = ({ user }) => {
-  if (!user) return null;
+const Profile = () => {
+  const [hostUser, setHostUser] = useContext(UserStore);
+  const [hostDp, setHostDp] = useContext(DpStore)
+  if (!hostUser) return null;
 
   const [passwordModal, setPasswordModal] = useState(false);
 
@@ -33,27 +37,38 @@ const Profile = ({ user }) => {
         >
           {/* Left: Avatar + Name */}
           <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-            <Avatar src="/default-profile.png" sx={{ width: 70, height: 70 }} />
+            <Avatar
+              src={hostDp || undefined}
+              sx={{
+                width: 70,
+                height: 70,
+                bgcolor: 'primary.main',
+                fontSize: 28,
+                fontWeight: 600,
+              }}
+            >
+              {hostUser?.staffName?.charAt(0)?.toUpperCase()}
+            </Avatar>
 
             <Box>
               <Typography variant="h5" fontWeight={600}>
-                {user.staffName}
+                {hostUser.staffName}
               </Typography>
 
               <Box
                 sx={{ display: "flex", alignItems: "center", gap: 2, mt: 1 }}
               >
                 <Typography color="text.secondary">
-                  {user.role}
+                  {hostUser.role}
                 </Typography>
 
                 <Chip
-                  label={user.staffStatus}
-                  color={user.staffStatus === "Active" ? "success" : "default"}
+                  label={hostUser.staffStatus}
+                  color={hostUser.staffStatus === "Active" ? "success" : "default"}
                   size="small"
                 />
 
-                <Chip label={user.staffID} variant="outlined" size="small" />
+                <Chip label={hostUser.staffID} variant="outlined" size="small" />
               </Box>
             </Box>
           </Box>
@@ -79,19 +94,19 @@ const Profile = ({ user }) => {
             <ProfileInfoSection
               title="Personal Information"
               fields={{
-                "First Name": user.staffName,
-                Birthday: new Date(user.dob).toDateString(),
-                "Aadhar No": user.aadhar,
-                "Blood Group": user.bloodGroup,
-                Phone: user.staffPhone,
-                Email: user.staffEmail,
-                Gender: user.gender,
-                "Mother's Name": user.motherName,
-                "Father's Name": user.fatherName,
-                "Spouse Name": user.spouseName,
-                "PF Number": user.pfNumber,
-                "ESI Number": user.esiNumber,
-                "Physically Challenged": user.physicallyChallenged,
+                "First Name": hostUser.staffName,
+                Birthday: new Date(hostUser.dob).toDateString(),
+                "Aadhar No": hostUser.aadhar,
+                "Blood Group": hostUser.bloodGroup,
+                Phone: hostUser.staffPhone,
+                Email: hostUser.staffEmail,
+                Gender: hostUser.gender,
+                "Mother's Name": hostUser.motherName,
+                "Father's Name": hostUser.fatherName,
+                "Spouse Name": hostUser.spouseName,
+                "PF Number": hostUser.pfNumber,
+                "ESI Number": hostUser.esiNumber,
+                "Physically Challenged": hostUser.physicallyChallenged,
               }}
             />
 
@@ -100,13 +115,13 @@ const Profile = ({ user }) => {
             <ProfileInfoSection
               title="Professional Information"
               fields={{
-                Designation: user.designation,
-                Role: user.role,
-                "Date of Joining": new Date(user.doj).toDateString(),
-                "Staff Type": user.staffType,
-                "Staff Status": user.staffStatus,
-                "Login Status": user.login,
-                "UAN Number": user.uanNumber,
+                Designation: hostUser.designation,
+                Role: hostUser.role,
+                "Date of Joining": new Date(hostUser.doj).toDateString(),
+                "Staff Type": hostUser.staffType,
+                "Staff Status": hostUser.staffStatus,
+                "Login Status": hostUser.login==='false'?<StatusPill status={false} />:<StatusPill status={true} />,
+                "UAN Number": hostUser.uanNumber,
               }}
             />
 
@@ -115,17 +130,17 @@ const Profile = ({ user }) => {
             <ProfileInfoSection
               title="Address Information"
               fields={{
-                "Address Line 1 (Present)": user.addressLine1Present,
-                "Address Line 2 (Present)": user.addressLine2Present,
-                "City (Present)": user.addressCityPresent,
-                "State (Present)": user.addressStatePresent,
-                "Pin (Present)": user.addressPinPresent,
+                "Address Line 1 (Present)": hostUser.addressLine1Present,
+                "Address Line 2 (Present)": hostUser.addressLine2Present,
+                "City (Present)": hostUser.addressCityPresent,
+                "State (Present)": hostUser.addressStatePresent,
+                "Pin (Present)": hostUser.addressPinPresent,
 
-                "Address Line 1 (Permanent)": user.addressLine1Permanent,
-                "Address Line 2 (Permanent)": user.addressLine2Permanent,
-                "City (Permanent)": user.addressCityPermanent,
-                "State (Permanent)": user.addressStatePermanent,
-                "Pin (Permanent)": user.addressPinPermanent,
+                "Address Line 1 (Permanent)": hostUser.addressLine1Permanent,
+                "Address Line 2 (Permanent)": hostUser.addressLine2Permanent,
+                "City (Permanent)": hostUser.addressCityPermanent,
+                "State (Permanent)": hostUser.addressStatePermanent,
+                "Pin (Permanent)": hostUser.addressPinPermanent,
               }}
             />
           </Paper>
@@ -136,7 +151,7 @@ const Profile = ({ user }) => {
       <ChangePasswordModal
         open={passwordModal}
         handleClose={() => setPasswordModal(false)}
-        user={user}
+        user={hostUser}
       />
     </Box>
   );

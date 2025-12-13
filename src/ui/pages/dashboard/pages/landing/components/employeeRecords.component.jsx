@@ -18,7 +18,6 @@ function EmployeeRecords({ user }) {
     const [firstLogin, setFirstLogin] = useState("--:--");
     const [lastLogin, setLastLogin] = useState("--:--");
     const [totalTime, setTotalTime] = useState("0h 0m");
-    const [activeSession, setActiveSession] = useState("0m 0s");
 
     useEffect(() => {
         if (!user?._id) return;
@@ -62,20 +61,6 @@ function EmployeeRecords({ user }) {
     const hrs = Math.floor(totalSec / 3600);
     const mins = Math.floor((totalSec % 3600) / 60);
     setTotalTime(`${hrs}h ${mins}m`);
-
-    // 🔥 Active session in hours, minutes, seconds
-    if (!last.logout) {
-        const activeMs = now - new Date(last.login);
-        const s = Math.floor(activeMs / 1000);
-
-        const hh = Math.floor(s / 3600);
-        const mm = Math.floor((s % 3600) / 60);
-        const ss = s % 60;
-
-        setActiveSession(`${hh}h ${mm}m ${ss}s`);
-    } else {
-        setActiveSession("0h 0m 0s");
-    }
 };
 
         fetchLogs();
@@ -111,12 +96,6 @@ function EmployeeRecords({ user }) {
                                 <AccessTimeIcon color="success" />
                                 <Typography variant="subtitle1" fontWeight={600}>
                                     Total Time Worked Today: {totalTime}
-                                </Typography>
-                            </Box>
-                            <Box display="flex" alignItems="center" gap={1}>
-                                <TimerIcon color="secondary" />
-                                <Typography variant="subtitle1" fontWeight={600}>
-                                    Current Active Session: {activeSession}
                                 </Typography>
                             </Box>
                         </CardContent>

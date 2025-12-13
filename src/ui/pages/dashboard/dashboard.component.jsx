@@ -132,7 +132,7 @@ function Dashboard({ setUser }) {
                 <div className={style.content}>
                     <AppBar setFriend={setFriend} setPage={setPage}/>
                     {page === 'dashboard' && <LandingPage />}
-                    {page === 'profile' && <Profile user={hostUser} />}
+                    {page === 'profile' && <Profile />}
                     {page === 'friend' && <Friends friend={friend} user={hostUser} />}
                 </div>
             </div>

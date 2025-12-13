@@ -14,11 +14,12 @@ import axios from "axios";
 import { BASE_API_URL } from "../../../../data";
 import Thoughts from "./components/thoughts";
 import ProfileAvatar from "./components/profilePicture";
+import Album from "./components/album";
 
 export default function Friends({ friend, user }) {
     if (!friend) return (<h1>Please search a friend</h1>)
     const [client, setClient] = useState(null);
-   
+
     function refresh() {
         let config = {
             method: 'get',
@@ -29,7 +30,26 @@ export default function Friends({ friend, user }) {
 
         axios.request(config)
             .then((response) => {
-                setClient(response.data.data)
+                let config = {
+                    method: 'get',
+                    maxBodyLength: Infinity,
+                    url: `${BASE_API_URL}api/dp/${friend._id}`,
+                    headers: {}
+                };
+                axios.request(config)
+                    .then((res) => {
+                        let newClient = {
+                            ...response.data.data
+                        }
+                        if (res.data.data[0]) {
+                            newClient = {
+                                ...newClient,
+                                profilePicture: res.data.data[0].profilePicture,
+                            }
+                        }
+                        setClient(newClient)
+
+                    })
             })
             .catch((error) => {
                 console.log(error);
@@ -91,6 +111,9 @@ export default function Friends({ friend, user }) {
                     <Typography><b>My thoughts!</b></Typography>
                     <Typography>{client?.myThoughts}</Typography>
                 </Box>}
+
+                <Divider sx={{ my: 3 }} />
+                <Album friend={client} />
 
             </Paper>
 

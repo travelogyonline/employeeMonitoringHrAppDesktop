@@ -6,7 +6,7 @@ import { UserStore } from '../../../../store/userStore';
 import axios from 'axios';
 import Button from "@mui/material/Button";
 import { BASE_API_URL } from '../../../../data';
-import GlassSwitch from '../component/switch/glassSwitch';
+import CurrentSession from '../component/currentSession';
 
 export default function AppBar({ setFriend, setPage }) {
     const [hostUser, setHostUser] = useContext(UserStore);
@@ -21,7 +21,6 @@ export default function AppBar({ setFriend, setPage }) {
             url: `${BASE_API_URL}api/login/${apiHelper}/${hostUser._id}`,
             headers: {}
         };
-        console.log("hostUser: ", hostUser)
 
         await axios.request(config)
             .then((response) => {
@@ -54,13 +53,14 @@ export default function AppBar({ setFriend, setPage }) {
                 <UserProfileBar />
             </div>
             <div className={style.innerContainer}>
+                <CurrentSession />
                 <Button
                     variant="contained"
                     size="large"
                     className={style.button}
                     sx={{
-                        mt: 4,
-                        ml: 4,
+                        // mt: 4,
+                        mr: 4,
                         px: 4,
                         fontWeight: 600,
                         borderRadius: 2,
@@ -70,9 +70,8 @@ export default function AppBar({ setFriend, setPage }) {
                 >
                     {status !== "false" ? "Go Offline!" : "Go Online!"}
                 </Button>
+                <EmployeeSearch setFriend={e => { setFriend(e); setPage('friend') }} />
             </div>
-            <GlassSwitch value={status==='false'? false:true} onChange={(v) => setStatus(`${v}`)} />
-            <EmployeeSearch setFriend={e => { setFriend(e); setPage('friend') }} />
         </div>
 
     )
