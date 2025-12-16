@@ -1,24 +1,24 @@
 import React, { useEffect, useState } from "react";
 import {
     Box,
-    Avatar,
     Typography,
     Divider,
-    TextField,
-    IconButton,
     Paper,
-    Stack
 } from "@mui/material";
-import SendIcon from "@mui/icons-material/Send";
 import axios from "axios";
 import { BASE_API_URL } from "../../../../data";
 import Thoughts from "./components/thoughts";
 import ProfileAvatar from "./components/profilePicture";
 import Album from "./components/album";
+import AlbumImageUploader from "./components/AlbumImageUploader";
+import ChatBox from "./components/chatBox/chatBox";
 
 export default function Friends({ friend, user }) {
     if (!friend) return (<h1>Please search a friend</h1>)
+    const [imageRefresher, setImageRefresh] = useState(null);
     const [client, setClient] = useState(null);
+
+    console.log("image refresh: ", imageRefresher)
 
     function refresh() {
         let config = {
@@ -58,14 +58,6 @@ export default function Friends({ friend, user }) {
     useEffect(() => {
         refresh();
     }, [friend]);
-
-    const dummyMessages = [
-        { from: "me", text: "Hi there!" },
-        { from: "friend", text: "Hello! How are you?" },
-        { from: "me", text: "All good, working on the new chat module 😄" },
-        { from: "friend", text: "Nice! Let me know when it's done!" }
-    ];
-
 
     return (
         <Box sx={{ display: "flex", p: 2, gap: 2 }}>
@@ -113,7 +105,7 @@ export default function Friends({ friend, user }) {
                 </Box>}
 
                 <Divider sx={{ my: 3 }} />
-                <Album friend={client} />
+                <Album friend={client} user={user} imageRefresher={imageRefresher}/>
 
             </Paper>
 
@@ -132,63 +124,10 @@ export default function Friends({ friend, user }) {
                 {friend._id === user._id ?
                     <>
                         <Thoughts user={user} updateUser={() => refresh()} />
+                        <AlbumImageUploader refresh={()=>setImageRefresh(Math.floor(Math.random() * 1000))} />
                     </>
                     :
-                    <>
-                        <Typography
-                            variant="h6"
-                            sx={{ mb: 2, fontWeight: 600, borderBottom: "1px solid #ddd", pb: 1 }}
-                        >
-                            Chat with {client?.staffName}
-                        </Typography>
-
-                        {/* Chat Messages Area */}
-                        <Box
-                            sx={{
-                                flex: 1,
-                                overflowY: "auto",
-                                display: "flex",
-                                flexDirection: "column",
-                                gap: 1,
-                                px: 1
-                            }}
-                        >
-                            {dummyMessages.map((msg, index) => (
-                                <Box
-                                    key={index}
-                                    sx={{
-                                        display: "flex",
-                                        justifyContent: msg.from === "me" ? "flex-end" : "flex-start"
-                                    }}
-                                >
-                                    <Box
-                                        sx={{
-                                            bgcolor: msg.from === "me" ? "#1976d2" : "#e0e0e0",
-                                            color: msg.from === "me" ? "#fff" : "#000",
-                                            p: 1.2,
-                                            borderRadius: 2,
-                                            maxWidth: "40%"
-                                        }}
-                                    >
-                                        {msg.text}
-                                    </Box>
-                                </Box>
-                            ))}
-                        </Box>
-
-                        {/* Message Input */}
-                        <Stack direction="row" spacing={1} sx={{ mt: 1 }}>
-                            <TextField
-                                fullWidth
-                                placeholder="Type a message..."
-                                variant="outlined"
-                                size="small"
-                            />
-                            <IconButton color="primary">
-                                <SendIcon />
-                            </IconButton>
-                        </Stack>
-                    </>
+                    <ChatBox client={client}/>
                 }
             </Paper>
         </Box>
