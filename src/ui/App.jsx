@@ -78,23 +78,58 @@ function App() {
                 >
                   <AlertTitle><strong>Update Required</strong></AlertTitle>
                   You are using an outdated version of the application.
-                  Please follow the steps below to update to the latest release.
+                  Please follow the steps below to update safely.
                 </Alert>
 
-                {/* Step 1 */}
+                {/* Step 1 — DOWNLOAD */}
                 <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 2 }}>
-                  <PowerSettingsNewIcon color="error" sx={{ fontSize: 32 }} />
+                  <CloudDownloadIcon color="primary" sx={{ fontSize: 32 }} />
                   <Box>
                     <Typography variant="h6" fontWeight={700}>
-                      Step 1 — Quit the App Completely
+                      Step 1 — Download the Latest Version
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                      Go to the system tray and click <strong>Quit Completely</strong>.
+                      Download the newest version first. Do not remove the old version
+                      until the download is complete.
                     </Typography>
                   </Box>
                 </Box>
 
-                {/* Screenshot */}
+                <Button
+                  variant="contained"
+                  color="primary"
+                  endIcon={<OpenInNewIcon />}
+                  sx={{
+                    mb: 3,
+                    width: "100%",
+                    borderRadius: "12px",
+                    py: 1.2,
+                    fontSize: "16px",
+                    fontWeight: 600,
+                  }}
+                  onClick={() =>
+                    window.open("http://monitor.travelogy.online", "_blank")
+                  }
+                >
+                  Download Latest Version
+                </Button>
+
+                <Divider sx={{ my: 3 }} />
+
+                {/* Step 2 — QUIT */}
+                <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 2 }}>
+                  <PowerSettingsNewIcon color="error" sx={{ fontSize: 32 }} />
+                  <Box>
+                    <Typography variant="h6" fontWeight={700}>
+                      Step 2 — Quit the App Completely
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      After the download finishes, go to the system tray and select
+                      <strong> Quit Completely</strong>.
+                    </Typography>
+                  </Box>
+                </Box>
+
                 <Box sx={{ display: "flex", justifyContent: "center", my: 2 }}>
                   <img
                     src={quit}
@@ -109,53 +144,23 @@ function App() {
 
                 <Divider sx={{ my: 3 }} />
 
-                {/* Step 2 */}
-                <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 3 }}>
+                {/* Step 3 — REMOVE */}
+                <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
                   <DeleteForeverIcon sx={{ fontSize: 32, color: "#8b0000" }} />
                   <Box>
                     <Typography variant="h6" fontWeight={700}>
-                      Step 2 — Remove Old Installer
+                      Step 3 — Remove the Old Installer
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                      Delete the old EXE file from your system.
+                      Once the new version is downloaded and the app is closed,
+                      delete the old installer (EXE) from your system. <b>Only then open the new version</b>.
                     </Typography>
                   </Box>
                 </Box>
-
-                <Divider sx={{ my: 3 }} />
-
-                {/* Step 3 */}
-                <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-                  <CloudDownloadIcon color="primary" sx={{ fontSize: 32 }} />
-                  <Box>
-                    <Typography variant="h6" fontWeight={700}>
-                      Step 3 — Download Latest Version
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      Click below to download the newest release.
-                    </Typography>
-                  </Box>
-                </Box>
-
-                <Button
-                  variant="contained"
-                  color="primary"
-                  endIcon={<OpenInNewIcon />}
-                  sx={{
-                    mt: 3,
-                    width: "100%",
-                    borderRadius: "12px",
-                    py: 1.2,
-                    fontSize: "16px",
-                    fontWeight: 600,
-                  }}
-                  onClick={() => window.open("http://monitor.travelogy.online", "_blank")}
-                >
-                  Download Latest Version
-                </Button>
               </Paper>
             </Box>
           </div>
+
       }
     </>
   )

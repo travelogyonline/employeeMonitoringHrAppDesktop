@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, desktopCapturer, nativeImage, screen, Tray, Menu, powerMonitor } from 'electron';
+import { app, BrowserWindow, Notification, ipcMain, desktopCapturer, nativeImage, screen, Tray, Menu, powerMonitor } from 'electron';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import axios from 'axios';
@@ -10,6 +10,7 @@ import Registry from "winreg";
 let tray = null;
 let win = null;
 let isResumedFromSleep = false;
+let isWindowFocused = true;
 
 const store = new Store();
 
@@ -107,8 +108,9 @@ ipcMain.handle('capture-screen', async () => {
 
 function createWindow() {
     win = new BrowserWindow({
-        width: 900,
-        height: 600,
+        // width: 900,
+        // height: 600,
+        // fullscreen: true,
         autoHideMenuBar: true,
         webPreferences: {
             preload: path.join(__dirname, 'preload.js'),
@@ -117,6 +119,8 @@ function createWindow() {
             // devTools: false,
         },
     });
+
+    win.maximize();
 
     if (process.env.NODE_ENV === 'development') {
         win.loadURL('http://localhost:5173');
@@ -168,7 +172,7 @@ function getWindowsStartupPath(appName) {
 }
 
 app.whenReady().then(async () => {
-    const appName = "EmployeeMonitoringApp";
+    const appName = "Travel Buddy";
     const currentExePath = process.execPath;
 
     const appLauncher = new AutoLaunch({
@@ -191,6 +195,12 @@ app.whenReady().then(async () => {
         console.log("Auto-launch path correct.");
     }
     createWindow();
+    win.on("focus", () => {
+        isWindowFocused = true;
+    })
+    win.on("blur", () => {
+        isWindowFocused = false;
+    })
     console.log("path: ", process.execPath)
     tray = new Tray(path.join(__dirname, "icon.png"));
 
@@ -253,6 +263,26 @@ app.whenReady().then(async () => {
             store.delete("pendingStatus");
         }
         win.show();
+    });
+});
+
+ipcMain.on("show-notification", (event, payload) => {
+    if (isWindowFocused) return; // ✅ BLOCK notification
+
+    if (!Notification.isSupported()) return;
+
+    console.log("payload: ", payload)
+
+    const notification = new Notification({
+        title: payload.title,
+        body: payload.body
+    });
+
+    notification.show();
+
+    notification.on("click", () => {
+        win.show();
+        win.focus();
     });
 });
 

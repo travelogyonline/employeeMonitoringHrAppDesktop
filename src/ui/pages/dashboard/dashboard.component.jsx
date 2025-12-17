@@ -18,7 +18,6 @@ import {
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
-import EmployeeSearch from './components/component/EmployeeSearch.jsx';
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
@@ -26,9 +25,9 @@ import '@fontsource/roboto/700.css';
 import axios from 'axios';
 import Friends from './pages/friends/friends.component.jsx';
 import PeopleIcon from '@mui/icons-material/People';
-import UserProfileBar from './components/component/userBar.jsx';
 import { UserStore } from '../../store/userStore.jsx';
 import AppBar from './components/AppBar/appBar.jsx';
+import ChatRoom from './pages/ChatRoom/chatRoom.jsx';
 
 const modelStyle = {
     position: 'absolute',
@@ -116,6 +115,19 @@ function Dashboard({ setUser }) {
 
                         <Divider />
 
+                        <ListItemButton onClick={() => setPage('chatRoom')}>
+                            <ListItemIcon>
+                                <LogoutIcon />
+                            </ListItemIcon>
+                            <ListItemText
+                                sx={{ color: '#5d5949' }}
+                                primary="Chat Room"
+                                primaryTypographyProps={{ variant: "h6" }}
+                            />
+                        </ListItemButton>
+
+                        <Divider />
+
                         <ListItemButton onClick={handleLogout}>
                             <ListItemIcon>
                                 <LogoutIcon />
@@ -133,6 +145,7 @@ function Dashboard({ setUser }) {
                     <AppBar setFriend={setFriend} setPage={setPage}/>
                     {page === 'dashboard' && <LandingPage />}
                     {page === 'profile' && <Profile />}
+                    {page === 'chatRoom' && <ChatRoom />}
                     {page === 'friend' && <Friends friend={friend} user={hostUser} />}
                 </div>
             </div>
