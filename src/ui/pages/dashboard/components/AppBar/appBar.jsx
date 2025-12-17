@@ -39,12 +39,12 @@ export default function AppBar({ setFriend, setPage }) {
                         handleFunction();
                     })
                     .catch((error) => {
-                        console.log(error);
+                        // console.log(error);
                     });
                 setStatus(status === 'false' ? 'true' : 'false')
             })
             .catch((error) => {
-                console.log(error);
+                // console.log(error);
             });
     }
     return (

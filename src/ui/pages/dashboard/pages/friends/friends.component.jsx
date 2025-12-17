@@ -18,8 +18,6 @@ export default function Friends({ friend, user }) {
     const [imageRefresher, setImageRefresh] = useState(null);
     const [client, setClient] = useState(null);
 
-    console.log("image refresh: ", imageRefresher)
-
     function refresh() {
         let config = {
             method: 'get',
@@ -52,7 +50,7 @@ export default function Friends({ friend, user }) {
                     })
             })
             .catch((error) => {
-                console.log(error);
+                // console.log(error);
             });
     }
     useEffect(() => {

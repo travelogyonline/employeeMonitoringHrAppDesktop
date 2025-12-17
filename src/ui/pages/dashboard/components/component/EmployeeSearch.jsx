@@ -22,7 +22,7 @@ export default function EmployeeSearch({setFriend}) {
         setLoading(false);
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
         setLoading(false);
       });
   }, []);

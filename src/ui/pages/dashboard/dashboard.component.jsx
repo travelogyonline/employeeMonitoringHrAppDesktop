@@ -61,7 +61,7 @@ function Dashboard({ setUser }) {
                 .then((res) => {
                 })
                 .catch((error) => {
-                    console.log(error);
+                    // console.log(error);
                 });
         }
         async function handleResponse() {

@@ -36,7 +36,7 @@ function CurrentSession() {
 
                 calculateStats(logs);
             } catch (err) {
-                console.error("Fetch error:", err);
+                // console.error("Fetch error:", err);
             }
         };
 

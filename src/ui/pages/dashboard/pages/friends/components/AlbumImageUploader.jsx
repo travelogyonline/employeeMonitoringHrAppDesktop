@@ -4,6 +4,7 @@ import { Box, Typography, Button, CircularProgress, Alert, IconButton } from "@m
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import ImageIcon from "@mui/icons-material/Image";
 import { UserStore } from "../../../../../store/userStore";
+import { BASE_API_URL } from "../../../../../data";
 
 export default function AlbumImageUploader({refresh}) {
   const [hostUser] = useContext(UserStore);
@@ -35,7 +36,7 @@ export default function AlbumImageUploader({refresh}) {
       formData.append("image", file);
 
       await axios.post(
-        `http://localhost:5000/api/album/${hostUser._id}`,
+        `${BASE_API_URL}api/album/${hostUser._id}`,
         formData,
         { headers: { "Content-Type": "multipart/form-data" } }
       );

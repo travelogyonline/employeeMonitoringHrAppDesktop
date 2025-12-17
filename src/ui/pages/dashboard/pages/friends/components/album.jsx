@@ -13,7 +13,6 @@ function Album({ friend, user, imageRefresher }) {
     const [images, setImages] = useState([]);
     const [openAlbum, setOpenAlbum] = useState(false);
     const [zoomImage, setZoomImage] = useState(null);
-    console.log("images: ", images);
     useEffect(() => {
         let config = {
             method: 'get',
@@ -23,11 +22,10 @@ function Album({ friend, user, imageRefresher }) {
             .then((response) => {
                 if (response.data.data.length > 0) {
                     setImages(response.data.data[0].album)
-                    console.log("album: ", response.data.data[0].album)
                 }
             })
             .catch((error) => {
-                console.log(error);
+                // console.log(error);
             });
 
     }, [friend, imageRefresher]);
