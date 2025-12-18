@@ -14,6 +14,13 @@ export default function AppBar({ setFriend, setPage }) {
     useEffect(() => {
         setStatus(hostUser.login);
     }, []);
+    useEffect(() => {
+            const cleanup = window.electronAPI.onUpdateData((data) => {
+                setStatus(hostUser.login);
+            });
+    
+            return cleanup;
+        }, []);
     const handleWorkingStatus = async () => {
         const apiHelper = status !== 'false' ? "out" : "in";
         let config = {
@@ -53,7 +60,7 @@ export default function AppBar({ setFriend, setPage }) {
                 <UserProfileBar />
             </div>
             <div className={style.innerContainer}>
-                <CurrentSession />
+                {status!=='false' && <CurrentSession />}
                 <Button
                     variant="contained"
                     size="large"

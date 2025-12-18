@@ -1,6 +1,7 @@
 body {
   margin: 0;
   overflow-x: hidden;
+  /* background-color: red; */
 }
 
 .sidebar {
@@ -52,6 +53,17 @@ body {
   margin: 10px;
 }
 
-.content{
+.content {
   width: 100%;
+  max-height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  /* Hide scrollbar – Firefox */
+  scrollbar-width: none;
+}
+
+/* Hide scrollbar – Chrome, Edge, Safari */
+.content::-webkit-scrollbar {
+  display: none;
 }

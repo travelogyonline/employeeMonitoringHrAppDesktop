@@ -7,10 +7,13 @@ import EmployeeRecords from './components/employeeRecords.component.jsx';
 import { BASE_API_URL } from '../../../../data.jsx';
 import style from './landingPage.module.css';
 import { UserStore } from '../../../../store/userStore.jsx';
+import axios from 'axios';
 
 function LandingPage() {
     const [hostUser, setHostUser] = useContext(UserStore)
     const [image, setImage] = useState(null);
+
+    console.log("hostUser: ", hostUser);
 
     const handleCapture = async () => {
         if (status === 'false') return
@@ -30,13 +33,6 @@ function LandingPage() {
         }, 10 * 60 * 1000);
 
         return () => clearInterval(interval);
-    }, []);
-    useEffect(() => {
-        const cleanup = window.electronAPI.onUpdateData((data) => {
-            setStatus(data);
-        });
-
-        return cleanup;
     }, []);
 
     const uploadScreenshot = async (img) => {

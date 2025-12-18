@@ -222,21 +222,21 @@ app.whenReady().then(async () => {
         win.show();
         win.focus();
     });
-    powerMonitor.on("suspend", () => {
+    powerMonitor.on("suspend", async () => {
         console.log("System is going to sleep");
         isResumedFromSleep = false;
-        handleLogout();
+        await handleLogout();
     });
 
-    powerMonitor.on("lock-screen", () => {
+    powerMonitor.on("lock-screen", async () => {
         console.log("System is locked");
-        store.set("pendingStatus", "false");
-        handleLogout();
+        store.set("pendingStatus", "true");
+        await handleLogout();
     });
 
     powerMonitor.on("resume", () => {
-        console.log("isResumedFromSleep: ", isResumedFromSleep)
         function isRendererResumed() {
+            console.log("isResumedFromSleep: ", isResumedFromSleep)
             if (isResumedFromSleep) {
                 updateReactStateFromMain('false');
                 console.log("Screen resumed from sleep");
@@ -259,7 +259,7 @@ app.whenReady().then(async () => {
         const flag = store.get("pendingStatus");
         console.log("Screen unlocked: ", flag);
         if (flag) {
-            updateReactStateFromMain(flag);
+            updateReactStateFromMain(false);
             store.delete("pendingStatus");
         }
         win.show();

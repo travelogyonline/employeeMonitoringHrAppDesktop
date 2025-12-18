@@ -1,18 +1,4 @@
-// import { useState } from "react";
-// import ChatList from "./components/chatList";
-
-// function ChatRoom() {
-//   const [activeRoom, setActiveRoom] = useState([]);
-//   return (
-//     <div>
-//       <ChatList activeRoom={activeRoom} setActiveRoom={(v)=>setActiveRoom(v)}/>
-//     </div>
-//   )
-// }
-
-// export default ChatRoom;
-
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   Box,
   Avatar,
@@ -23,172 +9,225 @@ import {
   ListItem,
   ListItemAvatar,
   ListItemText,
-  Divider,
-  Badge,
+  Paper,
 } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
+import SearchIcon from "@mui/icons-material/Search";
 
-// ---------------- DUMMY DATA ----------------
-const users = [
-  {
-    id: 1,
-    name: "Mavis Barry",
-    avatar: "https://i.pravatar.cc/150?img=1",
-    online: true,
-    lastMessage: "Yes, I did and sent...",
-    time: "12:30",
-  },
-  {
-    id: 2,
-    name: "Gita Zahara",
-    avatar: "https://i.pravatar.cc/150?img=2",
-    online: false,
-    lastMessage: "Ok, thanks",
-    time: "12:30",
-  },
-  {
-    id: 3,
-    name: "Mehran Malekpour",
-    avatar: "https://i.pravatar.cc/150?img=3",
-    online: false,
-    lastMessage: "Before the class",
-    time: "12:30",
-  },
+/* ---------------- DUMMY DATA ---------------- */
+const friends = Array.from({ length: 20 }).map((_, i) => ({
+  id: i + 1,
+  name: `User ${i + 1}`,
+}));
+
+const initialMessages = [
+  { id: 1, sender: "them", text: "Hey!" },
+  { id: 2, sender: "me", text: "Hello!" },
+  { id: 3, sender: "them", text: "How are you doing!?" },
+  { id: 4, sender: "me", text: "I am doing good! What about you?" },
+  { id: 5, sender: "them", text: "All Good..." },
 ];
 
-const messages = [
-  {
-    id: 1,
-    sender: "them",
-    text: "Hello, how are you? Shall we have a meeting?",
-    time: "09:12",
-  },
-  {
-    id: 2,
-    sender: "me",
-    text: "Of course! I will come to a meeting with you in 15 minutes",
-    time: "09:20",
-  },
-  {
-    id: 3,
-    sender: "them",
-    text: "Please send photos too",
-    time: "09:30",
-  },
-];
+export default function ChatBox() {
+  const [messages, setMessages] = useState(initialMessages);
+  const [input, setInput] = useState("");
+  const [activeUser, setActiveUser] = useState(friends[0]);
 
-// ---------------- COMPONENT ----------------
-export default function ChatRoom() {
-  const [selectedUser, setSelectedUser] = useState(users[0]);
-  const [chatMessages, setChatMessages] = useState(messages);
-  const [text, setText] = useState("");
+  const bottomRef = useRef(null);
 
-  const handleSend = () => {
-    if (!text.trim()) return;
+  /* Auto-scroll on new message */
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
-    setChatMessages([
-      ...chatMessages,
-      { id: Date.now(), sender: "me", text, time: "Now" },
+  const sendMessage = () => {
+    if (!input.trim()) return;
+    setMessages((prev) => [
+      ...prev,
+      { id: Date.now(), sender: "me", text: input },
     ]);
-    setText("");
+    setInput("");
   };
 
   return (
-    <Box display="flex" height="100vh" bgcolor="#f5f7fb">
-      {/* LEFT PANEL */}
-      <Box width={320} bgcolor="#fff" borderRight="1px solid #eee">
-        <Box p={2}>
-          <TextField fullWidth size="small" placeholder="Search" />
-        </Box>
-        <List>
-          {users.map((user) => (
-            <ListItem
-              key={user.id}
-              button
-              selected={selectedUser.id === user.id}
-              onClick={() => setSelectedUser(user)}
-            >
-              <ListItemAvatar>
-                <Badge
-                  color="success"
-                  variant="dot"
-                  overlap="circular"
-                  invisible={!user.online}
-                >
-                  <Avatar src={user.avatar} />
-                </Badge>
-              </ListItemAvatar>
-              <ListItemText
-                primary={user.name}
-                secondary={user.lastMessage}
-              />
-              <Typography variant="caption">{user.time}</Typography>
-            </ListItem>
-          ))}
-        </List>
-      </Box>
-
-      {/* RIGHT PANEL */}
-      <Box flex={1} display="flex" flexDirection="column">
-        {/* HEADER */}
+    <Box
+      sx={{
+        height: "90vh",
+        backgroundColor: "#FFF2C2",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <Paper
+        elevation={4}
+        sx={{
+          width: "95%",
+          height: "90%",
+          borderRadius: 4,
+          display: "flex",
+          overflow: "hidden",
+          backgroundColor: "#FFF6D9",
+        }}
+      >
+        {/* ================= LEFT SIDEBAR ================= */}
         <Box
-          display="flex"
-          alignItems="center"
+          width={280}
           p={2}
-          bgcolor="#fff"
-          borderBottom="1px solid #eee"
+          bgcolor="#FBE7A1"
+          display="flex"
+          flexDirection="column"
         >
-          <Avatar src={selectedUser.avatar} />
-          <Box ml={2}>
-            <Typography fontWeight={600}>{selectedUser.name}</Typography>
-            <Typography variant="caption" color="green">
-              {selectedUser.online ? "Online" : "Offline"}
-            </Typography>
+          {/* Search */}
+          <Paper
+            sx={{
+              mb: 2,
+              display: "flex",
+              alignItems: "center",
+              p: 1,
+              borderRadius: 2,
+              bgcolor: "#FFFFFF",
+            }}
+          >
+            <SearchIcon fontSize="small" />
+            <TextField
+              placeholder="Search Friend"
+              variant="standard"
+              InputProps={{ disableUnderline: true }}
+              sx={{ ml: 1, flex: 1 }}
+            />
+          </Paper>
+
+          {/* Friends List */}
+          <Box
+            flex={1}
+            sx={{
+              overflowY: "auto",
+              overflowX: "hidden",
+              scrollbarWidth: "none",
+              "&::-webkit-scrollbar": { display: "none" },
+            }}
+          >
+            <List>
+              {friends.map((friend) => {
+                const isActive = activeUser.id === friend.id;
+
+                return (
+                  <ListItem
+                    key={friend.id}
+                    onClick={() => setActiveUser(friend)}
+                    sx={{
+                      mb: 1,
+                      borderRadius: 2,
+                      cursor: "pointer",
+                      bgcolor: isActive ? "#FFFDF4" : "#FFF6D9",
+                      border: isActive
+                        ? "2px solid #2F5BFF"
+                        : "1px solid #F0E2A0",
+                      transition: "0.2s",
+                      "&:hover": {
+                        bgcolor: "#FFFDF4",
+                      },
+                    }}
+                  >
+                    <ListItemAvatar>
+                      <Avatar sx={{ bgcolor: "#2F5BFF" }}>
+                        {friend.name[0]}
+                      </Avatar>
+                    </ListItemAvatar>
+                    <ListItemText primary={friend.name} />
+                  </ListItem>
+                );
+              })}
+            </List>
           </Box>
         </Box>
 
-        {/* MESSAGES */}
-        <Box flex={1} p={2} overflow="auto">
-          {chatMessages.map((msg) => (
-            <Box
-              key={msg.id}
-              display="flex"
-              justifyContent={msg.sender === "me" ? "flex-end" : "flex-start"}
-              mb={2}
-            >
-              <Box
-                maxWidth="60%"
-                p={1.5}
-                borderRadius={2}
-                bgcolor={msg.sender === "me" ? "#6c63ff" : "#fff"}
-                color={msg.sender === "me" ? "#fff" : "#000"}
-                boxShadow={1}
-              >
-                <Typography variant="body2">{msg.text}</Typography>
-                <Typography variant="caption" display="block" align="right">
-                  {msg.time}
-                </Typography>
-              </Box>
+        {/* ================= RIGHT CHAT AREA ================= */}
+        <Box flex={1} p={2} display="flex" flexDirection="column">
+          {/* Header */}
+          <Paper
+            sx={{
+              p: 2,
+              mb: 2,
+              borderRadius: 3,
+              bgcolor: "#FFFFFF",
+            }}
+          >
+            <Box display="flex" alignItems="center">
+              <Avatar sx={{ bgcolor: "#2F5BFF", mr: 2 }}>
+                {activeUser.name[0]}
+              </Avatar>
+              <Typography fontWeight={600}>
+                {activeUser.name}
+              </Typography>
             </Box>
-          ))}
-        </Box>
+          </Paper>
 
-        {/* INPUT */}
-        <Divider />
-        <Box display="flex" p={2} bgcolor="#fff">
-          <TextField
-            fullWidth
-            size="small"
-            placeholder="Type your message..."
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && handleSend()}
-          />
-          <IconButton color="primary" onClick={handleSend}>
-            <SendIcon />
-          </IconButton>
+          {/* Messages */}
+          <Box
+            flex={1}
+            px={1}
+            sx={{
+              overflowY: "auto",
+              overflowX: "hidden",
+              scrollbarWidth: "none",
+              "&::-webkit-scrollbar": { display: "none" },
+            }}
+          >
+            {messages.map((msg) => (
+              <Box
+                key={msg.id}
+                display="flex"
+                justifyContent={
+                  msg.sender === "me" ? "flex-end" : "flex-start"
+                }
+                mb={2}
+              >
+                <Paper
+                  elevation={1}
+                  sx={{
+                    p: 1.5,
+                    maxWidth: "60%",
+                    borderRadius: 3,
+                    bgcolor:
+                      msg.sender === "me" ? "#FFFFFF" : "#FFF0C2",
+                    wordBreak: "break-word",
+                  }}
+                >
+                  <Typography variant="body2">{msg.text}</Typography>
+                </Paper>
+              </Box>
+            ))}
+            <div ref={bottomRef} />
+          </Box>
+
+          {/* Input */}
+          <Paper
+            sx={{
+              mt: 2,
+              p: 1,
+              borderRadius: 3,
+              display: "flex",
+              alignItems: "center",
+              bgcolor: "#FFFFFF",
+            }}
+          >
+            <TextField
+              fullWidth
+              placeholder="Type your message here..."
+              variant="standard"
+              InputProps={{ disableUnderline: true }}
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && sendMessage()}
+            />
+            <IconButton onClick={sendMessage} color="primary">
+              <SendIcon />
+            </IconButton>
+          </Paper>
         </Box>
-      </Box>
+      </Paper>
     </Box>
   );
 }
