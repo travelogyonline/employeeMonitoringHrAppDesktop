@@ -21,8 +21,6 @@ const dummyMessages = [
     { from: "friend", text: "Nice! Let me know when it's done!" }
 ];
 
-// const socket = io("http://localhost:5000");
-
 function ChatBox({ client }) {
     const [hostUser, setHostUser] = useContext(UserStore);
     const [message, setMessage] = useState([]);
@@ -43,22 +41,23 @@ function ChatBox({ client }) {
         }
         initChat();
     }, [roomID]);
+
     useEffect(() => {
-  socket.on("receiveMessage", (msg) => {
-    setMessage((prev) => [...prev, msg]);
+        socket.on("receiveMessage", (msg) => {
+            setMessage((prev) => [...prev, msg]);
 
-    // 🔔 Notify ONLY for incoming messages
-    console.log("client: ", client);
-    if (msg.senderId !== hostUser._id) {
-      window.electron?.notify({
-        title: `New message from ${msg.senderName}`,
-        body: msg.text
-      });
-    }
-  });
+            // 🔔 Notify ONLY for incoming messages
+            console.log("client: ", client);
+            if (msg.senderId !== hostUser._id) {
+                window.electron?.notify({
+                    title: `New message from ${msg.senderName}`,
+                    body: msg.text
+                });
+            }
+        });
 
-  return () => socket.off("receiveMessage");
-}, []);
+        return () => socket.off("receiveMessage");
+    }, []);
     const sendMessage = () => {
         socket.emit("sendMessage", {
             roomID,
@@ -85,8 +84,8 @@ function ChatBox({ client }) {
             {/* Chat Messages Area */}
             <Box
                 sx={{
-                    height: 400,            
-                    overflowY: "auto",     
+                    height: 400,
+                    overflowY: "auto",
                     display: "flex",
                     flexDirection: "column",
                     gap: 1,
@@ -95,9 +94,9 @@ function ChatBox({ client }) {
                     border: "1px solid #e0e0e0",
                     borderRadius: 2,
                     bgcolor: "#fafafa",
-                    scrollbarWidth: "none",          
+                    scrollbarWidth: "none",
                     "&::-webkit-scrollbar": {
-                        display: "none"                
+                        display: "none"
                     }
                 }}
             >

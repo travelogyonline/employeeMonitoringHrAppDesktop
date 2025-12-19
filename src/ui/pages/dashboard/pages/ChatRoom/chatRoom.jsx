@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useContext } from "react";
 import {
   Box,
   Avatar,
@@ -10,44 +10,49 @@ import {
   ListItemAvatar,
   ListItemText,
   Paper,
+  Autocomplete,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
 } from "@mui/material";
-import SendIcon from "@mui/icons-material/Send";
 import SearchIcon from "@mui/icons-material/Search";
-
-/* ---------------- DUMMY DATA ---------------- */
-const friends = Array.from({ length: 20 }).map((_, i) => ({
-  id: i + 1,
-  name: `User ${i + 1}`,
-}));
-
-const initialMessages = [
-  { id: 1, sender: "them", text: "Hey!" },
-  { id: 2, sender: "me", text: "Hello!" },
-  { id: 3, sender: "them", text: "How are you doing!?" },
-  { id: 4, sender: "me", text: "I am doing good! What about you?" },
-  { id: 5, sender: "them", text: "All Good..." },
-];
+import AddIcon from '@mui/icons-material/Add';
+import { useChatList } from "./hooks/useChatList";
+import { useAlluser } from "./hooks/useAllUser";
+import { UserStore } from "../../../../store/userStore";
+import { BASE_API_URL } from "../../../../data";
+import axios from "axios";
+import MessageBox from "./components/messageBox";
 
 export default function ChatBox() {
-  const [messages, setMessages] = useState(initialMessages);
-  const [input, setInput] = useState("");
-  const [activeUser, setActiveUser] = useState(friends[0]);
+  const [hostUser, setHostUser] = useContext(UserStore);
+  const [chatlist, loadingChatlist, refreshChatlist] = useChatList(hostUser._id)
+  const [allUser, loadingAllUser] = useAlluser();
 
-  const bottomRef = useRef(null);
+  const [activeUser, setActiveUser] = useState(false);
 
-  /* Auto-scroll on new message */
-  useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  const [open, setOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
 
-  const sendMessage = () => {
-    if (!input.trim()) return;
-    setMessages((prev) => [
-      ...prev,
-      { id: Date.now(), sender: "me", text: input },
-    ]);
-    setInput("");
-  };
+  const createChatRoom = (value) => {
+    let config = {
+      method: 'post',
+      url: `${BASE_API_URL}api/chats`,
+      data: {
+        user1: hostUser._id,
+        user1name: hostUser.staffName,
+        user2: value._id,
+        user2name: value.staffName,
+      }
+    };
+
+    axios.request(config)
+      .then((response) => {
+        refreshChatlist();
+      })
+  }
 
   return (
     <Box
@@ -78,24 +83,100 @@ export default function ChatBox() {
           display="flex"
           flexDirection="column"
         >
-          {/* Search */}
           <Paper
             sx={{
               mb: 2,
-              display: "flex",
-              alignItems: "center",
               p: 1,
               borderRadius: 2,
               bgcolor: "#FFFFFF",
+              display: "flex",
+              alignItems: "center",
             }}
           >
-            <SearchIcon fontSize="small" />
-            <TextField
-              placeholder="Search Friend"
-              variant="standard"
-              InputProps={{ disableUnderline: true }}
-              sx={{ ml: 1, flex: 1 }}
-            />
+            {!loadingChatlist && (
+              <>
+                <SearchIcon fontSize="small" sx={{ ml: 1, color: "text.secondary" }} />
+
+                <Autocomplete
+                  options={chatlist}
+                  getOptionLabel={(option) => option?.clientName || ""}
+                  onChange={(e, value) => {
+                    if(value){
+                      setActiveUser(value)
+                    }
+                  }}
+                  sx={{ ml: 1, flex: 1 }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      placeholder="Search Friend"
+                      variant="standard"
+                      InputProps={{
+                        ...params.InputProps,
+                        disableUnderline: true,
+                      }}
+                    />
+                  )}
+                  /* Dropdown container */
+                  PaperComponent={(props) => (
+                    <Paper
+                      {...props}
+                      sx={{
+                        mt: 1,
+                        borderRadius: 3,
+                        boxShadow: "0 20px 40px rgba(0,0,0,0.15)",
+                        overflow: "hidden",
+                      }}
+                    />
+                  )}
+                  /* Option styling */
+                  renderOption={(props, option, { selected }) => (
+                    <li
+                      {...props}
+                      style={{
+                        padding: "10px 16px",
+                        fontWeight: selected ? 600 : 500,
+                        backgroundColor: selected ? "#f5f7fa" : "transparent",
+                      }}
+                    >
+                      {option.clientName}
+                    </li>
+                  )}
+                  /* Listbox (scroll area) */
+                  ListboxProps={{
+                    sx: {
+                      maxHeight: 280,
+                      p: 0,
+                      "&::-webkit-scrollbar": { width: "8px" },
+                      "&::-webkit-scrollbar-track": { background: "transparent" },
+                      "&::-webkit-scrollbar-thumb": {
+                        backgroundColor: "#c1c1c1",
+                        borderRadius: "8px",
+                      },
+                      "&::-webkit-scrollbar-thumb:hover": {
+                        backgroundColor: "#a0a0a0",
+                      },
+                    },
+                  }}
+                />
+
+                {/* ================= ADD BUTTON ================= */}
+                <IconButton
+                  size="small"
+                  onClick={() => setOpen(true)}
+                  sx={{
+                    ml: 1,
+                    bgcolor: "#2F5BFF",
+                    color: "white",
+                    "&:hover": {
+                      bgcolor: "#1E44CC",
+                    },
+                  }}
+                >
+                  <AddIcon fontSize="small" />
+                </IconButton>
+              </>
+            )}
           </Paper>
 
           {/* Friends List */}
@@ -109,12 +190,12 @@ export default function ChatBox() {
             }}
           >
             <List>
-              {friends.map((friend) => {
-                const isActive = activeUser.id === friend.id;
+              {!loadingChatlist && chatlist.length > 0 && chatlist.map((friend, index) => {
+                const isActive = activeUser.clientId === friend.clientId;
 
                 return (
                   <ListItem
-                    key={friend.id}
+                    key={index}
                     onClick={() => setActiveUser(friend)}
                     sx={{
                       mb: 1,
@@ -131,11 +212,9 @@ export default function ChatBox() {
                     }}
                   >
                     <ListItemAvatar>
-                      <Avatar sx={{ bgcolor: "#2F5BFF" }}>
-                        {friend.name[0]}
-                      </Avatar>
+                      <Avatar sx={{ bgcolor: "#2F5BFF" }} />
                     </ListItemAvatar>
-                    <ListItemText primary={friend.name} />
+                    <ListItemText primary={friend.clientName} />
                   </ListItem>
                 );
               })}
@@ -145,89 +224,68 @@ export default function ChatBox() {
 
         {/* ================= RIGHT CHAT AREA ================= */}
         <Box flex={1} p={2} display="flex" flexDirection="column">
-          {/* Header */}
-          <Paper
-            sx={{
-              p: 2,
-              mb: 2,
-              borderRadius: 3,
-              bgcolor: "#FFFFFF",
-            }}
-          >
-            <Box display="flex" alignItems="center">
-              <Avatar sx={{ bgcolor: "#2F5BFF", mr: 2 }}>
-                {activeUser.name[0]}
-              </Avatar>
-              <Typography fontWeight={600}>
-                {activeUser.name}
-              </Typography>
-            </Box>
-          </Paper>
 
-          {/* Messages */}
-          <Box
-            flex={1}
-            px={1}
-            sx={{
-              overflowY: "auto",
-              overflowX: "hidden",
-              scrollbarWidth: "none",
-              "&::-webkit-scrollbar": { display: "none" },
-            }}
-          >
-            {messages.map((msg) => (
-              <Box
-                key={msg.id}
-                display="flex"
-                justifyContent={
-                  msg.sender === "me" ? "flex-end" : "flex-start"
-                }
-                mb={2}
-              >
-                <Paper
-                  elevation={1}
-                  sx={{
-                    p: 1.5,
-                    maxWidth: "60%",
-                    borderRadius: 3,
-                    bgcolor:
-                      msg.sender === "me" ? "#FFFFFF" : "#FFF0C2",
-                    wordBreak: "break-word",
-                  }}
-                >
-                  <Typography variant="body2">{msg.text}</Typography>
-                </Paper>
-              </Box>
-            ))}
-            <div ref={bottomRef} />
-          </Box>
+          <MessageBox activeUser={activeUser} />
 
-          {/* Input */}
-          <Paper
-            sx={{
-              mt: 2,
-              p: 1,
-              borderRadius: 3,
-              display: "flex",
-              alignItems: "center",
-              bgcolor: "#FFFFFF",
-            }}
-          >
-            <TextField
-              fullWidth
-              placeholder="Type your message here..."
-              variant="standard"
-              InputProps={{ disableUnderline: true }}
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && sendMessage()}
-            />
-            <IconButton onClick={sendMessage} color="primary">
-              <SendIcon />
-            </IconButton>
-          </Paper>
         </Box>
       </Paper>
+      <Dialog
+        open={open}
+        onClose={() => setOpen(false)}
+        fullWidth
+        maxWidth="xs"
+        PaperProps={{
+          sx: {
+            borderRadius: 4,
+            p: 1,
+          },
+        }}
+      >
+        <DialogTitle fontWeight={700}>
+          Start New Chat
+        </DialogTitle>
+
+        <DialogContent>
+          <Box sx={{ mt: 1 }}>
+            <Autocomplete
+              options={allUser}
+              getOptionLabel={(option) => option?.staffName || ""}
+              onChange={(e, value) => setSelectedUser(value)}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Select User"
+                  placeholder="Search by name"
+                />
+              )}
+              isOptionEqualToValue={(option, value) =>
+                option._id === value._id
+              }
+            />
+          </Box>
+        </DialogContent>
+
+        <DialogActions sx={{ p: 2 }}>
+          <Button
+            onClick={() => setOpen(false)}
+            color="inherit"
+          >
+            Cancel
+          </Button>
+
+          <Button
+            variant="contained"
+            disabled={!selectedUser}
+            onClick={() => {
+              createChatRoom(selectedUser);
+              setOpen(false);
+            }}
+          >
+            Start Chat
+          </Button>
+        </DialogActions>
+      </Dialog>
+
     </Box>
   );
 }

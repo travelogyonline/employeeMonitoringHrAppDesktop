@@ -14,10 +14,12 @@ import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import TimerIcon from "@mui/icons-material/Timer";
 import { BASE_API_URL } from "../../../../../data";
 
-function EmployeeRecords({ user }) {
+function EmployeeRecords({ user, setProductivity }) {
     const [firstLogin, setFirstLogin] = useState("--:--");
     const [lastLogin, setLastLogin] = useState("--:--");
     const [totalTime, setTotalTime] = useState("0h 0m");
+    const [totalBreak, setTotalBreak] = useState("0h 0m");
+
 
     useEffect(() => {
         if (!user?._id) return;
@@ -41,27 +43,48 @@ function EmployeeRecords({ user }) {
         };
 
         const calculateStats = (logs) => {
-    if (logs.length === 0) return;
+            if (logs.length === 0) return;
 
-    const now = new Date();
-    let totalMs = 0;
+            const sortedLogs = [...logs].sort(
+                (a, b) => new Date(a.login) - new Date(b.login)
+            );
 
-    logs.forEach((s) => {
-        const login = new Date(s.login);
-        const logout = s.logout ? new Date(s.logout) : now;
-        totalMs += Math.max(0, logout - login);
-    });
+            const now = new Date();
+            let totalMs = 0;
+            let totalBreakMs = 0;
 
-    setFirstLogin(new Date(logs[0].login).toLocaleTimeString());
+            sortedLogs.forEach((s, i) => {
+                const login = new Date(s.login);
+                const logout = s.logout ? new Date(s.logout) : now;
+                totalMs += Math.max(0, logout - login);
 
-    const last = logs[logs.length - 1];
-    setLastLogin(new Date(last.login).toLocaleTimeString());
+                const nextSession = sortedLogs[i + 1];
+                if (nextSession && s.logout) {
+                    const nextLogin = new Date(nextSession.login);
+                    totalBreakMs += Math.max(0, nextLogin - logout);
+                }
+            });
 
-    const totalSec = Math.floor(totalMs / 1000);
-    const hrs = Math.floor(totalSec / 3600);
-    const mins = Math.floor((totalSec % 3600) / 60);
-    setTotalTime(`${hrs}h ${mins}m`);
-};
+            setFirstLogin(new Date(sortedLogs[0].login).toLocaleTimeString());
+
+            const last = sortedLogs[sortedLogs.length - 1];
+            setLastLogin(new Date(last.login).toLocaleTimeString());
+
+            const totalSec = Math.floor(totalMs / 1000);
+            const hrs = Math.floor(totalSec / 3600);
+            const mins = Math.floor((totalSec % 3600) / 60);
+            setTotalTime(`${hrs}h ${mins}m`);
+
+            const breakSec = Math.floor(totalBreakMs / 1000);
+            const breakHrs = Math.floor(breakSec / 3600);
+            const breakMins = Math.floor((breakSec % 3600) / 60);
+            setTotalBreak(`${breakHrs}h ${breakMins}m`);
+
+            const totalEllipseTime = now - new Date(sortedLogs[0].login)
+            const productivity = (totalMs / totalEllipseTime) * 100;
+            setProductivity(productivity.toFixed(2))
+
+        };
 
         fetchLogs();
         const interval = setInterval(fetchLogs, 1000);
@@ -69,11 +92,7 @@ function EmployeeRecords({ user }) {
     }, [user]);
 
     return (
-        <Box
-            sx={{
-                mt: 3,
-            }}
-        >
+        <Box>
 
             <Grid container spacing={3} sx={{ maxWidth: 900 }}>
 
@@ -96,6 +115,12 @@ function EmployeeRecords({ user }) {
                                 <AccessTimeIcon color="success" />
                                 <Typography variant="subtitle1" fontWeight={600}>
                                     Total Time Worked Today: {totalTime}
+                                </Typography>
+                            </Box>
+                            <Box display="flex" alignItems="center" gap={1}>
+                                <TimerIcon color="error" />
+                                <Typography variant="subtitle1" fontWeight={600}>
+                                    Total Break Taken Today: {totalBreak}
                                 </Typography>
                             </Box>
                         </CardContent>

@@ -12,9 +12,53 @@ import ProfileAvatar from "./components/profilePicture";
 import Album from "./components/album";
 import AlbumImageUploader from "./components/AlbumImageUploader";
 import ChatBox from "./components/chatBox/chatBox";
+import PersonSearchIcon from "@mui/icons-material/PersonSearch";
 
 export default function Friends({ friend, user }) {
-    if (!friend) return (<h1>Please search a friend</h1>)
+    if (!friend)
+        return (
+            <Box
+                sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    p: 4,
+                }}
+            >
+                <Paper
+                    elevation={0}
+                    sx={{
+                        p: 4,
+                        textAlign: "center",
+                        borderRadius: 4,
+                        background:
+                            "linear-gradient(135deg, rgba(255,255,255,0.9), rgba(245,247,250,0.9))",
+                        boxShadow: "0 12px 30px rgba(0,0,0,0.08)",
+                    }}
+                >
+                    <PersonSearchIcon
+                        sx={{
+                            fontSize: 56,
+                            color: "text.secondary",
+                            mb: 1.5,
+                        }}
+                    />
+
+                    <Typography variant="h6" fontWeight={700}>
+                        No Friend Selected
+                    </Typography>
+
+                    <Typography
+                        variant="body2"
+                        color="text.secondary"
+                        sx={{ mt: 1 }}
+                    >
+                        Search and select a friend to see their thoughts and albums.
+                    </Typography>
+                </Paper>
+            </Box>
+        );
+
     const [imageRefresher, setImageRefresh] = useState(null);
     const [client, setClient] = useState(null);
 
@@ -103,7 +147,7 @@ export default function Friends({ friend, user }) {
                 </Box>}
 
                 <Divider sx={{ my: 3 }} />
-                <Album friend={client} user={user} imageRefresher={imageRefresher}/>
+                <Album friend={client} user={user} imageRefresher={imageRefresher} />
 
             </Paper>
 
@@ -122,10 +166,10 @@ export default function Friends({ friend, user }) {
                 {friend._id === user._id ?
                     <>
                         <Thoughts user={user} updateUser={() => refresh()} />
-                        <AlbumImageUploader refresh={()=>setImageRefresh(Math.floor(Math.random() * 1000))} />
+                        <AlbumImageUploader refresh={() => setImageRefresh(Math.floor(Math.random() * 1000))} />
                     </>
                     :
-                    <ChatBox client={client}/>
+                    <ChatBox client={client} />
                 }
             </Paper>
         </Box>

@@ -1,6 +1,6 @@
 import style from './dashboard.module.css';
 import logo from '../../assets/logo.png';
-import { useContext, useState } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import LandingPage from './pages/landing/landingPage.component.jsx';
 import Profile from './pages/profile/profile.jsx';
 import { BASE_API_URL } from '../../data.jsx';
@@ -28,6 +28,7 @@ import PeopleIcon from '@mui/icons-material/People';
 import { UserStore } from '../../store/userStore.jsx';
 import AppBar from './components/AppBar/appBar.jsx';
 import ChatRoom from './pages/ChatRoom/chatRoom.jsx';
+import ForumIcon from "@mui/icons-material/Forum";
 
 const modelStyle = {
     position: 'absolute',
@@ -47,6 +48,50 @@ function Dashboard({ setUser }) {
     const [page, setPage] = useState("dashboard");
     const [modelOpen, setmodelOpen] = useState(false);
     const [friend, setFriend] = useState(null)
+    const [image, setImage] = useState(null);
+
+
+    const handleCapture = async () => {
+        if (page === 'chatRoom') return;
+        const img = await window.electronAPI.captureScreen();
+        setImage(img);
+        uploadScreenshot(img);
+    };
+    // Sending the app, that the laptop is awake
+    useEffect(() => {
+        window.electronAPI.sendMessage(true);
+    }, []);
+    useEffect(() => {
+        handleCapture();
+
+        const interval = setInterval(() => {
+            handleCapture();
+        }, 10 * 60 * 1000);
+
+        return () => clearInterval(interval);
+    }, [page]);
+
+    const uploadScreenshot = async (img) => {
+        try {
+            if (!img) return;
+
+            const response = await fetch(img);
+            const blob = await response.blob();
+
+            const formData = new FormData();
+            formData.append("image", blob, "screenshot.png");
+
+            const upload = await fetch(BASE_API_URL + "api/screenshot/" + hostUser._id, {
+                method: "POST",
+                body: formData
+            });
+
+            await upload.json();
+
+        } catch (err) {
+            console.error(err);
+        }
+    };
     const handleModelClose = () => setmodelOpen(false);
     const handleLogout = async () => {
         if (hostUser.login !== 'false') {
@@ -115,12 +160,12 @@ function Dashboard({ setUser }) {
 
                         <Divider />
 
-                        <ListItemButton onClick={() => setPage('chatRoom')}>
+                        <ListItemButton onClick={() => setPage("chatRoom")}>
                             <ListItemIcon>
-                                <LogoutIcon />
+                                <ForumIcon />
                             </ListItemIcon>
                             <ListItemText
-                                sx={{ color: '#5d5949' }}
+                                sx={{ color: "#5d5949" }}
                                 primary="Chat Room"
                                 primaryTypographyProps={{ variant: "h6" }}
                             />
@@ -142,7 +187,7 @@ function Dashboard({ setUser }) {
                     </List>
                 </div>
                 <div className={style.content}>
-                    <AppBar setFriend={setFriend} setPage={setPage}/>
+                    <AppBar setFriend={setFriend} setPage={setPage} />
                     {page === 'dashboard' && <LandingPage />}
                     {page === 'profile' && <Profile />}
                     {page === 'chatRoom' && <ChatRoom />}
