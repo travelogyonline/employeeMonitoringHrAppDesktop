@@ -12,11 +12,13 @@ import {
 } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import EditNoteIcon from "@mui/icons-material/EditNote";
+import SaveIcon from '@mui/icons-material/Save';
 
 import { BASE_API_URL } from "../../../../../data";
 
 export default function Thoughts({ user, updateUser }) {
-  const [thought, setThought] = useState("");
+  const [thought, setThought] = useState(user.myThoughts);
+  const [editing, setEditing] = useState(false);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState("");
@@ -45,6 +47,7 @@ export default function Thoughts({ user, updateUser }) {
       updateUser();
 
       setTimeout(() => setSaved(false), 2000);
+      setEditing(false);
     } catch (err) {
       setSaving(false);
       setError("Failed to save your thoughts.");
@@ -53,58 +56,45 @@ export default function Thoughts({ user, updateUser }) {
 
   return (
     <Paper
-      elevation={4}
+      elevation={0}
       sx={{
-        width: "80%",
-        p: 3,
-        borderRadius: 4,
         display: "flex",
         flexDirection: "column",
-        background: "linear-gradient(135deg, #f9fafb, #ffffff)",
+        backgroundColor: "transparent",
+        boxShadow: "none",
       }}
     >
-      <Typography variant="h6" sx={{ fontWeight: 700, mb: 1 }}>
-        What's in my mind
+      <Typography fontWeight={700} mb={1}>
+        Thoughts
       </Typography>
-
-      <Typography variant="body2" sx={{ color: "gray", mb: 2 }}>
-        Write your thoughts, feelings, updates…  
-      </Typography>
-
-      <TextField
-        multiline
-        minRows={4}
-        maxRows={8}
-        value={thought}
-        onChange={(e) => setThought(e.target.value)}
-        placeholder="Share your thoughts…"
-        sx={{
-          "& .MuiOutlinedInput-root": {
-            borderRadius: 3,
-            backgroundColor: "#fff",
-            transition: "0.2s",
-            "&:hover fieldset": { borderColor: "#7b68ee" },
-            "&.Mui-focused fieldset": {
-              borderColor: "#7b68ee",
-              boxShadow: "0 0 0 3px rgba(123, 104, 238, 0.2)",
-            },
-          },
-        }}
-      />
-
+      {editing ? (<>
+        <TextField
+          variant="standard"
+          fullWidth
+          value={thought}
+          onChange={(e) => setThought(e.target.value)}
+          autoFocus
+          sx={{
+            fontSize: "0.875rem", // matches body2
+          }}
+        />
+        <Typography variant="caption" sx={{ color: "#999" }}>
+          {thought.length} / 300
+        </Typography>
+      </>
+      ) : (
+        <Typography variant="body2">
+          {thought}
+        </Typography>
+      )}
       <Box
         sx={{
           mt: 1,
           display: "flex",
           alignItems: "center",
-          justifyContent: "space-between",
+          justifyContent: "center",
         }}
       >
-        {/* Character counter */}
-        <Typography variant="caption" sx={{ color: "#999" }}>
-          {thought.length} / 300
-        </Typography>
-
         {/* Save button area */}
         <Box sx={{ display: "flex", alignItems: "center" }}>
           {saving ? (
@@ -113,7 +103,7 @@ export default function Thoughts({ user, updateUser }) {
             <CheckCircleIcon color="success" />
           ) : (
             <IconButton
-              onClick={handleSave}
+              onClick={() => { !editing ? setEditing(true) : handleSave() }}
               sx={{
                 background: "#7b68ee",
                 color: "white",
@@ -124,7 +114,7 @@ export default function Thoughts({ user, updateUser }) {
                 px: 2,
               }}
             >
-              <EditNoteIcon />
+              {!editing ? <EditNoteIcon /> : <SaveIcon />}
             </IconButton>
           )}
         </Box>

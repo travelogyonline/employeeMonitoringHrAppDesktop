@@ -187,7 +187,7 @@ function Dashboard({ setUser }) {
                     </List>
                 </div>
                 <div className={style.content}>
-                    <AppBar setFriend={setFriend} setPage={setPage} />
+                    <AppBar setFriend={(v)=>setFriend(v)} setPage={setPage} />
                     {page === 'dashboard' && <LandingPage />}
                     {page === 'profile' && <Profile />}
                     {page === 'chatRoom' && <ChatRoom />}

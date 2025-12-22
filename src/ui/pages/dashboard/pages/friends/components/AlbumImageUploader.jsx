@@ -6,7 +6,7 @@ import ImageIcon from "@mui/icons-material/Image";
 import { UserStore } from "../../../../../store/userStore";
 import { BASE_API_URL } from "../../../../../data";
 
-export default function AlbumImageUploader({refresh}) {
+export default function AlbumImageUploader({ refresh }) {
   const [hostUser] = useContext(UserStore);
   const [file, setFile] = useState(null);
   const [preview, setPreview] = useState(null);
@@ -53,7 +53,7 @@ export default function AlbumImageUploader({refresh}) {
   };
 
   return (
-    <Box sx={{ maxWidth: 420, mx: "auto", mt: 6, color: 'black' }}>
+    <Box sx={{ maxWidth: 420, mx: "auto", color: 'black' }}>
       <Box
         sx={{
           p: 3,
@@ -94,7 +94,16 @@ export default function AlbumImageUploader({refresh}) {
         </Box>
 
         {preview && (
-          <Box sx={{ mt: 2 }}>
+          <Box
+            sx={{
+              mt: 'auto',
+              display: 'flex',          // Enables Flexbox
+              justifyContent: 'center', // Centers horizontally
+              alignItems: 'center',     // Centers vertically
+              width: '100%',            // Ensures it takes up the full width of the parent
+              py: 2                     // Adds a little padding for breathing room
+            }}
+          >
             <Box
               component="img"
               src={preview}

@@ -12,17 +12,39 @@ export function useAlluser() {
     const [alluser, setAlluser] = useState([]);
 
     useEffect(() => {
-        let config = {
-            method: 'get',
-            url: `${BASE_API_URL}api/user`
-        };
-        axios.request(config)
-            .then((response) => {
-                setAlluser(response.data.data)
-            })
-            .finally(() => {
+        const fetchUsers = async () => {
+            try {
+                const usersRes = await axios.get(`${BASE_API_URL}api/user`);
+                const users = usersRes.data.data;
+
+                const usersWithDp = await Promise.all(
+                    users.map(async (item) => {
+                        try {
+                            const dpRes = await axios.get(
+                                `${BASE_API_URL}api/dp/${item._id}`
+                            );
+
+                            return {
+                                ...item,
+                                dp:
+                                    dpRes.data.data.length > 0
+                                        ? dpRes.data.data[0].profilePicture
+                                        : null,
+                            };
+                        } catch (err) {
+                            return { ...item, dp: null };
+                        }
+                    })
+                );
+                setAlluser(usersWithDp);
+            } catch (error) {
+                console.error(error);
+            } finally {
                 setLoading(false);
-            });
+            }
+        };
+
+        fetchUsers();
     }, []);
 
     return [alluser, loading]

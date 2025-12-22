@@ -25,8 +25,9 @@ import { UserStore } from "../../../../store/userStore";
 import { BASE_API_URL } from "../../../../data";
 import axios from "axios";
 import MessageBox from "./components/messageBox";
+import getDp from "./functions/getDp";
 
-export default function ChatBox() {
+export default function ChatBox({setPage}) {
   const [hostUser, setHostUser] = useContext(UserStore);
   const [chatlist, loadingChatlist, refreshChatlist] = useChatList(hostUser._id)
   const [allUser, loadingAllUser] = useAlluser();
@@ -101,7 +102,7 @@ export default function ChatBox() {
                   options={chatlist}
                   getOptionLabel={(option) => option?.clientName || ""}
                   onChange={(e, value) => {
-                    if(value){
+                    if (value) {
                       setActiveUser(value)
                     }
                   }}
@@ -192,7 +193,6 @@ export default function ChatBox() {
             <List>
               {!loadingChatlist && chatlist.length > 0 && chatlist.map((friend, index) => {
                 const isActive = activeUser.clientId === friend.clientId;
-
                 return (
                   <ListItem
                     key={index}
@@ -212,7 +212,10 @@ export default function ChatBox() {
                     }}
                   >
                     <ListItemAvatar>
-                      <Avatar sx={{ bgcolor: "#2F5BFF" }} />
+                      <Avatar
+                        sx={{ bgcolor: "#2F5BFF" }}
+                        src={getDp(friend.clientId, allUser) || undefined}
+                      />
                     </ListItemAvatar>
                     <ListItemText primary={friend.clientName} />
                   </ListItem>
@@ -225,7 +228,7 @@ export default function ChatBox() {
         {/* ================= RIGHT CHAT AREA ================= */}
         <Box flex={1} p={2} display="flex" flexDirection="column">
 
-          <MessageBox activeUser={activeUser} />
+          <MessageBox activeUser={activeUser} allUser={allUser} setPage={setPage}/>
 
         </Box>
       </Paper>
