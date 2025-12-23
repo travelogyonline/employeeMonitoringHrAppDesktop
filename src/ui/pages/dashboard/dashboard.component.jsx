@@ -16,6 +16,7 @@ import {
     Divider
 } from "@mui/material";
 import DashboardIcon from '@mui/icons-material/Dashboard';
+import TableChartIcon from '@mui/icons-material/TableChart';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
 import '@fontsource/roboto/300.css';
@@ -24,11 +25,12 @@ import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import axios from 'axios';
 import Friends from './pages/friends/friends.component.jsx';
-import PeopleIcon from '@mui/icons-material/People';
-import { UserStore } from '../../store/userStore.jsx';
+import PeopleIcon from '@mui/icons-material/People';S
+import { ThemeStore, UserStore } from '../../store/userStore.jsx';
 import AppBar from './components/AppBar/appBar.jsx';
 import ChatRoom from './pages/ChatRoom/chatRoom.jsx';
 import ForumIcon from "@mui/icons-material/Forum";
+import MyTheme from './pages/Theme/MyTheme.jsx';
 
 const modelStyle = {
     position: 'absolute',
@@ -45,11 +47,12 @@ const modelStyle = {
 
 function Dashboard({ setUser }) {
     const [hostUser, setHostUser] = useContext(UserStore);
+    const [theme,setTheme] = useContext(ThemeStore)
     const [page, setPage] = useState("dashboard");
     const [modelOpen, setmodelOpen] = useState(false);
     const [friend, setFriend] = useState(null)
     const [image, setImage] = useState(null);
-
+    console.log("theme: ", theme);
 
     const handleCapture = async () => {
         if (page === 'chatRoom') return;
@@ -171,7 +174,18 @@ function Dashboard({ setUser }) {
                             />
                         </ListItemButton>
 
+
                         <Divider />
+                        <ListItemButton onClick={() => setPage("myThemes")}>
+                            <ListItemIcon>
+                                <TableChartIcon />
+                            </ListItemIcon>
+                            <ListItemText
+                                sx={{ color: "#5d5949" }}
+                                primary="My Themes"
+                                primaryTypographyProps={{ variant: "h6" }}
+                            />
+                        </ListItemButton>
 
                         <ListItemButton onClick={handleLogout}>
                             <ListItemIcon>
@@ -192,6 +206,7 @@ function Dashboard({ setUser }) {
                     {page === 'profile' && <Profile />}
                     {page === 'chatRoom' && <ChatRoom />}
                     {page === 'friend' && <Friends friend={friend} user={hostUser} />}
+                    {page === 'myThemes' && <MyTheme />}
                 </div>
             </div>
             <Modal
