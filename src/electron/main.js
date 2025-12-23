@@ -46,7 +46,7 @@ function startIdleChecker() {
             }, 100);
         }
 
-    }, 60 * 1000); // check every 10 seconds
+    }, 5 * 60 * 1000); // check every 10 seconds
 }
 
 
@@ -267,7 +267,7 @@ app.whenReady().then(async () => {
 });
 
 ipcMain.on("show-notification", (event, payload) => {
-    if (isWindowFocused) return; // ✅ BLOCK notification
+    // if (isWindowFocused) return; // ✅ BLOCK notification
 
     if (!Notification.isSupported()) return;
 

@@ -25,7 +25,6 @@ function LandingPage() {
                 alignItems: "flex-start",
             }}
         >
-            {/* Employee Records (takes more space) */}
             <Box>
                 <EmployeeRecords
                     user={hostUser}

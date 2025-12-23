@@ -13,14 +13,10 @@ import axios from "axios";
 import socket from "../functions/socket";
 import { BASE_API_URL } from "../../../../../data";
 import getDp from "../functions/getDp";
-import Friends from "../../friends/friends.component";
 
 function MessageBox({ activeUser, allUser }) {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
-  const [isMessagePage, setIsMessagePage] = useState(false);
-  const [host, setHost] = useState(null);
-  const [client, setClient] = useState(null);
   const bottomRef = useRef(null);
 
   /* ---------------- INIT CHAT ---------------- */
@@ -45,6 +41,10 @@ function MessageBox({ activeUser, allUser }) {
   useEffect(() => {
     const handleReceiveMessage = (msg) => {
       setMessages((prev) => [...prev, msg]);
+      window.electron.notify({
+        title: 'Travel Chat',
+        body: 'You have a new message!',
+      });
     };
 
     socket.on("receiveMessage", handleReceiveMessage);
@@ -74,21 +74,6 @@ function MessageBox({ activeUser, allUser }) {
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
-
-  const handleTitleClick = () => {
-    const client = allUser.filter(item => item._id === activeUser.clientId)
-    const host = allUser.filter(item => item._id === activeUser.hostId)
-    setClient(client[0]);
-    setHost(host[0]);
-    setIsMessagePage(true);
-  }
-
-  /* ---------------- EMPTY STATE ---------------- */
-  if(isMessagePage) {
-    return(
-      <Friends friend={client} user={host} />
-    )
-  }
 
   if (!activeUser) {
     return (
@@ -126,7 +111,7 @@ function MessageBox({ activeUser, allUser }) {
     <>
       {/* Header */}
       <Paper sx={{ p: 2, mb: 2 }}>
-        <Box display="flex" alignItems="center" onClick={()=>handleTitleClick()} sx={{ cursor: 'pointer' }}>
+        <Box display="flex" alignItems="center">
           <Avatar
             sx={{ bgcolor: "#2F5BFF", mr: 2 }}
             src={getDp(activeUser.clientId, allUser) || undefined}

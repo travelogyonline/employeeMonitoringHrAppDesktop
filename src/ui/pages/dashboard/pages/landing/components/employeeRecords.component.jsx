@@ -93,9 +93,7 @@ function EmployeeRecords({ user, setProductivity }) {
 
     return (
         <Box>
-
             <Grid container spacing={3} sx={{ maxWidth: 900 }}>
-
                 <Grid item xs={12} sm={6}>
                     <Card elevation={3} sx={{ borderRadius: 3 }}>
                         <CardContent>
