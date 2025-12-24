@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import { BASE_API_URL } from "../../../../data";
-import Thoughts from "./components/thoughts";
+import MyThoughts from "./components/MyThoughts";
 import ProfileAvatar from "./components/profilePicture";
 import Album from "./components/album";
 import AlbumImageUploader from "./components/AlbumImageUploader";
@@ -23,6 +23,7 @@ import TimelineIcon from "@mui/icons-material/Timeline";
 import formatBirthday from "./functions/formatBirthday";
 import getExperience from "./functions/getExperience";
 import BackupIcon from '@mui/icons-material/Backup';
+import FriendThought from "./components/FriendThought";
 
 const modalStyle = {
     position: 'absolute',
@@ -72,7 +73,6 @@ export default function Friends({ friend, user }) {
             </Box>
         );
     }
-    console.log("friend: ", user);
 
     const [imageRefresher, setImageRefresh] = useState(null);
     const [open, setOpen] = useState(false);
@@ -192,7 +192,7 @@ export default function Friends({ friend, user }) {
                             textAlign: "center",
                         }}
                     >
-                        <Thoughts user={user} updateUser={() => refresh()} />
+                        {friend._id!==user._id? <FriendThought friend={friend} /> : <MyThoughts user={friend} updateUser={() => refresh()} />}
                     </Paper>
                 )}
             </Paper>

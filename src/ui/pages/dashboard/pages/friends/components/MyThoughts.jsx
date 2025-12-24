@@ -16,7 +16,7 @@ import SaveIcon from '@mui/icons-material/Save';
 
 import { BASE_API_URL } from "../../../../../data";
 
-export default function Thoughts({ user, updateUser }) {
+export default function MyThoughts({ user, updateUser }) {
   const [thought, setThought] = useState(user.myThoughts);
   const [editing, setEditing] = useState(false);
   const [saving, setSaving] = useState(false);

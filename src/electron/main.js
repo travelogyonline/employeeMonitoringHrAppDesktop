@@ -4,8 +4,6 @@ import { fileURLToPath } from 'url';
 import axios from 'axios';
 import Store from "electron-store";
 import { BASE_API_URL } from './data.js';
-import AutoLaunch from "auto-launch";
-import Registry from "winreg";
 
 let tray = null;
 let win = null;
@@ -157,43 +155,7 @@ function updateReactStateFromMain(data) {
     win.webContents.send('update-data', data);
 }
 
-function getWindowsStartupPath(appName) {
-    return new Promise((resolve, reject) => {
-        const regKey = new Registry({
-            hive: Registry.HKCU,
-            key: '\\Software\\Microsoft\\Windows\\CurrentVersion\\Run'
-        });
-
-        regKey.get(appName, (err, item) => {
-            if (err || !item) return resolve(null);
-            resolve(item.value);
-        });
-    });
-}
-
 app.whenReady().then(async () => {
-    const appName = "Travel Buddy";
-    const currentExePath = process.execPath;
-
-    const appLauncher = new AutoLaunch({
-        name: appName,
-        path: currentExePath,
-    });
-
-    // Read existing registry startup value
-    const startupPath = await getWindowsStartupPath(appName);
-
-    if (!startupPath || startupPath.replace(/"/g, '') !== currentExePath) {
-        console.log("Startup path changed or missing → fixing auto-launch...");
-        try {
-            await appLauncher.enable();
-            console.log("Auto-launch updated successfully.");
-        } catch (err) {
-            console.error("Failed to update auto-launch:", err);
-        }
-    } else {
-        console.log("Auto-launch path correct.");
-    }
     createWindow();
     win.on("focus", () => {
         isWindowFocused = true;

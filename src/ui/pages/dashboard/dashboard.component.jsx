@@ -25,34 +25,21 @@ import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import axios from 'axios';
 import Friends from './pages/friends/friends.component.jsx';
-import PeopleIcon from '@mui/icons-material/People';S
+import PeopleIcon from '@mui/icons-material/People';
 import { ThemeStore, UserStore } from '../../store/userStore.jsx';
 import AppBar from './components/AppBar/appBar.jsx';
 import ChatRoom from './pages/ChatRoom/chatRoom.jsx';
 import ForumIcon from "@mui/icons-material/Forum";
 import MyTheme from './pages/Theme/MyTheme.jsx';
 
-const modelStyle = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 400,
-    bgcolor: 'background.paper',
-    borderRadius: '12px',
-    boxShadow: 24,
-    p: 4,
-};
-
-
 function Dashboard({ setUser }) {
     const [hostUser, setHostUser] = useContext(UserStore);
     const [theme,setTheme] = useContext(ThemeStore)
     const [page, setPage] = useState("dashboard");
-    const [modelOpen, setmodelOpen] = useState(false);
     const [friend, setFriend] = useState(null)
     const [image, setImage] = useState(null);
-    console.log("theme: ", theme);
+
+    console.log(theme)
 
     const handleCapture = async () => {
         if (page === 'chatRoom') return;
@@ -95,7 +82,6 @@ function Dashboard({ setUser }) {
             console.error(err);
         }
     };
-    const handleModelClose = () => setmodelOpen(false);
     const handleLogout = async () => {
         if (hostUser.login !== 'false') {
             const config = {
@@ -119,10 +105,10 @@ function Dashboard({ setUser }) {
     }
 
     return (
-        <div className={style.container}>
+        <div className={style.container} style={{backgroundColor: theme.light}}>
             <div className={style.innerContainer}>
-                <div className={style.sidebar}>
-                    <div className={style.logoContainer}>
+                <div className={style.sidebar} style={{ backgroundColor: theme.medium }}>
+                    <div className={style.logoContainer} style={{backgroundColor: theme.dark}}>
                         <img src={logo} alt="Logo" className={style.logo} />
                     </div>
                     <List sx={{ width: "100%", padding: 0 }}>
@@ -131,7 +117,7 @@ function Dashboard({ setUser }) {
                                 <DashboardIcon />
                             </ListItemIcon>
                             <ListItemText
-                                sx={{ color: '#5d5949' }}
+                                sx={{ color: theme.text }}
                                 primary="Dashboard"
                                 primaryTypographyProps={{ variant: "h6" }}
                             />
@@ -144,7 +130,7 @@ function Dashboard({ setUser }) {
                                 <AccountCircleIcon />
                             </ListItemIcon>
                             <ListItemText
-                                sx={{ color: '#5d5949' }}
+                                sx={{ color: theme.text }}
                                 primary="Profile"
                                 primaryTypographyProps={{ variant: "h6" }}
                             />
@@ -155,7 +141,7 @@ function Dashboard({ setUser }) {
                                 <PeopleIcon />
                             </ListItemIcon>
                             <ListItemText
-                                sx={{ color: '#5d5949' }}
+                                sx={{ color: theme.text }}
                                 primary="Friends"
                                 primaryTypographyProps={{ variant: "h6" }}
                             />
@@ -168,7 +154,7 @@ function Dashboard({ setUser }) {
                                 <ForumIcon />
                             </ListItemIcon>
                             <ListItemText
-                                sx={{ color: "#5d5949" }}
+                                sx={{ color: theme.text }}
                                 primary="Chat Room"
                                 primaryTypographyProps={{ variant: "h6" }}
                             />
@@ -181,7 +167,7 @@ function Dashboard({ setUser }) {
                                 <TableChartIcon />
                             </ListItemIcon>
                             <ListItemText
-                                sx={{ color: "#5d5949" }}
+                                sx={{ color: theme.text }}
                                 primary="My Themes"
                                 primaryTypographyProps={{ variant: "h6" }}
                             />
@@ -192,7 +178,7 @@ function Dashboard({ setUser }) {
                                 <LogoutIcon />
                             </ListItemIcon>
                             <ListItemText
-                                sx={{ color: '#5d5949' }}
+                                sx={{ color: theme.text }}
                                 primary="Logout"
                                 primaryTypographyProps={{ variant: "h6" }}
                             />
@@ -209,30 +195,6 @@ function Dashboard({ setUser }) {
                     {page === 'myThemes' && <MyTheme />}
                 </div>
             </div>
-            <Modal
-                open={modelOpen}
-                onClose={handleModelClose}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
-            >
-                <Box sx={modelStyle}>
-                    <Typography variant="h4" gutterBottom>{hostUser.staffName}</Typography>
-                    <Typography className={style.role} variant="subtitle1" gutterBottom>{hostUser.role}</Typography>
-
-                    <Typography variant="subtitle2" gutterBottom>Email</Typography>
-                    <Typography variant="body1" gutterBottom>{hostUser.staffEmail}</Typography>
-
-                    <Typography variant="subtitle2" gutterBottom>Phone</Typography>
-                    <Typography variant="body1" gutterBottom>{hostUser.staffPhone}</Typography>
-
-                    {/* ➤ NEW BUTTON AT BOTTOM */}
-                    <Box sx={{ mt: 3, textAlign: "center" }}>
-                        <Button variant="contained" color="primary" onClick={() => setPasswordModal(true)}>
-                            Change Password
-                        </Button>
-                    </Box>
-                </Box>
-            </Modal>
         </div>
     );
 }
