@@ -3,11 +3,12 @@ import axios from "axios";
 import { Box, Typography, Button, CircularProgress, Alert, IconButton } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import ImageIcon from "@mui/icons-material/Image";
-import { UserStore } from "../../../../../store/userStore";
+import { ThemeStore, UserStore } from "../../../../../store/userStore";
 import { BASE_API_URL } from "../../../../../data";
 
 export default function AlbumImageUploader({ refresh }) {
   const [hostUser] = useContext(UserStore);
+  const [theme] = useContext(ThemeStore);
   const [file, setFile] = useState(null);
   const [preview, setPreview] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -58,15 +59,15 @@ export default function AlbumImageUploader({ refresh }) {
         sx={{
           p: 3,
           borderRadius: 3,
-          bgcolor: "rgba(255,255,255,0.08)",
+          bgcolor: theme.light,
           backdropFilter: "blur(12px)",
           border: "1px solid rgba(255,255,255,0.2)",
-          boxShadow: "0 20px 40px rgba(0,0,0,0.3)",
+          boxShadow: "black",
         }}
       >
         <Typography
           variant="h6"
-          sx={{ color: "#000000ff", mb: 2, display: "flex", alignItems: "center", gap: 1 }}
+          sx={{ color: theme.dark, mb: 2, display: "flex", alignItems: "center", gap: 1 }}
         >
           <ImageIcon fontSize="small" /> Upload to Album
         </Typography>
@@ -79,15 +80,16 @@ export default function AlbumImageUploader({ refresh }) {
             alignItems: "center",
             justifyContent: "center",
             p: 3,
-            border: "2px dashed rgba(255,255,255,0.3)",
+            border: `2px dashed ${theme.dark}`,
+            color: theme.dark,
             borderRadius: 2,
             cursor: "pointer",
             transition: "0.3s",
-            '&:hover': { borderColor: "rgba(0, 0, 0, 0.6)" },
+            '&:hover': { borderColor: theme.medium, color: theme.medium},
           }}
         >
-          <CloudUploadIcon sx={{ color: "rgba(0, 0, 0, 0.7)", mb: 1 }} />
-          <Typography variant="body2" sx={{ color: "rgba(0, 0, 0, 0.7)" }}>
+          <CloudUploadIcon sx={{ mb: 1 }} />
+          <Typography variant="body2" >
             Click to select an image
           </Typography>
           <input hidden type="file" accept="image/*" onChange={handleFileChange} />
@@ -130,8 +132,9 @@ export default function AlbumImageUploader({ refresh }) {
           sx={{
             mt: 3,
             py: 1.2,
+            color: theme.text,
             borderRadius: 2,
-            background: "linear-gradient(135deg, #6366f1, #9333ea)",
+            background: theme.dark,
             '&:hover': { opacity: 0.9 },
           }}
           startIcon={loading ? <CircularProgress size={18} color="inherit" /> : null}

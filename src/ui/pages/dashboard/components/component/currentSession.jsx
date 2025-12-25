@@ -3,17 +3,15 @@ import axios from "axios";
 import {
     Box,
     Typography,
-    Card,
-    CardContent,
-    Grid
 } from "@mui/material";
 
 import TimerIcon from "@mui/icons-material/Timer";
 import { BASE_API_URL } from "../../../../data";
-import { UserStore } from "../../../../store/userStore";
+import { ThemeStore, UserStore } from "../../../../store/userStore";
 
 function CurrentSession() {
     const [hostUser, setHostUser] = useContext(UserStore);
+    const [theme] = useContext(ThemeStore);
     const [firstLogin, setFirstLogin] = useState("--:--");
     const [lastLogin, setLastLogin] = useState("--:--");
     const [totalTime, setTotalTime] = useState("0h 0m");
@@ -86,7 +84,7 @@ function CurrentSession() {
         hostUser.login==='false'?<></>:
         <Box display="flex" alignItems="center" sx={{mr: '10px'}}>
             <TimerIcon color="secondary" />
-            <Typography variant="subtitle1" fontWeight={600} sx={{color: 'black'}}>
+            <Typography variant="subtitle1" fontWeight={600} sx={{color: theme.dark}}>
                 Current Active Session: {activeSession}
             </Typography>
         </Box>

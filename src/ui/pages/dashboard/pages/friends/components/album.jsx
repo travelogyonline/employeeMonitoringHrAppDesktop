@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Box, Typography, Modal, Grid } from "@mui/material";
 import axios from "axios";
 import { BASE_API_URL } from "../../../../../data";
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import { ThemeStore } from "../../../../../store/userStore";
 
 function Album({ friend, user, imageRefresher }) {
+    const [theme] = useContext(ThemeStore);
     const [images, setImages] = useState([]);
     const [zoomImage, setZoomImage] = useState(null);
 
@@ -125,11 +127,13 @@ function Album({ friend, user, imageRefresher }) {
                     />
                     <Typography
                         sx={{
-                            mt: 2,                  // Margin top to space it from the image
-                            textAlign: "center",    // Centers text horizontally
-                            fontWeight: "bold",     // Makes font bold
-                            fontSize: "1.5rem",     // Large font size
-                            width: "100%",          // Ensures it takes full width to allow centering
+                            mt: 2,                  
+                            textAlign: "center",    
+                            fontWeight: "bold",     
+                            fontSize: "1.5rem",     
+                            width: "100%",         
+                            bgcolor: theme.light,
+                            color: theme.dark
                         }}
                     >
                         {zoomImage?.timestamp

@@ -1,23 +1,12 @@
-import { useState, useEffect } from "react";
-import axios from "axios";
+import { useState, useEffect, useContext } from "react";
 import {
-  Box,
-  TextField,
   Typography,
-  CircularProgress,
-  Fade,
-  Alert,
-  IconButton,
   Paper
 } from "@mui/material";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import EditNoteIcon from "@mui/icons-material/EditNote";
-import SaveIcon from '@mui/icons-material/Save';
-
-import { BASE_API_URL } from "../../../../../data";
+import { ThemeStore } from "../../../../../store/userStore";
 
 export default function FriendThought({ friend }) {
-  console.log("friend: ", friend)
+  const [theme] = useContext(ThemeStore);
   return (
     <Paper
       elevation={0}
@@ -28,18 +17,19 @@ export default function FriendThought({ friend }) {
         boxShadow: "none",
       }}
     >
-      <Typography fontWeight={700} mb={1}>
+      <Typography fontWeight={700} mb={1} sx={{ color: theme.text }}>
         Thoughts
       </Typography>
       {friend.myThoughts ? (
-        <Typography variant="body2">
-          No thoughts!
-        </Typography>
-      ) : (
-        <Typography variant="body2">
+        <Typography variant="body2" sx={{ color: theme.text, mb: 2 }}>
           {friend.myThoughts}
         </Typography>
+      ) : (
+        <Typography variant="body2" sx={{ color: theme.text, mb: 2 }}>
+          No thoughts!
+        </Typography>
       )}
+
 
     </Paper>
   );

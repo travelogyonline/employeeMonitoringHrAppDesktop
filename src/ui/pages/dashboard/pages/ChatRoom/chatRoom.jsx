@@ -1,8 +1,7 @@
-import React, { useState, useRef, useEffect, useContext } from "react";
+import { useState, useContext } from "react";
 import {
   Box,
   Avatar,
-  Typography,
   TextField,
   IconButton,
   List,
@@ -21,14 +20,16 @@ import SearchIcon from "@mui/icons-material/Search";
 import AddIcon from '@mui/icons-material/Add';
 import { useChatList } from "./hooks/useChatList";
 import { useAlluser } from "./hooks/useAllUser";
-import { UserStore } from "../../../../store/userStore";
+import { ThemeStore, UserStore } from "../../../../store/userStore";
 import { BASE_API_URL } from "../../../../data";
 import axios from "axios";
 import MessageBox from "./components/messageBox";
 import getDp from "./functions/getDp";
+import lightenHex from './functions/colourLightner';
 
 export default function ChatBox({setPage}) {
   const [hostUser, setHostUser] = useContext(UserStore);
+  const [theme] = useContext(ThemeStore)
   const [chatlist, loadingChatlist, refreshChatlist] = useChatList(hostUser._id)
   const [allUser, loadingAllUser] = useAlluser();
 
@@ -59,7 +60,7 @@ export default function ChatBox({setPage}) {
     <Box
       sx={{
         height: "90vh",
-        backgroundColor: "#FFF2C2",
+        bgColor: lightenHex(theme.light, 20),
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -73,30 +74,31 @@ export default function ChatBox({setPage}) {
           borderRadius: 4,
           display: "flex",
           overflow: "hidden",
-          backgroundColor: "#FFF6D9",
+          backgroundColor: theme.medium,
         }}
       >
         {/* ================= LEFT SIDEBAR ================= */}
         <Box
           width={280}
           p={2}
-          bgcolor="#FBE7A1"
           display="flex"
           flexDirection="column"
+          sx={{
+            bgcolor: theme.medium
+          }}
         >
           <Paper
             sx={{
               mb: 2,
               p: 1,
               borderRadius: 2,
-              bgcolor: "#FFFFFF",
               display: "flex",
               alignItems: "center",
             }}
           >
             {!loadingChatlist && (
               <>
-                <SearchIcon fontSize="small" sx={{ ml: 1, color: "text.secondary" }} />
+                <SearchIcon fontSize="small" sx={{ ml: 1, color: theme.dark }} />
 
                 <Autocomplete
                   options={chatlist}
@@ -137,7 +139,9 @@ export default function ChatBox({setPage}) {
                       style={{
                         padding: "10px 16px",
                         fontWeight: selected ? 600 : 500,
-                        backgroundColor: selected ? "#f5f7fa" : "transparent",
+                        // backgroundColor: theme.light,
+                        backgroundColor: selected ? theme.dark : theme.light,
+                        color: selected ? theme.text : theme.dark,
                       }}
                     >
                       {option.clientName}
@@ -151,11 +155,11 @@ export default function ChatBox({setPage}) {
                       "&::-webkit-scrollbar": { width: "8px" },
                       "&::-webkit-scrollbar-track": { background: "transparent" },
                       "&::-webkit-scrollbar-thumb": {
-                        backgroundColor: "#c1c1c1",
+                        backgroundColor: theme.medium,
                         borderRadius: "8px",
                       },
                       "&::-webkit-scrollbar-thumb:hover": {
-                        backgroundColor: "#a0a0a0",
+                        backgroundColor: theme.dark,
                       },
                     },
                   }}
@@ -167,10 +171,10 @@ export default function ChatBox({setPage}) {
                   onClick={() => setOpen(true)}
                   sx={{
                     ml: 1,
-                    bgcolor: "#2F5BFF",
+                    bgcolor: theme.medium,
                     color: "white",
                     "&:hover": {
-                      bgcolor: "#1E44CC",
+                      bgcolor: theme.dark,
                     },
                   }}
                 >
@@ -201,13 +205,12 @@ export default function ChatBox({setPage}) {
                       mb: 1,
                       borderRadius: 2,
                       cursor: "pointer",
-                      bgcolor: isActive ? "#FFFDF4" : "#FFF6D9",
-                      border: isActive
-                        ? "2px solid #2F5BFF"
-                        : "1px solid #F0E2A0",
+                      bgcolor: isActive ? theme.dark : theme.light,
+                      color: isActive ? theme.light : theme.dark,
                       transition: "0.2s",
                       "&:hover": {
-                        bgcolor: "#FFFDF4",
+                        bgcolor: theme.dark,
+                        color: theme.light
                       },
                     }}
                   >
@@ -226,7 +229,7 @@ export default function ChatBox({setPage}) {
         </Box>
 
         {/* ================= RIGHT CHAT AREA ================= */}
-        <Box flex={1} p={2} display="flex" flexDirection="column">
+        <Box flex={1} p={2} display="flex" flexDirection="column" sx={{backgroundColor: lightenHex(theme.medium,40)}}>
 
           <MessageBox activeUser={activeUser} allUser={allUser} setPage={setPage}/>
 

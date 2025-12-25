@@ -5,10 +5,6 @@ import LandingPage from './pages/landing/landingPage.component.jsx';
 import Profile from './pages/profile/profile.jsx';
 import { BASE_API_URL } from '../../data.jsx';
 import {
-    Typography,
-    Modal,
-    Box,
-    Button,
     List,
     ListItemButton,
     ListItemIcon,

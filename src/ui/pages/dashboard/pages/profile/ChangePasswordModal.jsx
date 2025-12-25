@@ -1,26 +1,30 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Modal, Box, TextField, Typography, Button } from "@mui/material";
 import axios from "axios";
 import { BASE_API_URL } from "../../../../data.jsx";
+import { ThemeStore } from "../../../../store/userStore.jsx";
 
-const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 350,
-    bgcolor: 'background.paper',
-    p: 4,
-    borderRadius: 2,
-    boxShadow: 24
-};
+
 
 export default function ChangePasswordModal({ open, handleClose, user }) {
+    const [theme] = useContext(ThemeStore)
     const [currentPassword, setCurrentPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
+
+    const style = {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: 350,
+        bgcolor: theme.medium,
+        p: 4,
+        borderRadius: 2,
+        boxShadow: 24
+    };
 
     const handleSubmit = async () => {
         setError("");
@@ -65,13 +69,13 @@ export default function ChangePasswordModal({ open, handleClose, user }) {
     return (
         <Modal open={open} onClose={handleClose}>
             <Box sx={style}>
-                <Typography variant="h6" gutterBottom>Change Password</Typography>
+                <Typography variant="h6" gutterBottom sx={{color: theme.dark}}>Change Password</Typography>
 
                 <TextField
                     label="Current Password"
                     type="password"
                     fullWidth
-                    sx={{ mt: 2 }}
+                    sx={{ mt: 2, bgcolor: theme.light, color: theme.dark }}
                     value={currentPassword}
                     onChange={(e) => setCurrentPassword(e.target.value)}
                 />
@@ -80,7 +84,7 @@ export default function ChangePasswordModal({ open, handleClose, user }) {
                     label="New Password"
                     type="password"
                     fullWidth
-                    sx={{ mt: 2 }}
+                    sx={{ mt: 2, bgcolor: theme.light, color: theme.dark }}
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
                 />
@@ -89,24 +93,24 @@ export default function ChangePasswordModal({ open, handleClose, user }) {
                     label="Confirm Password"
                     type="password"
                     fullWidth
-                    sx={{ mt: 2 }}
+                    sx={{ mt: 2, bgcolor: theme.light, color: theme.dark }}
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                 />
 
                 {error && (
-                    <Typography sx={{ mt: 2 }} color="error">{error}</Typography>
+                    <Typography sx={{ mt: 2, color: theme.text }}>{error}</Typography>
                 )}
 
                 {success && (
-                    <Typography sx={{ mt: 2, color: "green" }}>{success}</Typography>
+                    <Typography sx={{ mt: 2, color: theme.text }}>{success}</Typography>
                 )}
 
                 <Button
                     variant="contained"
                     color="primary"
                     fullWidth
-                    sx={{ mt: 3 }}
+                    sx={{ mt: 3, color: theme.text, backgroundColor: theme.dark }}
                     onClick={handleSubmit}
                 >
                     Update Password

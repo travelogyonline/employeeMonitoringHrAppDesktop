@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import {
   Box,
@@ -15,13 +15,17 @@ import EditNoteIcon from "@mui/icons-material/EditNote";
 import SaveIcon from '@mui/icons-material/Save';
 
 import { BASE_API_URL } from "../../../../../data";
+import { ThemeStore } from "../../../../../store/userStore";
 
 export default function MyThoughts({ user, updateUser }) {
+  const [theme] = useContext(ThemeStore)
   const [thought, setThought] = useState(user.myThoughts);
   const [editing, setEditing] = useState(false);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState("");
+
+  console.log("Theme: ", theme)
 
   // Save thoughts
   const handleSave = async () => {
@@ -62,6 +66,7 @@ export default function MyThoughts({ user, updateUser }) {
         flexDirection: "column",
         backgroundColor: "transparent",
         boxShadow: "none",
+        color: theme.text
       }}
     >
       <Typography fontWeight={700} mb={1}>
@@ -76,9 +81,29 @@ export default function MyThoughts({ user, updateUser }) {
           autoFocus
           sx={{
             fontSize: "0.875rem", // matches body2
+            // Input text
+            "& .MuiInputBase-input": {
+              color: theme.medium,
+              fontSize: "0.875rem",
+            },
+
+            // Bottom border (default)
+            "& .MuiInput-underline:before": {
+              borderBottomColor: theme.medium,
+            },
+
+            // Bottom border on hover
+            "& .MuiInput-underline:hover:before": {
+              borderBottomColor: theme.medium,
+            },
+
+            // Bottom border when focused
+            "& .MuiInput-underline:after": {
+              borderBottomColor: theme.medium,
+            },
           }}
         />
-        <Typography variant="caption" sx={{ color: "#999" }}>
+        <Typography variant="caption" sx={{ color: theme.medium }}>
           {thought.length} / 300
         </Typography>
       </>
@@ -105,10 +130,10 @@ export default function MyThoughts({ user, updateUser }) {
             <IconButton
               onClick={() => { !editing ? setEditing(true) : handleSave() }}
               sx={{
-                background: "#7b68ee",
-                color: "white",
+                background: theme.light,
+                color: theme.dark,
                 "&:hover": {
-                  background: "#6a58d9",
+                  background: theme.medium,
                 },
                 borderRadius: 2,
                 px: 2,

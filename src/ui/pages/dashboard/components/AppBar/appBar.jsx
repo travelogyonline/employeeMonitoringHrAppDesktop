@@ -2,7 +2,7 @@ import style from './appBar.module.css';
 import UserProfileBar from '../component/userBar';
 import EmployeeSearch from '../component/EmployeeSearch';
 import { useContext, useState, useEffect } from 'react';
-import { UserStore } from '../../../../store/userStore';
+import { ThemeStore, UserStore } from '../../../../store/userStore';
 import axios from 'axios';
 import Button from "@mui/material/Button";
 import { BASE_API_URL } from '../../../../data';
@@ -10,17 +10,18 @@ import CurrentSession from '../component/currentSession';
 
 export default function AppBar({ setFriend, setPage }) {
     const [hostUser, setHostUser] = useContext(UserStore);
+    const [theme] = useContext(ThemeStore);
     const [status, setStatus] = useState('');
     useEffect(() => {
         setStatus(hostUser.login);
     }, []);
     useEffect(() => {
-            const cleanup = window.electronAPI.onUpdateData((data) => {
-                setStatus(hostUser.login);
-            });
-    
-            return cleanup;
-        }, []);
+        const cleanup = window.electronAPI.onUpdateData((data) => {
+            setStatus(hostUser.login);
+        });
+
+        return cleanup;
+    }, []);
     const handleWorkingStatus = async () => {
         const apiHelper = status !== 'false' ? "out" : "in";
         let config = {
@@ -56,11 +57,17 @@ export default function AppBar({ setFriend, setPage }) {
     }
     return (
         <div className={style.appBar}>
-            <div className={style.appBarText} onClick={() => { setFriend(hostUser); setPage('friend') }}>
+            <div
+                onClick={() => { setFriend(hostUser); setPage('friend') }}
+                style={{
+                    color: theme.dark,
+                    paddingLeft: '10px'
+                }}
+            >
                 <UserProfileBar />
             </div>
             <div className={style.innerContainer}>
-                {status!=='false' && <CurrentSession />}
+                {status !== 'false' && <CurrentSession />}
                 <Button
                     variant="contained"
                     size="large"
