@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, desktopCapturer, nativeImage, screen, Tray, Menu, powerMonitor } from 'electron';
+import { app, BrowserWindow, Notification, ipcMain, desktopCapturer, nativeImage, screen, Tray, Menu, powerMonitor } from 'electron';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import axios from 'axios';
@@ -8,10 +8,10 @@ import { BASE_API_URL } from './data.js';
 let tray = null;
 let win = null;
 let isResumedFromSleep = false;
+let isWindowFocused = true;
 
 const store = new Store();
 
-// --- Store IPC Handlers ---
 ipcMain.handle("store:set", (event, key, value) => {
     store.set(key, value);
     return true;
@@ -26,16 +26,34 @@ ipcMain.handle("store:delete", (event, key) => {
     return true;
 });
 
+function startIdleChecker() {
+    const IDLE_LIMIT = 15 * 60;
+    // const IDLE_LIMIT = 5;
 
-// --- Asynchronous Logout Function ---
+    setInterval(() => {
+        const idle = powerMonitor.getSystemIdleTime();
+
+        if (idle >= IDLE_LIMIT) {
+            updateReactStateFromMain('false');
+            handleLogout();
+            win.setAlwaysOnTop(true, 'screen-saver');
+            win.focus();
+            win.show();
+            setTimeout(() => {
+                win.setAlwaysOnTop(false);
+            }, 100);
+        }
+
+    }, 5 * 60 * 1000); // check every 10 seconds
+}
+
+
 const handleLogout = async () => {
     const user = store.get('user');
-    // FIX 1: Add a check for user._id before proceeding, as it's used in the URL
-    if (!user || !user._id) { 
+    if (!user || !user._id) {
         console.warn("Logout attempted, but user or user ID is missing in store.");
         return;
     }
-    // FIX 2: Only check if user.login is explicitly the string 'false' or not present
     if (user.login === 'false') return;
 
     const config = {
@@ -48,17 +66,10 @@ const handleLogout = async () => {
     try {
         await axios.request(config);
         console.log(`User ${user._id} logged out successfully.`);
-        // Ensure the store reflects that the user is logged out after a successful request
         store.set('user.login', 'false');
     } catch (error) {
-        // Log the error but crucially, DO NOT re-throw or fail the promise chain.
-        // This ensures the main window's 'close' handler can proceed with app.quit() 
-        // even if the API call fails (like your 404 error).
         console.error("Error during logout request:", error.response ? `Request failed with status code ${error.response.status}` : error.message);
-        
-        // OPTIONAL: If the request fails, assume the user is logged out client-side anyway
-        // to prevent repeated failed calls.
-        store.set('user.login', 'false'); 
+        store.set('user.login', 'false');
     }
 }
 
@@ -70,7 +81,6 @@ ipcMain.on("message", (event, msg) => {
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// --- Screen Capture IPC Handler ---
 ipcMain.handle('capture-screen', async () => {
     const { width, height } = screen.getPrimaryDisplay().size;
 
@@ -81,27 +91,24 @@ ipcMain.handle('capture-screen', async () => {
 
     const primarySource = sources[0];
 
-    // ORIGINAL full-size PNG buffer
     const originalBuffer = primarySource.thumbnail.toPNG();
 
-    // CREATE nativeImage from the original buffer
     const img = nativeImage.createFromBuffer(originalBuffer);
 
-    // RESIZE & COMPRESS
     const resized = img
-        .resize({ width: 1280 }) // shrink width → auto adjust height
-        .toJPEG(60); // 60% quality (PNG does not have “quality”, JPEG does)
-
-    // Convert resized compressed image to Base64
+        .resize({ width: 1280 })
+        .toJPEG(60);
     const base64 = nativeImage.createFromBuffer(resized).toDataURL();
 
     return base64;
 });
 
+
 function createWindow() {
     win = new BrowserWindow({
-        width: 900,
-        height: 600,
+        // width: 900,
+        // height: 600,
+        // fullscreen: true,
         autoHideMenuBar: true,
         webPreferences: {
             preload: path.join(__dirname, 'preload.js'),
@@ -110,6 +117,8 @@ function createWindow() {
             // devTools: false,
         },
     });
+
+    win.maximize();
 
     if (process.env.NODE_ENV === 'development') {
         win.loadURL('http://localhost:5173');
@@ -120,28 +129,22 @@ function createWindow() {
 
     win.on("close", async (event) => {
         if (app.isQuiting) {
-            // 1. Prevent the window from closing immediately to allow async task to run
             event.preventDefault();
             console.log("Awaiting asynchronous logout before quitting...");
 
-            // 2. Wait for the logout request to complete
             await handleLogout();
 
             updateReactStateFromMain('false');
 
-            // 3. Cleanup: Destroy the tray icon
-            if (tray) { 
+            if (tray) {
                 tray.destroy();
                 tray = null;
             }
-            
-            // 4. FINAL FIX: Forcibly exit the process to ensure no background console threads remain.
+
             process.exit(0);
-            
+
             return;
         }
-
-        // Default action when closing the window (minimizing to tray)
         event.preventDefault();
         win.hide();
         console.log("windows is hiding in tray");
@@ -152,11 +155,15 @@ function updateReactStateFromMain(data) {
     win.webContents.send('update-data', data);
 }
 
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
     createWindow();
-
-    // Initialize tray with icon
-    // NOTE: Ensure 'icon.png' exists in the build directory for production
+    win.on("focus", () => {
+        isWindowFocused = true;
+    })
+    win.on("blur", () => {
+        isWindowFocused = false;
+    })
+    console.log("path: ", process.execPath)
     tray = new Tray(path.join(__dirname, "icon.png"));
 
     const trayMenu = Menu.buildFromTemplate([
@@ -164,11 +171,12 @@ app.whenReady().then(() => {
         {
             label: "Quit Completely", click: () => {
                 app.isQuiting = true;
-                // We will handle the actual exit inside win.on('close')
-                win.close(); 
+                win.close();
             }
         }
     ]);
+
+    startIdleChecker();
 
     tray.setToolTip("Employee Monitoring App");
     tray.setContextMenu(trayMenu);
@@ -176,37 +184,32 @@ app.whenReady().then(() => {
         win.show();
         win.focus();
     });
-
-    // --- Power Monitor Event Handlers ---
-    
-    // System going to sleep/suspend
-    powerMonitor.on("suspend", () => {
+    powerMonitor.on("suspend", async () => {
         console.log("System is going to sleep");
         isResumedFromSleep = false;
-        // Best practice to log out when the system is suspended
-        handleLogout(); 
+        await handleLogout();
     });
 
-    // Screen locked
-    powerMonitor.on("lock-screen", () => {
+    powerMonitor.on("lock-screen", async () => {
         console.log("System is locked");
-        store.set("pendingStatus", "false");
-        // Best practice to log out when the screen is locked
-        handleLogout();
+        store.set("pendingStatus", "true");
+        await handleLogout();
     });
 
-    // System resumed from sleep
     powerMonitor.on("resume", () => {
-        console.log("isResumedFromSleep: ", isResumedFromSleep)
         function isRendererResumed() {
+            console.log("isResumedFromSleep: ", isResumedFromSleep)
             if (isResumedFromSleep) {
-                // Inform renderer to check state and possibly log out/stop tracking
-                updateReactStateFromMain('false'); 
+                updateReactStateFromMain('false');
                 console.log("Screen resumed from sleep");
+                win.setAlwaysOnTop(true, 'screen-saver');
+                win.focus();
                 win.show();
+                setTimeout(() => {
+                    win.setAlwaysOnTop(false);
+                }, 100);
                 return;
             }
-            // Keep checking until the renderer communicates back or timeout (500ms check)
             setTimeout(() => {
                 isRendererResumed();
             }, 500);
@@ -214,24 +217,39 @@ app.whenReady().then(() => {
         isRendererResumed();
     });
 
-    // Screen unlocked
     powerMonitor.on("unlock-screen", () => {
         const flag = store.get("pendingStatus");
         console.log("Screen unlocked: ", flag);
         if (flag) {
-            // Restore previous working state if pending
-            updateReactStateFromMain(flag);
+            updateReactStateFromMain(false);
             store.delete("pendingStatus");
         }
         win.show();
     });
 });
 
+ipcMain.on("show-notification", (event, payload) => {
+    // if (isWindowFocused) return; // ✅ BLOCK notification
+
+    if (!Notification.isSupported()) return;
+
+    console.log("payload: ", payload)
+
+    const notification = new Notification({
+        title: payload.title,
+        body: payload.body
+    });
+
+    notification.show();
+
+    notification.on("click", () => {
+        win.show();
+        win.focus();
+    });
+});
+
 app.on('window-all-closed', () => {
-    // Standard Electron behavior: Quit the application when all windows are closed,
-    // except on macOS (where applications keep running until the user quits explicitly).
     if (process.platform !== 'darwin') {
-        // Forcibly exit the process to ensure no background threads remain
         process.exit(0);
     }
 });

@@ -26,8 +26,12 @@ body {
   margin: 0;
   display: flex;
   place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+  height: 100%;
+  width: 100%;
+  /* min-width: 320px;
+  min-height: 100vh; */
+  /* background-color: blue; */
+  padding: 0;
 }
 
 h1 {

@@ -1,0 +1,148 @@
+import React, { useEffect, useState } from "react";
+import { Box, Typography, Modal, Grid } from "@mui/material";
+import axios from "axios";
+import { BASE_API_URL } from "../../../../../data";
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+
+function Album({ friend, user, imageRefresher }) {
+    const [images, setImages] = useState([]);
+    const [zoomImage, setZoomImage] = useState(null);
+
+    useEffect(() => {
+        setImages([])
+        let config = {
+            method: 'get',
+            url: `${BASE_API_URL}api/album/${friend?._id}`
+        };
+        axios.request(config)
+            .then((response) => {
+                if (response.data.data.length > 0) {
+                    setImages(response.data.data[0].album);
+                }
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    }, [friend, imageRefresher]);
+
+    const handleDelete = async (imageId) => {
+        try {
+            await axios.delete(`${BASE_API_URL}api/album/${user._id}/pic/${imageId}`);
+            setImages(prev => prev.filter(img => img._id !== imageId));
+        } catch (err) {
+            console.error("Delete failed", err);
+        }
+    };
+
+    return (
+        <>
+            <Box
+                sx={{
+                    maxHeight: '70vh',
+                    overflowY: "auto",       // scrollable
+                    "&::-webkit-scrollbar": { display: "none" }, // hide scrollbar
+                    scrollbarWidth: "none",  // for Firefox
+                }}
+            >
+                <Grid container spacing={2}>
+                    {images.length > 0 ? images.map((img, i) => (
+                        <Grid item xs={6} sm={4} md={3} key={img._id || i}>
+                            <Box sx={{ position: "relative" }}>
+                                {friend?._id === user?._id && (
+                                    <Box
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleDelete(img._id);
+                                        }}
+                                        sx={{
+                                            position: "absolute",
+                                            top: 6,
+                                            right: 6,
+                                            width: 26,
+                                            height: 26,
+                                            borderRadius: "50%",
+                                            bgcolor: "rgba(255,0,0,0.9)",
+                                            color: "#fff",
+                                            display: "flex",
+                                            alignItems: "center",
+                                            justifyContent: "center",
+                                            fontSize: 14,
+                                            fontWeight: 700,
+                                            cursor: "pointer",
+                                            zIndex: 2,
+                                            "&:hover": { bgcolor: "red" },
+                                        }}
+                                    >
+                                        <DeleteForeverIcon />
+                                    </Box>
+                                )}
+
+                                <Box
+                                    component="img"
+                                    src={img.url}
+                                    onClick={() => setZoomImage(img)}
+                                    sx={{
+                                        width: "100%",
+                                        height: 140,
+                                        objectFit: "cover",
+                                        borderRadius: 2,
+                                        cursor: "pointer",
+                                    }}
+                                />
+                            </Box>
+                        </Grid>
+                    )) : (
+                        <Typography sx={{ color: "#000000ff" }}>
+                            No images!
+                        </Typography>
+                    )}
+                </Grid>
+            </Box>
+
+            {/* Zoom Modal */}
+            <Modal open={Boolean(zoomImage)} onClose={() => setZoomImage(null)}>
+                <Box
+                    sx={{
+                        position: "absolute",
+                        top: "50%",
+                        left: "50%",
+                        transform: "translate(-50%, -50%)",
+                        bgcolor: "transparent",
+                        p: 2,
+                        outline: 'none',       
+                        border: 'none',
+                    }}
+                >
+                    <Box
+                        component="img"
+                        src={zoomImage?.url}
+                        sx={{
+                            width: 800,
+                            height: 600,
+                            objectFit: "contain",
+                            borderRadius: 2,
+                        }}
+                    />
+                    <Typography
+                        sx={{
+                            mt: 2,                  // Margin top to space it from the image
+                            textAlign: "center",    // Centers text horizontally
+                            fontWeight: "bold",     // Makes font bold
+                            fontSize: "1.5rem",     // Large font size
+                            width: "100%",          // Ensures it takes full width to allow centering
+                        }}
+                    >
+                        {zoomImage?.timestamp
+                            ? new Date(zoomImage.timestamp).toLocaleString(undefined, {
+                                dateStyle: 'long',
+                                timeStyle: 'short'
+                            })
+                            : "No Date Available"}
+                    </Typography>
+                </Box>
+            </Modal>
+        </>
+    );
+}
+
+export default Album;

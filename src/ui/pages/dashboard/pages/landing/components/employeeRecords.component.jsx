@@ -12,13 +12,14 @@ import LoginIcon from "@mui/icons-material/Login";
 import LogoutIcon from "@mui/icons-material/Logout";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import TimerIcon from "@mui/icons-material/Timer";
-import { BASE_API_URL } from "../../../data";
+import { BASE_API_URL } from "../../../../../data";
 
-function EmployeeRecords({ user }) {
+function EmployeeRecords({ user, setProductivity }) {
     const [firstLogin, setFirstLogin] = useState("--:--");
     const [lastLogin, setLastLogin] = useState("--:--");
     const [totalTime, setTotalTime] = useState("0h 0m");
-    const [activeSession, setActiveSession] = useState("0m 0s");
+    const [totalBreak, setTotalBreak] = useState("0h 0m");
+
 
     useEffect(() => {
         if (!user?._id) return;
@@ -44,18 +45,29 @@ function EmployeeRecords({ user }) {
         const calculateStats = (logs) => {
             if (logs.length === 0) return;
 
+            const sortedLogs = [...logs].sort(
+                (a, b) => new Date(a.login) - new Date(b.login)
+            );
+
             const now = new Date();
             let totalMs = 0;
+            let totalBreakMs = 0;
 
-            logs.forEach((s) => {
+            sortedLogs.forEach((s, i) => {
                 const login = new Date(s.login);
                 const logout = s.logout ? new Date(s.logout) : now;
                 totalMs += Math.max(0, logout - login);
+
+                const nextSession = sortedLogs[i + 1];
+                if (nextSession && s.logout) {
+                    const nextLogin = new Date(nextSession.login);
+                    totalBreakMs += Math.max(0, nextLogin - logout);
+                }
             });
 
-            setFirstLogin(new Date(logs[0].login).toLocaleTimeString());
+            setFirstLogin(new Date(sortedLogs[0].login).toLocaleTimeString());
 
-            const last = logs[logs.length - 1];
+            const last = sortedLogs[sortedLogs.length - 1];
             setLastLogin(new Date(last.login).toLocaleTimeString());
 
             const totalSec = Math.floor(totalMs / 1000);
@@ -63,15 +75,15 @@ function EmployeeRecords({ user }) {
             const mins = Math.floor((totalSec % 3600) / 60);
             setTotalTime(`${hrs}h ${mins}m`);
 
-            if (!last.logout) {
-                const activeMs = now - new Date(last.login);
-                const s = Math.floor(activeMs / 1000);
-                const mm = Math.floor((s % 3600) / 60);
-                const ss = s % 60;
-                setActiveSession(`${mm}m ${ss}s`);
-            } else {
-                setActiveSession("0m 0s");
-            }
+            const breakSec = Math.floor(totalBreakMs / 1000);
+            const breakHrs = Math.floor(breakSec / 3600);
+            const breakMins = Math.floor((breakSec % 3600) / 60);
+            setTotalBreak(`${breakHrs}h ${breakMins}m`);
+
+            const totalEllipseTime = now - new Date(sortedLogs[0].login)
+            const productivity = (totalMs / totalEllipseTime) * 100;
+            setProductivity(productivity.toFixed(2))
+
         };
 
         fetchLogs();
@@ -80,85 +92,38 @@ function EmployeeRecords({ user }) {
     }, [user]);
 
     return (
-        <Box
-            sx={{
-                width: "100%",
-                mt: 3,
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-            }}
-        >
-            <Typography variant="h5" sx={{ fontWeight: 600, mb: 3 }}>
-                {user.staffName} — Work Overview
-            </Typography>
-
-            <Grid container spacing={3} justifyContent="center" sx={{ maxWidth: 900 }}>
-
-                <Grid item xs={12} sm={6} md={4}>
+        <Box>
+            <Grid container spacing={3} sx={{ maxWidth: 900 }}>
+                <Grid item xs={12} sm={6}>
                     <Card elevation={3} sx={{ borderRadius: 3 }}>
                         <CardContent>
                             <Box display="flex" alignItems="center" gap={1}>
                                 <LoginIcon color="primary" />
                                 <Typography variant="subtitle1" fontWeight={600}>
-                                    First Login Today
+                                    First Login Today: {firstLogin}
                                 </Typography>
                             </Box>
-                            <Typography variant="h6" sx={{ mt: 1 }}>
-                                {firstLogin}
-                            </Typography>
-                        </CardContent>
-                    </Card>
-                </Grid>
-
-                <Grid item xs={12} sm={6} md={4}>
-                    <Card elevation={3} sx={{ borderRadius: 3 }}>
-                        <CardContent>
                             <Box display="flex" alignItems="center" gap={1}>
                                 <LogoutIcon color="warning" />
                                 <Typography variant="subtitle1" fontWeight={600}>
-                                    Last Login Today
+                                    Last Login Today: {lastLogin}
                                 </Typography>
                             </Box>
-                            <Typography variant="h6" sx={{ mt: 1 }}>
-                                {lastLogin}
-                            </Typography>
-                        </CardContent>
-                    </Card>
-                </Grid>
-
-                <Grid item xs={12} sm={6} md={4}>
-                    <Card elevation={3} sx={{ borderRadius: 3 }}>
-                        <CardContent>
                             <Box display="flex" alignItems="center" gap={1}>
                                 <AccessTimeIcon color="success" />
                                 <Typography variant="subtitle1" fontWeight={600}>
-                                    Total Time Worked Today
+                                    Total Time Worked Today: {totalTime}
                                 </Typography>
                             </Box>
-                            <Typography variant="h6" sx={{ mt: 1 }}>
-                                {totalTime}
-                            </Typography>
-                        </CardContent>
-                    </Card>
-                </Grid>
-
-                <Grid item xs={12} sm={6} md={4}>
-                    <Card elevation={3} sx={{ borderRadius: 3 }}>
-                        <CardContent>
                             <Box display="flex" alignItems="center" gap={1}>
-                                <TimerIcon color="secondary" />
+                                <TimerIcon color="error" />
                                 <Typography variant="subtitle1" fontWeight={600}>
-                                    Current Active Session
+                                    Total Break Taken Today: {totalBreak}
                                 </Typography>
                             </Box>
-                            <Typography variant="h6" sx={{ mt: 1 }}>
-                                {activeSession}
-                            </Typography>
                         </CardContent>
                     </Card>
                 </Grid>
-
             </Grid>
         </Box>
     );

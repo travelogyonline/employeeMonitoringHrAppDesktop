@@ -21,3 +21,7 @@ contextBridge.exposeInMainWorld("electronStore", {
   get: (key) => ipcRenderer.invoke("store:get", key),
   delete: (key) => ipcRenderer.invoke("store:delete", key),
 });
+
+contextBridge.exposeInMainWorld("electron", {
+  notify: (data) => ipcRenderer.send("show-notification", data)
+});
