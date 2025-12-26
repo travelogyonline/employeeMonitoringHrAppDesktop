@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import {
     Box,
@@ -13,8 +13,10 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import TimerIcon from "@mui/icons-material/Timer";
 import { BASE_API_URL } from "../../../../../data";
+import { ThemeStore } from "../../../../../store/userStore";
 
 function EmployeeRecords({ user, setProductivity }) {
+    const [theme] = useContext(ThemeStore);
     const [firstLogin, setFirstLogin] = useState("--:--");
     const [lastLogin, setLastLogin] = useState("--:--");
     const [totalTime, setTotalTime] = useState("0h 0m");
@@ -32,23 +34,17 @@ function EmployeeRecords({ user, setProductivity }) {
                     `${BASE_API_URL}api/login/date/${user._id}`,
                     { date: today }
                 );
-
                 const logs = response.data?.data || [];
                 if (!Array.isArray(logs)) return;
-
                 calculateStats(logs);
-            } catch (err) {
-                console.error("Fetch error:", err);
-            }
+            } catch (err) { }
         };
 
         const calculateStats = (logs) => {
             if (logs.length === 0) return;
-
             const sortedLogs = [...logs].sort(
                 (a, b) => new Date(a.login) - new Date(b.login)
             );
-
             const now = new Date();
             let totalMs = 0;
             let totalBreakMs = 0;
@@ -96,29 +92,52 @@ function EmployeeRecords({ user, setProductivity }) {
             <Grid container spacing={3} sx={{ maxWidth: 900 }}>
                 <Grid item xs={12} sm={6}>
                     <Card elevation={3} sx={{ borderRadius: 3 }}>
-                        <CardContent>
+                        <CardContent sx={{
+                            background:
+                                `linear-gradient(145deg, ${theme.light}, ${theme.text})`,
+                        }}>
                             <Box display="flex" alignItems="center" gap={1}>
                                 <LoginIcon color="primary" />
                                 <Typography variant="subtitle1" fontWeight={600}>
-                                    First Login Today: {firstLogin}
+                                    <Box component="span" sx={{ color: theme.dark }}>
+                                        First Login Today:
+                                    </Box>{" "}
+                                    <Box component="span" sx={{ color: theme.medium }}>
+                                        {firstLogin}
+                                    </Box>
                                 </Typography>
                             </Box>
                             <Box display="flex" alignItems="center" gap={1}>
                                 <LogoutIcon color="warning" />
                                 <Typography variant="subtitle1" fontWeight={600}>
-                                    Last Login Today: {lastLogin}
+                                    <Box component="span" sx={{ color: theme.dark }}>
+                                        Last Login Today:
+                                    </Box>{" "}
+                                    <Box component="span" sx={{ color: theme.medium }}>
+                                        {lastLogin}
+                                    </Box>
                                 </Typography>
                             </Box>
                             <Box display="flex" alignItems="center" gap={1}>
                                 <AccessTimeIcon color="success" />
                                 <Typography variant="subtitle1" fontWeight={600}>
-                                    Total Time Worked Today: {totalTime}
+                                    <Box component="span" sx={{ color: theme.dark }}>
+                                        Total Time Worked Today:
+                                    </Box>{" "}
+                                    <Box component="span" sx={{ color: theme.medium }}>
+                                        {totalTime}
+                                    </Box>
                                 </Typography>
                             </Box>
                             <Box display="flex" alignItems="center" gap={1}>
                                 <TimerIcon color="error" />
                                 <Typography variant="subtitle1" fontWeight={600}>
-                                    Total Break Taken Today: {totalBreak}
+                                    <Box component="span" sx={{ color: theme.dark }}>
+                                        Total Break Taken Today:
+                                    </Box>{" "}
+                                    <Box component="span" sx={{ color: theme.medium }}>
+                                        {totalBreak}
+                                    </Box>
                                 </Typography>
                             </Box>
                         </CardContent>

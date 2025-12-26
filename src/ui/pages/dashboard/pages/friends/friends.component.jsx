@@ -38,17 +38,16 @@ const modalStyle = {
 
 
 export default function Friends({ friend, user }) {
+    const [theme] = useContext(ThemeStore);
 
     if (!friend) {
         return (
             <Box
                 sx={{
                     display: "flex",
-                    alignItems: "center",
                     justifyContent: "center",
                     p: 4,
-                    backgroundColor: "#FFF7D6",
-                    height: "100%",
+                    backgroundColor: theme.light,
                 }}
             >
                 <Paper
@@ -57,17 +56,17 @@ export default function Friends({ friend, user }) {
                         p: 4,
                         textAlign: "center",
                         borderRadius: 4,
-                        backgroundColor: "#FFFFFF",
+                        backgroundColor: theme.text,
                         boxShadow: "0 10px 24px rgba(0,0,0,0.08)",
                     }}
                 >
                     <PersonSearchIcon
-                        sx={{ fontSize: 56, color: "#FFB300", mb: 1.5 }}
+                        sx={{ fontSize: 56, color: theme.dark, mb: 1.5 }}
                     />
-                    <Typography variant="h6" fontWeight={700}>
+                    <Typography variant="h6" fontWeight={700} sx={{color: theme.dark}}>
                         No Friend Selected
                     </Typography>
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography variant="body2" sx={{color: theme.medium}}>
                         Search and select a friend to see their thoughts and albums.
                     </Typography>
                 </Paper>
@@ -75,7 +74,6 @@ export default function Friends({ friend, user }) {
         );
     }
 
-    const [theme] = useContext(ThemeStore);
     const [imageRefresher, setImageRefresh] = useState(null);
     const [open, setOpen] = useState(false);
     const [client, setClient] = useState(null);

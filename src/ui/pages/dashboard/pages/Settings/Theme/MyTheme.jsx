@@ -1,6 +1,6 @@
 import { Box, Grid, Paper, Typography } from "@mui/material";
 import { useContext } from "react";
-import { ThemeStore } from "../../../../store/userStore";
+import { ThemeStore } from "../../../../../store/userStore";
 
 const palettes = [
     // Glow
@@ -99,7 +99,7 @@ const palettes = [
 function MyTheme() {
     const [theme,setTheme] = useContext(ThemeStore);
     const handleClick = async (value) => {
-        await window.electronStore.get("theme", value);
+        await window.electronStore.set("theme", value);
         setTheme(value);
     };
 

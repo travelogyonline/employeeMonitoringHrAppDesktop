@@ -11,10 +11,12 @@ import {
 import ProfileInfoSection from "./ProfileInfoSection";
 import ChangePasswordModal from "./ChangePasswordModal.jsx";
 import StatusPill from "./component/statusPill.jsx";
-import { UserStore, DpStore, ThemeStore } from "../../../../store/userStore.jsx";
+import { UserStore, DpStore, ThemeStore, LanguageStore } from "../../../../store/userStore.jsx";
+import translate from '../../../../language/translate.jsx'
 
 const Profile = () => {
   const [hostUser, setHostUser] = useContext(UserStore);
+  const [language] = useContext(LanguageStore);
   const [theme] = useContext(ThemeStore);
   const [hostDp, setHostDp] = useContext(DpStore)
   if (!hostUser) return null;
@@ -94,7 +96,7 @@ const Profile = () => {
               backgroundColor: theme.dark,
             }}
           >
-            Change Password
+            {translate(language,"changePassword")}
           </Button>
         </Paper>
 
@@ -102,59 +104,59 @@ const Profile = () => {
         <Box mt={3}>
           <Paper sx={{ p: 3, borderRadius: "12px" }}>
             <Typography variant="h6" fontWeight={700} mb={2} sx={{color: theme.dark}}>
-              Profile
+              {translate(language,"profile")}
             </Typography>
 
             <ProfileInfoSection
-              title="Personal Information"
+              title="personalInformation"
               fields={{
-                "First Name": hostUser.staffName,
-                Birthday: new Date(hostUser.dob).toDateString(),
-                "Aadhar No": hostUser.aadhar,
-                "Blood Group": hostUser.bloodGroup,
-                Phone: hostUser.staffPhone,
-                Email: hostUser.staffEmail,
-                Gender: hostUser.gender,
-                "Mother's Name": hostUser.motherName,
-                "Father's Name": hostUser.fatherName,
-                "Spouse Name": hostUser.spouseName,
-                "PF Number": hostUser.pfNumber,
-                "ESI Number": hostUser.esiNumber,
-                "Physically Challenged": hostUser.physicallyChallenged,
+                "firstName": hostUser.staffName,
+                "birthday": new Date(hostUser.dob).toDateString(),
+                "aadharNo": hostUser.aadhar,
+                "bloodGroup": hostUser.bloodGroup,
+                "phone": hostUser.staffPhone,
+                "email": hostUser.staffEmail,
+                "gender": hostUser.gender,
+                "motherName": hostUser.motherName,
+                "fatherName": hostUser.fatherName,
+                "spouseName": hostUser.spouseName,
+                "pfNumber": hostUser.pfNumber,
+                "esiNumber": hostUser.esiNumber,
+                "physicallyChallenged": hostUser.physicallyChallenged,
               }}
             />
 
             <Divider sx={{ my: 3 }} />
 
             <ProfileInfoSection
-              title="Professional Information"
+              title="professionalInformation"
               fields={{
-                Designation: hostUser.designation,
-                Role: hostUser.role,
-                "Date of Joining": new Date(hostUser.doj).toDateString(),
-                "Staff Type": hostUser.staffType,
-                "Staff Status": hostUser.staffStatus,
-                "Login Status": hostUser.login === 'false' ? <StatusPill status={false} /> : <StatusPill status={true} />,
-                "UAN Number": hostUser.uanNumber,
+                "designation": hostUser.designation,
+                "role": hostUser.role,
+                "dateOfJoining": new Date(hostUser.doj).toDateString(),
+                "staffType": hostUser.staffType,
+                "staffStatus": hostUser.staffStatus,
+                "loginStatus": hostUser.login === 'false' ? <StatusPill status={false} /> : <StatusPill status={true} />,
+                "uanNumber": hostUser.uanNumber,
               }}
             />
 
             <Divider sx={{ my: 3 }} />
 
             <ProfileInfoSection
-              title="Address Information"
+              title="addressInformation"
               fields={{
-                "Address Line 1 (Present)": hostUser.addressLine1Present,
-                "Address Line 2 (Present)": hostUser.addressLine2Present,
-                "City (Present)": hostUser.addressCityPresent,
-                "State (Present)": hostUser.addressStatePresent,
-                "Pin (Present)": hostUser.addressPinPresent,
+                "addressLine1Present": hostUser.addressLine1Present,
+                "addressLine2Present": hostUser.addressLine2Present,
+                "cityPresent": hostUser.addressCityPresent,
+                "statePresent": hostUser.addressStatePresent,
+                "pinPresent": hostUser.addressPinPresent,
 
-                "Address Line 1 (Permanent)": hostUser.addressLine1Permanent,
-                "Address Line 2 (Permanent)": hostUser.addressLine2Permanent,
-                "City (Permanent)": hostUser.addressCityPermanent,
-                "State (Permanent)": hostUser.addressStatePermanent,
-                "Pin (Permanent)": hostUser.addressPinPermanent,
+                "addressLine1Permanent": hostUser.addressLine1Permanent,
+                "addressLine2Permanent": hostUser.addressLine2Permanent,
+                "cityPermanent": hostUser.addressCityPermanent,
+                "statePermanent": hostUser.addressStatePermanent,
+                "pinPermanent": hostUser.addressPinPermanent,
               }}
             />
           </Paper>

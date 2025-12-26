@@ -1,0 +1,69 @@
+{
+    "dashboard": "Dashboard",
+    "profile": "Profile",
+    "friends": "Friends",
+    "chatRoom": "Chat Room",
+    "settings": "Settings",
+    "logout": "Logout",
+
+    "goOnline": "Go Online!",
+    "goOffline": "Go Offline!",
+
+    "currentActiveSession": "Current Active Session",
+
+    "searchEmployeeByName": "Search employee by name",
+
+    "welcome": "Welcome",
+
+    "language": "Language",
+    "theme": "Theme",
+
+    "selectLanguage": "Select Language",
+
+    "changePassword": "Change Password",
+
+    "currentPassword": "Current Password",
+    "newPassword": "New Password",
+    "confirmPassword": "Confirm Password",
+    "updatePassword": "Update Password",
+
+    "online": "ONLINE",
+    "offline": "OFFLINE",
+
+    "personalInformation":"Personal Information",
+    "firstName": "First Name",
+    "birthday": "Birthday",
+    "aadharNo": "Aadhar No",
+    "bloodGroup": "Blood Group",
+    "phone": "Phone",
+    "email": "Email",
+    "gender": "Gender",
+    "motherName": "Mother's Name",
+    "fatherName": "Father's Name",
+    "spouseName": "Spouse Name",
+    "pfNumber": "PF Number",
+    "esiNumber": "ESI Number",
+    "physicallyChallenged": "Physically Challenged",
+
+    "professionalInformation":"Professional Information",
+    "designation":"Designation",
+    "role":"Role",
+    "dateOfJoining":"Date of Joining",
+    "staffType":"Staff Type",
+    "staffStatus":"Staff Status",
+    "loginStatus":"Login Status",
+    "uanNumber":"UAN Number",
+    "addressInformation": "Address Information",
+    "addressLine1Present": "Address Line 1 (Present)",
+    "addressLine2Present": "Address Line 2 (Present)",
+    "cityPresent": "City (Present)",
+    "statePresent": "State (Present)",
+    "pinPresent": "Pin (Present)",
+    "addressLine1Permanent": "Address Line 1 (Permanent)",
+    "addressLine2Permanent": "Address Line 2 (Permanent)",
+    "cityPermanent": "City (Permanent)",
+    "statePermanent": "State (Permanent)",
+    "pinPermanent": "Pin (Permanent)"
+
+
+}

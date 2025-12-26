@@ -2,14 +2,16 @@ import style from './appBar.module.css';
 import UserProfileBar from '../component/userBar';
 import EmployeeSearch from '../component/EmployeeSearch';
 import { useContext, useState, useEffect } from 'react';
-import { ThemeStore, UserStore } from '../../../../store/userStore';
+import { LanguageStore, ThemeStore, UserStore } from '../../../../store/userStore';
 import axios from 'axios';
 import Button from "@mui/material/Button";
 import { BASE_API_URL } from '../../../../data';
 import CurrentSession from '../component/currentSession';
+import translate from '../../../../language/translate';
 
 export default function AppBar({ setFriend, setPage }) {
     const [hostUser, setHostUser] = useContext(UserStore);
+    const [language] = useContext(LanguageStore);
     const [theme] = useContext(ThemeStore);
     const [status, setStatus] = useState('');
     useEffect(() => {
@@ -73,7 +75,6 @@ export default function AppBar({ setFriend, setPage }) {
                     size="large"
                     className={style.button}
                     sx={{
-                        // mt: 4,
                         mr: 4,
                         px: 4,
                         fontWeight: 600,
@@ -82,7 +83,7 @@ export default function AppBar({ setFriend, setPage }) {
                     }}
                     onClick={handleWorkingStatus}
                 >
-                    {status !== "false" ? "Go Offline!" : "Go Online!"}
+                    {status !== "false" ? translate(language,"goOffline") : translate(language,"goOnline")}
                 </Button>
                 <EmployeeSearch setFriend={e => { setFriend(e); setPage('friend') }} />
             </div>

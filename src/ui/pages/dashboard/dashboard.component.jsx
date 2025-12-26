@@ -12,7 +12,6 @@ import {
     Divider
 } from "@mui/material";
 import DashboardIcon from '@mui/icons-material/Dashboard';
-import TableChartIcon from '@mui/icons-material/TableChart';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
 import '@fontsource/roboto/300.css';
@@ -22,20 +21,21 @@ import '@fontsource/roboto/700.css';
 import axios from 'axios';
 import Friends from './pages/friends/friends.component.jsx';
 import PeopleIcon from '@mui/icons-material/People';
-import { ThemeStore, UserStore } from '../../store/userStore.jsx';
+import { LanguageStore, ThemeStore, UserStore } from '../../store/userStore.jsx';
 import AppBar from './components/AppBar/appBar.jsx';
 import ChatRoom from './pages/ChatRoom/chatRoom.jsx';
 import ForumIcon from "@mui/icons-material/Forum";
-import MyTheme from './pages/Theme/MyTheme.jsx';
+import SettingsIcon from '@mui/icons-material/Settings';
+import Settings from './pages/Settings/settings.jsx';
+import translate from '../../language/translate.jsx';
 
 function Dashboard({ setUser }) {
+    const [language] = useContext(LanguageStore);
     const [hostUser, setHostUser] = useContext(UserStore);
-    const [theme,setTheme] = useContext(ThemeStore)
+    const [theme, setTheme] = useContext(ThemeStore)
     const [page, setPage] = useState("dashboard");
     const [friend, setFriend] = useState(null)
     const [image, setImage] = useState(null);
-
-    console.log(theme)
 
     const handleCapture = async () => {
         if (page === 'chatRoom') return;
@@ -87,11 +87,6 @@ function Dashboard({ setUser }) {
             };
 
             await axios.request(config)
-                .then((res) => {
-                })
-                .catch((error) => {
-                    // console.log(error);
-                });
         }
         async function handleResponse() {
             await window.electronStore.delete("user");
@@ -101,20 +96,19 @@ function Dashboard({ setUser }) {
     }
 
     return (
-        <div className={style.container} style={{backgroundColor: theme.light}}>
+        <div className={style.container} style={{ backgroundColor: theme.light }}>
             <div className={style.innerContainer}>
                 <div className={style.sidebar} style={{ backgroundColor: theme.medium }}>
-                    <div className={style.logoContainer} style={{backgroundColor: theme.dark}}>
+                    <div className={style.logoContainer} style={{ backgroundColor: theme.dark }}>
                         <img src={logo} alt="Logo" className={style.logo} />
                     </div>
                     <List sx={{ width: "100%", padding: 0 }}>
-                        <ListItemButton onClick={() => setPage('dashboard')}>
+                        <ListItemButton onClick={() => setPage('dashboard')} >
                             <ListItemIcon>
-                                <DashboardIcon />
+                                <DashboardIcon sx={{ color: theme.text }} />
                             </ListItemIcon>
                             <ListItemText
-                                sx={{ color: theme.text }}
-                                primary="Dashboard"
+                                primary={translate(language,"dashboard")}
                                 primaryTypographyProps={{ variant: "h6" }}
                             />
                         </ListItemButton>
@@ -123,22 +117,22 @@ function Dashboard({ setUser }) {
 
                         <ListItemButton onClick={() => setPage('profile')}>
                             <ListItemIcon>
-                                <AccountCircleIcon />
+                                <AccountCircleIcon sx={{ color: theme.text }} />
                             </ListItemIcon>
                             <ListItemText
                                 sx={{ color: theme.text }}
-                                primary="Profile"
+                                primary={translate(language,"profile")}
                                 primaryTypographyProps={{ variant: "h6" }}
                             />
                         </ListItemButton>
                         <Divider />
                         <ListItemButton onClick={() => setPage('friend')}>
                             <ListItemIcon>
-                                <PeopleIcon />
+                                <PeopleIcon sx={{ color: theme.text }} />
                             </ListItemIcon>
                             <ListItemText
                                 sx={{ color: theme.text }}
-                                primary="Friends"
+                                primary={translate(language,"friends")}
                                 primaryTypographyProps={{ variant: "h6" }}
                             />
                         </ListItemButton>
@@ -147,35 +141,35 @@ function Dashboard({ setUser }) {
 
                         <ListItemButton onClick={() => setPage("chatRoom")}>
                             <ListItemIcon>
-                                <ForumIcon />
+                                <ForumIcon sx={{ color: theme.text }} />
                             </ListItemIcon>
                             <ListItemText
                                 sx={{ color: theme.text }}
-                                primary="Chat Room"
+                                primary={translate(language,"chatRoom")}
                                 primaryTypographyProps={{ variant: "h6" }}
                             />
                         </ListItemButton>
 
 
                         <Divider />
-                        <ListItemButton onClick={() => setPage("myThemes")}>
+                        <ListItemButton onClick={() => setPage("settings")}>
                             <ListItemIcon>
-                                <TableChartIcon />
+                                <SettingsIcon sx={{ color: theme.text }} />
                             </ListItemIcon>
                             <ListItemText
                                 sx={{ color: theme.text }}
-                                primary="My Themes"
+                                primary={translate(language,"settings")}
                                 primaryTypographyProps={{ variant: "h6" }}
                             />
                         </ListItemButton>
 
                         <ListItemButton onClick={handleLogout}>
                             <ListItemIcon>
-                                <LogoutIcon />
+                                <LogoutIcon sx={{ color: theme.text }} />
                             </ListItemIcon>
                             <ListItemText
                                 sx={{ color: theme.text }}
-                                primary="Logout"
+                                primary={translate(language,"logout")}
                                 primaryTypographyProps={{ variant: "h6" }}
                             />
                         </ListItemButton>
@@ -183,12 +177,12 @@ function Dashboard({ setUser }) {
                     </List>
                 </div>
                 <div className={style.content}>
-                    <AppBar setFriend={(v)=>setFriend(v)} setPage={setPage} />
+                    <AppBar setFriend={(v) => setFriend(v)} setPage={setPage} />
                     {page === 'dashboard' && <LandingPage />}
                     {page === 'profile' && <Profile />}
                     {page === 'chatRoom' && <ChatRoom />}
                     {page === 'friend' && <Friends friend={friend} user={hostUser} />}
-                    {page === 'myThemes' && <MyTheme />}
+                    {page === 'settings' && <Settings />}
                 </div>
             </div>
         </div>

@@ -9,10 +9,12 @@ import {
 } from "@mui/material";
 
 import { BASE_API_URL } from "../../../../data";
-import { ThemeStore } from "../../../../store/userStore";
+import { LanguageStore, ThemeStore } from "../../../../store/userStore";
+import translate from '../../../../language/translate';
 
 export default function EmployeeSearch({ setFriend }) {
   const [theme] = useContext(ThemeStore);
+  const [language] = useContext(LanguageStore)
   const [employees, setEmployees] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -24,7 +26,6 @@ export default function EmployeeSearch({ setFriend }) {
         setLoading(false);
       })
       .catch((err) => {
-        // console.log(err);
         setLoading(false);
       });
   }, []);
@@ -69,18 +70,16 @@ export default function EmployeeSearch({ setFriend }) {
             sx: {
               maxHeight: 300,
               overflowY: "auto",
-
-              /* Hide scrollbar */
-              scrollbarWidth: "none",          // Firefox
+              scrollbarWidth: "none",          
               "&::-webkit-scrollbar": {
-                display: "none",               // Chrome / Safari
+                display: "none",               
               },
             },
           }}
           renderInput={(params) => (
             <TextField
               {...params}
-              label="Search employee by name"
+              label={translate(language,"searchEmployeeByName")}
               variant="outlined"
             />
           )}

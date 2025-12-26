@@ -2,8 +2,11 @@ import { Box, Typography, CircularProgress, Chip } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
+import { useContext } from "react";
+import { ThemeStore } from "../../../../../store/userStore";
 
 function Productivity({ value = 0 }) {
+  const [theme] = useContext(ThemeStore)
   const getStatus = () => {
     if (value >= 75)
       return {
@@ -36,7 +39,7 @@ function Productivity({ value = 0 }) {
         borderRadius: 4,
         width: 220,
         background:
-          "linear-gradient(145deg, rgba(255,255,255,0.95), rgba(240,242,245,0.95))",
+          `linear-gradient(145deg, ${theme.light}, ${theme.text})`,
         boxShadow: "0 12px 32px rgba(0,0,0,0.12)",
         display: "flex",
         flexDirection: "column",
@@ -47,7 +50,7 @@ function Productivity({ value = 0 }) {
       {/* Header */}
       <Typography
         variant="subtitle2"
-        color="text.secondary"
+        color={theme.medium}
         fontWeight={600}
         letterSpacing={0.5}
       >

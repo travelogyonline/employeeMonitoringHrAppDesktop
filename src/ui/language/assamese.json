@@ -1,0 +1,68 @@
+{
+    "dashboard": "ডেচবৰ্ড",
+    "profile": "প্ৰফাইল",
+    "friends": "বন্ধু-বান্ধৱ",
+    "chatRoom": "বাৰ্তালাপ কক্ষ",
+    "settings": "সংহতি",
+    "logout": "প্ৰস্থান",
+
+    "goOnline": "অনলাইন হওক!",
+    "goOffline": "অফলাইন হওক!",
+
+    "currentActiveSession": "বৰ্তমানৰ সক্ৰিয় অধিবেশন",
+
+    "searchEmployeeByName": "নামৰ দ্বাৰা কৰ্মচাৰী বিচাৰক",
+
+    "welcome": "স্বাগতম",
+
+    "language": "ভাষা",
+    "theme": "থিম",
+
+    "selectLanguage": "ভাষা নিৰ্বাচন কৰক",
+
+    "changePassword": "পাছৱৰ্ড সলনি কৰক",
+
+    "currentPassword": "বৰ্তমানৰ পাছৱৰ্ড",
+    "newPassword": "নতুন পাছৱৰ্ড",
+    "confirmPassword": "পাছৱৰ্ড নিশ্চিত কৰক",
+    "updatePassword": "পাছৱৰ্ড নবীকৰণ কৰক",
+
+    "online": "অনলাইন",
+    "offline": "অফলাইন",
+    
+    "personalInformation": "ব্যক্তিগত তথ্য",
+    "firstName": "প্ৰথম নাম",
+    "birthday": "জন্মদিন",
+    "aadharNo": "আধাৰ নম্বৰ",
+    "bloodGroup": "তেজৰ গ্ৰুপ",
+    "phone": "ফোন",
+    "email": "ইমেইল",
+    "gender": "লিংগ",
+    "motherName": "মাতৃৰ নাম",
+    "fatherName": "পিতৃৰ নাম",
+    "spouseName": "স্বামী/পত্নীৰ নাম",
+    "pfNumber": "পি.এফ. নম্বৰ",
+    "esiNumber": "ই.এচ.আই. নম্বৰ",
+    "physicallyChallenged": "শাৰীৰিকভাৱে প্ৰত্যাহ্বানগ্ৰস্ত",
+
+    "professionalInformation": "পেছাদাৰী তথ্য",
+    "designation": "পদবী",
+    "role": "ভূমিকা",
+    "dateOfJoining": "যোগদানৰ তাৰিখ",
+    "staffType": "কৰ্মচাৰীৰ প্ৰকাৰ",
+    "staffStatus": "কৰ্মচাৰীৰ স্থিতি",
+    "loginStatus": "লগইন স্থিতি",
+    "uanNumber": "ইউ.এ.এন. নম্বৰ",
+
+    "addressInformation": "ঠিকনাৰ তথ্য",
+    "addressLine1Present": "ঠিকনাৰ শাৰী ১ (বৰ্তমান)",
+    "addressLine2Present": "ঠিকনাৰ শাৰী ২ (বৰ্তমান)",
+    "cityPresent": "চহৰ (বৰ্তমান)",
+    "statePresent": "ৰাজ্য (বৰ্তমান)",
+    "pinPresent": "পিন ক'ড (বৰ্তমান)",
+    "addressLine1Permanent": "ঠিকনাৰ শাৰী ১ (স্থায়ী)",
+    "addressLine2Permanent": "ঠিকনাৰ শাৰী ২ (স্থায়ী)",
+    "cityPermanent": "চহৰ (স্থায়ী)",
+    "statePermanent": "ৰাজ্য (স্থায়ী)",
+    "pinPermanent": "পিন ক'ড (স্থায়ী)"
+}

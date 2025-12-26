@@ -80,6 +80,7 @@ function Login({ setUser }) {
                             required
                             value={userid}
                             onChange={(e) => setUserid(e.target.value)}
+                            onKeyDown={(e) => e.key === "Enter" && handleOnSubmit()}
                         />
 
                         <TextField
@@ -90,6 +91,7 @@ function Login({ setUser }) {
                             required
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
+                            onKeyDown={(e) => e.key === "Enter" && handleOnSubmit()}
                         />
 
                         <Button

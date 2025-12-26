@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
     Box,
     Card,
@@ -11,6 +11,7 @@ import {
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import ScheduleIcon from "@mui/icons-material/Schedule";
 import HourglassBottomIcon from "@mui/icons-material/HourglassBottom";
+import { ThemeStore } from "../../../../../store/userStore";
 
 const SHIFT_DURATION_HOURS = 10;
 
@@ -18,6 +19,7 @@ const format12Hour = (date) =>
     date.toLocaleTimeString([], { hour: "numeric", minute: "2-digit", hour12: true });
 
 const ShiftProgress = ({ shiftStartTime }) => {
+    const [theme] = useContext(ThemeStore);
     const [progress, setProgress] = useState(0);
     const [timeLeft, setTimeLeft] = useState("--");
 
@@ -72,13 +74,16 @@ const ShiftProgress = ({ shiftStartTime }) => {
             elevation={6}
             sx={{
                 borderRadius: 4,
-                background: "linear-gradient(135deg, #ffffff, #f5f7fa)",
+                background:
+                    `linear-gradient(145deg, ${theme.light}, ${theme.text})`,
                 minWidth: 420
             }}
         >
             <CardContent>
                 <Stack spacing={2}>
-                    <Typography variant="h6" fontWeight={600}>
+                    <Typography variant="h6" fontWeight={600} sx={{
+                        color: theme.medium
+                    }}>
                         Shift Overview
                     </Typography>
 
@@ -88,14 +93,24 @@ const ShiftProgress = ({ shiftStartTime }) => {
                         <Box display="flex" alignItems="center" gap={1}>
                             <AccessTimeIcon color="primary" />
                             <Typography fontWeight={500}>
-                                Start: {format12Hour(startDate)}
+                                <Box component="span" sx={{ color: theme.dark }}>
+                                    Start:
+                                </Box>{" "}
+                                <Box component="span" sx={{ color: theme.medium }}>
+                                    {format12Hour(startDate)}
+                                </Box>
                             </Typography>
                         </Box>
 
                         <Box display="flex" alignItems="center" gap={1}>
                             <ScheduleIcon color="success" />
                             <Typography fontWeight={500}>
-                                End: {format12Hour(endDate)}
+                                <Box component="span" sx={{ color: theme.dark }}>
+                                    End:
+                                </Box>{" "}
+                                <Box component="span" sx={{ color: theme.medium }}>
+                                    {format12Hour(endDate)}
+                                </Box>
                             </Typography>
                         </Box>
                     </Stack>
@@ -112,15 +127,16 @@ const ShiftProgress = ({ shiftStartTime }) => {
                             value={progress}
                             size={120}
                             thickness={4}
+                            sx={{ color: theme.dark }}
                         />
                         <Box
                             position="absolute"
                             textAlign="center"
                         >
-                            <Typography variant="h6" fontWeight={700}>
+                            <Typography variant="h6" fontWeight={700} sx={{ color: theme.medium }}>
                                 {progress}%
                             </Typography>
-                            <Typography variant="caption">
+                            <Typography variant="caption" sx={{ color: theme.medium }}>
                                 Shift Done
                             </Typography>
                         </Box>
@@ -128,7 +144,7 @@ const ShiftProgress = ({ shiftStartTime }) => {
 
                     <Box display="flex" alignItems="center" gap={1} justifyContent="center">
                         <HourglassBottomIcon color="warning" />
-                        <Typography fontWeight={500}>
+                        <Typography fontWeight={500} sx={{ color: theme.medium }}>
                             Time Left: {timeLeft}
                         </Typography>
                     </Box>

@@ -162,7 +162,7 @@ function MessageBox({ activeUser, allUser }) {
             }
           }}
         />
-        <IconButton onClick={sendMessage}>
+        <IconButton onClick={sendMessage} sx={{color: theme.medium}}>
           <SendIcon />
         </IconButton>
       </Paper>
