@@ -13,10 +13,13 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import TimerIcon from "@mui/icons-material/Timer";
 import { BASE_API_URL } from "../../../../../data";
-import { ThemeStore } from "../../../../../store/userStore";
+import { LanguageStore, ThemeStore } from "../../../../../store/userStore";
+import translate from "../../../../../language/translate";
+import timeTranslator from "../../../../../language/timeTranslator";
 
 function EmployeeRecords({ user, setProductivity }) {
     const [theme] = useContext(ThemeStore);
+    const [language] = useContext(LanguageStore);
     const [firstLogin, setFirstLogin] = useState("--:--");
     const [lastLogin, setLastLogin] = useState("--:--");
     const [totalTime, setTotalTime] = useState("0h 0m");
@@ -100,10 +103,10 @@ function EmployeeRecords({ user, setProductivity }) {
                                 <LoginIcon color="primary" />
                                 <Typography variant="subtitle1" fontWeight={600}>
                                     <Box component="span" sx={{ color: theme.dark }}>
-                                        First Login Today:
+                                        {translate(language,"firstLoginToday")}:
                                     </Box>{" "}
                                     <Box component="span" sx={{ color: theme.medium }}>
-                                        {firstLogin}
+                                        {timeTranslator(language,firstLogin)}
                                     </Box>
                                 </Typography>
                             </Box>
@@ -111,10 +114,10 @@ function EmployeeRecords({ user, setProductivity }) {
                                 <LogoutIcon color="warning" />
                                 <Typography variant="subtitle1" fontWeight={600}>
                                     <Box component="span" sx={{ color: theme.dark }}>
-                                        Last Login Today:
+                                        {translate(language,"lastLoginToday")}:
                                     </Box>{" "}
                                     <Box component="span" sx={{ color: theme.medium }}>
-                                        {lastLogin}
+                                        {timeTranslator(language,lastLogin)}
                                     </Box>
                                 </Typography>
                             </Box>
@@ -122,10 +125,10 @@ function EmployeeRecords({ user, setProductivity }) {
                                 <AccessTimeIcon color="success" />
                                 <Typography variant="subtitle1" fontWeight={600}>
                                     <Box component="span" sx={{ color: theme.dark }}>
-                                        Total Time Worked Today:
+                                        {translate(language,"totalTimeWorkedToday")}:
                                     </Box>{" "}
                                     <Box component="span" sx={{ color: theme.medium }}>
-                                        {totalTime}
+                                        {timeTranslator(language,totalTime)}
                                     </Box>
                                 </Typography>
                             </Box>
@@ -133,10 +136,10 @@ function EmployeeRecords({ user, setProductivity }) {
                                 <TimerIcon color="error" />
                                 <Typography variant="subtitle1" fontWeight={600}>
                                     <Box component="span" sx={{ color: theme.dark }}>
-                                        Total Break Taken Today:
+                                        {translate(language,"totalBreakTakenToday")}:
                                     </Box>{" "}
                                     <Box component="span" sx={{ color: theme.medium }}>
-                                        {totalBreak}
+                                        {timeTranslator(language,totalBreak)}
                                     </Box>
                                 </Typography>
                             </Box>

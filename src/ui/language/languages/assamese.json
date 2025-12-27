@@ -64,5 +64,51 @@
     "addressLine2Permanent": "ঠিকনাৰ শাৰী ২ (স্থায়ী)",
     "cityPermanent": "চহৰ (স্থায়ী)",
     "statePermanent": "ৰাজ্য (স্থায়ী)",
-    "pinPermanent": "পিন ক'ড (স্থায়ী)"
+    "pinPermanent": "পিন ক'ড (স্থায়ী)",
+
+    "productivity": "উৎপাদনশীলতা",
+    "goodJob": "সুন্দৰ কাম!",
+    "takeLessBreaks": "কমকৈ বিৰতি লওক",
+    "concerning": "চিন্তাজনক",
+
+    "firstLoginToday": "আজিৰ প্ৰথম লগইন",
+    "lastLoginToday": "আজিৰ অন্তিম লগইন",
+    "totalTimeWorkedToday": "আজি কাম কৰা মুঠ সময়",
+    "totalBreakTakenToday": "আজি লোৱা মুঠ বিৰতি",
+
+    "noFriendSelected": "কোনো বন্ধু নিৰ্বাচন কৰা হোৱা নাই",
+    "searchAndSelectAFriend": "বন্ধুবৰ্গৰ চিন্তা-ভাৱনা আৰু এলবাম চাবলৈ তেওঁলোকক বিচাৰক আৰু নিৰ্বাচন কৰক।",
+    "experience": "অভিজ্ঞতা",
+    "album": "এলবাম",
+
+    "thoughts": "চিন্তা-ভাৱনা",
+    "noThoughts": "কোনো চিন্তা-ভাৱনা নাই!",
+
+    "noImages": "কোনো ছবি নাই!",
+    "noDateAvailable": "কোনো তাৰিখ উপলব্ধ নাই",
+
+    "pleaseSelectAnImage": "অনুগ্ৰহ কৰি এখন ছবি বাছনি কৰক",
+    "imageUploadFailed": "ছবি আপলোড বিফল হৈছে",
+    "uploadToAlbum": "এলবামত আপলোড কৰক",
+    "clickToSelectAnImage": "ছবি বাছনি কৰিবলৈ ক্লিক কৰক",
+    "imageUploadedSuccessfully": "ছবি সফলতাৰে আপলোড কৰা হৈছে",
+    "uploading": "আপলোড হৈ আছে...",
+    "uploadImage": "ছবি আপলোড কৰক",
+
+    "shiftOverview": "শ্বিফ্টৰ পৰ্যালোচনা",
+    "start": "আৰম্ভ",
+    "end": "সমাপ্ত",
+    "shiftDone": "শ্বিফ্ট সম্পূৰ্ণ হ’ল",
+    "timeLeft": "বাকী থকা সময়",
+
+    "searchFriend": "বন্ধু বিচাৰক",
+    "startNewChat": "নতুন চাট আৰম্ভ কৰক",
+    "cancel": "বাতিল কৰক",
+    "startChat": "চাট আৰম্ভ কৰক",
+    "selectFriend": "বন্ধু নিৰ্বাচন কৰক",
+    "searchByFriendName": "বন্ধুৰ নামেৰে বিচাৰক",
+
+    "noConversationSelected": "কোনো বাৰ্তালাপ নিৰ্বাচন কৰা হোৱা নাই",
+    "createAConversation": "কথা-বতৰা আৰম্ভ কৰিবলৈ এটা বাৰ্তালাপ নিৰ্বাচন কৰক বা সৃষ্টি কৰক",
+    "typeYourMessage": "আপোনাৰ বাৰ্তা লিখক…"
 }

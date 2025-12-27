@@ -3,9 +3,11 @@ import { Box, Typography, Modal, Grid } from "@mui/material";
 import axios from "axios";
 import { BASE_API_URL } from "../../../../../data";
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import { ThemeStore } from "../../../../../store/userStore";
+import { LanguageStore, ThemeStore } from "../../../../../store/userStore";
+import translate from "../../../../../language/translate";
 
 function Album({ friend, user, imageRefresher }) {
+    const [language] = useContext(LanguageStore);
     const [theme] = useContext(ThemeStore);
     const [images, setImages] = useState([]);
     const [zoomImage, setZoomImage] = useState(null);
@@ -32,7 +34,6 @@ function Album({ friend, user, imageRefresher }) {
             await axios.delete(`${BASE_API_URL}api/album/${user._id}/pic/${imageId}`);
             setImages(prev => prev.filter(img => img._id !== imageId));
         } catch (err) {
-            console.error("Delete failed", err);
         }
     };
 
@@ -95,7 +96,7 @@ function Album({ friend, user, imageRefresher }) {
                         </Grid>
                     )) : (
                         <Typography sx={{ color: "#000000ff" }}>
-                            No images!
+                            {translate(language, "noImages")}
                         </Typography>
                     )}
                 </Grid>
@@ -141,7 +142,7 @@ function Album({ friend, user, imageRefresher }) {
                                 dateStyle: 'long',
                                 timeStyle: 'short'
                             })
-                            : "No Date Available"}
+                            : translate(language, "noDateAvailable")}
                     </Typography>
                 </Box>
             </Modal>

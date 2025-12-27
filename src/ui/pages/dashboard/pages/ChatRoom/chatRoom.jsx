@@ -20,15 +20,17 @@ import SearchIcon from "@mui/icons-material/Search";
 import AddIcon from '@mui/icons-material/Add';
 import { useChatList } from "./hooks/useChatList";
 import { useAlluser } from "./hooks/useAllUser";
-import { ThemeStore, UserStore } from "../../../../store/userStore";
+import { LanguageStore, ThemeStore, UserStore } from "../../../../store/userStore";
 import { BASE_API_URL } from "../../../../data";
 import axios from "axios";
 import MessageBox from "./components/messageBox";
 import getDp from "./functions/getDp";
 import lightenHex from './functions/colourLightner';
+import translate from '../../../../language/translate';
 
 export default function ChatBox({setPage}) {
   const [hostUser, setHostUser] = useContext(UserStore);
+  const [language] = useContext(LanguageStore);
   const [theme] = useContext(ThemeStore)
   const [chatlist, loadingChatlist, refreshChatlist] = useChatList(hostUser._id)
   const [allUser, loadingAllUser] = useAlluser();
@@ -77,7 +79,6 @@ export default function ChatBox({setPage}) {
           backgroundColor: theme.medium,
         }}
       >
-        {/* ================= LEFT SIDEBAR ================= */}
         <Box
           width={280}
           p={2}
@@ -112,7 +113,7 @@ export default function ChatBox({setPage}) {
                   renderInput={(params) => (
                     <TextField
                       {...params}
-                      placeholder="Search Friend"
+                      placeholder={translate(language,"searchFriend")}
                       variant="standard"
                       InputProps={{
                         ...params.InputProps,
@@ -120,7 +121,6 @@ export default function ChatBox({setPage}) {
                       }}
                     />
                   )}
-                  /* Dropdown container */
                   PaperComponent={(props) => (
                     <Paper
                       {...props}
@@ -132,14 +132,12 @@ export default function ChatBox({setPage}) {
                       }}
                     />
                   )}
-                  /* Option styling */
                   renderOption={(props, option, { selected }) => (
                     <li
                       {...props}
                       style={{
                         padding: "10px 16px",
                         fontWeight: selected ? 600 : 500,
-                        // backgroundColor: theme.light,
                         backgroundColor: selected ? theme.dark : theme.light,
                         color: selected ? theme.text : theme.dark,
                       }}
@@ -147,7 +145,6 @@ export default function ChatBox({setPage}) {
                       {option.clientName}
                     </li>
                   )}
-                  /* Listbox (scroll area) */
                   ListboxProps={{
                     sx: {
                       maxHeight: 280,
@@ -165,7 +162,6 @@ export default function ChatBox({setPage}) {
                   }}
                 />
 
-                {/* ================= ADD BUTTON ================= */}
                 <IconButton
                   size="small"
                   onClick={() => setOpen(true)}
@@ -184,7 +180,6 @@ export default function ChatBox({setPage}) {
             )}
           </Paper>
 
-          {/* Friends List */}
           <Box
             flex={1}
             sx={{
@@ -228,11 +223,8 @@ export default function ChatBox({setPage}) {
           </Box>
         </Box>
 
-        {/* ================= RIGHT CHAT AREA ================= */}
         <Box flex={1} p={2} display="flex" flexDirection="column" sx={{backgroundColor: lightenHex(theme.medium,40)}}>
-
           <MessageBox activeUser={activeUser} allUser={allUser} setPage={setPage}/>
-
         </Box>
       </Paper>
       <Dialog
@@ -248,9 +240,8 @@ export default function ChatBox({setPage}) {
         }}
       >
         <DialogTitle fontWeight={700}>
-          Start New Chat
+          {translate(language,"startNewChat")}
         </DialogTitle>
-
         <DialogContent>
           <Box sx={{ mt: 1 }}>
             <Autocomplete
@@ -260,8 +251,8 @@ export default function ChatBox({setPage}) {
               renderInput={(params) => (
                 <TextField
                   {...params}
-                  label="Select User"
-                  placeholder="Search by name"
+                  label={translate(language,"selectFriend")}
+                  placeholder={translate(language,"searchByFriendName")}
                 />
               )}
               isOptionEqualToValue={(option, value) =>
@@ -270,13 +261,12 @@ export default function ChatBox({setPage}) {
             />
           </Box>
         </DialogContent>
-
         <DialogActions sx={{ p: 2 }}>
           <Button
             onClick={() => setOpen(false)}
             color="inherit"
           >
-            Cancel
+            {translate(language,"cancel")}
           </Button>
 
           <Button
@@ -287,7 +277,7 @@ export default function ChatBox({setPage}) {
               setOpen(false);
             }}
           >
-            Start Chat
+            {translate(language,"startChat")}
           </Button>
         </DialogActions>
       </Dialog>

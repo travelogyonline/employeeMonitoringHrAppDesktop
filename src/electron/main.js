@@ -5,6 +5,19 @@ import axios from 'axios';
 import Store from "electron-store";
 import { BASE_API_URL } from './data.js';
 
+const gotTheLock = app.requestSingleInstanceLock();
+if (!gotTheLock) {
+    app.quit();
+} else {
+    app.on('second-instance', () => {
+        if (win) {
+            if (win.isMinimized()) win.restore();
+            win.show();
+            win.focus();
+        }
+    });
+}
+
 let tray = null;
 let win = null;
 let isResumedFromSleep = false;
@@ -27,24 +40,24 @@ ipcMain.handle("store:delete", (event, key) => {
 });
 
 function startIdleChecker() {
-    const IDLE_LIMIT = 15 * 60;
-    // const IDLE_LIMIT = 5;
+    const IDLE_LIMIT = 5 * 60; // 5 minutes (in seconds)
 
     setInterval(() => {
-        const idle = powerMonitor.getSystemIdleTime();
+        const idle = powerMonitor.getSystemIdleTime(); 
 
         if (idle >= IDLE_LIMIT) {
             updateReactStateFromMain('false');
             handleLogout();
+
             win.setAlwaysOnTop(true, 'screen-saver');
             win.focus();
             win.show();
+
             setTimeout(() => {
                 win.setAlwaysOnTop(false);
             }, 100);
         }
-
-    }, 5 * 60 * 1000); // check every 10 seconds
+    }, 5 * 1000); // check every 5 seconds
 }
 
 

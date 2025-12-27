@@ -9,6 +9,7 @@ import TimerIcon from "@mui/icons-material/Timer";
 import { BASE_API_URL } from "../../../../data";
 import { LanguageStore, ThemeStore, UserStore } from "../../../../store/userStore";
 import translate from '../../../../language/translate'
+import numeralTranslator from "../../../../language/numeralTranslate";
 
 function CurrentSession() {
     const [hostUser, setHostUser] = useContext(UserStore);
@@ -62,7 +63,6 @@ function CurrentSession() {
             const mins = Math.floor((totalSec % 3600) / 60);
             setTotalTime(`${hrs}h ${mins}m`);
 
-            // 🔥 Active session in hours, minutes, seconds
             if (!last.logout) {
                 const activeMs = now - new Date(last.login);
                 const s = Math.floor(activeMs / 1000);

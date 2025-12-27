@@ -3,9 +3,11 @@ import {
   Typography,
   Paper
 } from "@mui/material";
-import { ThemeStore } from "../../../../../store/userStore";
+import { LanguageStore, ThemeStore } from "../../../../../store/userStore";
+import translate from '../../../../../language/translate';
 
 export default function FriendThought({ friend }) {
+  const [language] = useContext(LanguageStore);
   const [theme] = useContext(ThemeStore);
   return (
     <Paper
@@ -18,7 +20,7 @@ export default function FriendThought({ friend }) {
       }}
     >
       <Typography fontWeight={700} mb={1} sx={{ color: theme.text }}>
-        Thoughts
+        {translate(language,"thoughts")}
       </Typography>
       {friend.myThoughts ? (
         <Typography variant="body2" sx={{ color: theme.text, mb: 2 }}>
@@ -26,7 +28,7 @@ export default function FriendThought({ friend }) {
         </Typography>
       ) : (
         <Typography variant="body2" sx={{ color: theme.text, mb: 2 }}>
-          No thoughts!
+          {translate(language,"noThoughts")}
         </Typography>
       )}
 

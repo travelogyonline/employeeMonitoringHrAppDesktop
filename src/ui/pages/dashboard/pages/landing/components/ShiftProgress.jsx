@@ -11,17 +11,24 @@ import {
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import ScheduleIcon from "@mui/icons-material/Schedule";
 import HourglassBottomIcon from "@mui/icons-material/HourglassBottom";
-import { ThemeStore } from "../../../../../store/userStore";
+import { LanguageStore, ThemeStore } from "../../../../../store/userStore";
+import translate from '../../../../../language/translate';
+import timeTranslator from "../../../../../language/timeTranslator";
+import numeralTranslator from "../../../../../language/numeralTranslate";
 
 const SHIFT_DURATION_HOURS = 10;
 
-const format12Hour = (date) =>
-    date.toLocaleTimeString([], { hour: "numeric", minute: "2-digit", hour12: true });
 
 const ShiftProgress = ({ shiftStartTime }) => {
     const [theme] = useContext(ThemeStore);
+    const [language] = useContext(LanguageStore);
     const [progress, setProgress] = useState(0);
     const [timeLeft, setTimeLeft] = useState("--");
+    
+    const format12Hour = (date) =>{
+        const n = date.toLocaleTimeString([], { hour: "numeric", minute: "2-digit", hour12: true });
+        return timeTranslator(language,n);
+    }
 
     useEffect(() => {
         if (!shiftStartTime) return;
@@ -84,7 +91,7 @@ const ShiftProgress = ({ shiftStartTime }) => {
                     <Typography variant="h6" fontWeight={600} sx={{
                         color: theme.medium
                     }}>
-                        Shift Overview
+                        {translate(language,"shiftOverview")}
                     </Typography>
 
                     <Divider />
@@ -94,7 +101,7 @@ const ShiftProgress = ({ shiftStartTime }) => {
                             <AccessTimeIcon color="primary" />
                             <Typography fontWeight={500}>
                                 <Box component="span" sx={{ color: theme.dark }}>
-                                    Start:
+                                    {translate(language,"start")}:
                                 </Box>{" "}
                                 <Box component="span" sx={{ color: theme.medium }}>
                                     {format12Hour(startDate)}
@@ -106,7 +113,7 @@ const ShiftProgress = ({ shiftStartTime }) => {
                             <ScheduleIcon color="success" />
                             <Typography fontWeight={500}>
                                 <Box component="span" sx={{ color: theme.dark }}>
-                                    End:
+                                    {translate(language,"end")}:
                                 </Box>{" "}
                                 <Box component="span" sx={{ color: theme.medium }}>
                                     {format12Hour(endDate)}
@@ -134,10 +141,10 @@ const ShiftProgress = ({ shiftStartTime }) => {
                             textAlign="center"
                         >
                             <Typography variant="h6" fontWeight={700} sx={{ color: theme.medium }}>
-                                {progress}%
+                                {numeralTranslator(language,progress)}%
                             </Typography>
                             <Typography variant="caption" sx={{ color: theme.medium }}>
-                                Shift Done
+                                {translate(language,"shiftDone")}
                             </Typography>
                         </Box>
                     </Box>
@@ -145,7 +152,7 @@ const ShiftProgress = ({ shiftStartTime }) => {
                     <Box display="flex" alignItems="center" gap={1} justifyContent="center">
                         <HourglassBottomIcon color="warning" />
                         <Typography fontWeight={500} sx={{ color: theme.medium }}>
-                            Time Left: {timeLeft}
+                            {translate(language,"timeLeft")}: {timeLeft}
                         </Typography>
                     </Box>
                 </Stack>

@@ -63,7 +63,51 @@
     "addressLine2Permanent": "Address Line 2 (Permanent)",
     "cityPermanent": "City (Permanent)",
     "statePermanent": "State (Permanent)",
-    "pinPermanent": "Pin (Permanent)"
+    "pinPermanent": "Pin (Permanent)",
 
+    "productivity": "PRODUCTIVITY",
+    "goodJob": "Good Job!",
+    "takeLessBreaks": "Take less breaks",
+    "concerning": "Concerning",
 
+    "firstLoginToday": "First Login Today",
+    "lastLoginToday": "Last Login Today",
+    "totalTimeWorkedToday": "Total Time Worked Today",
+    "totalBreakTakenToday": "Total Break Taken Today",
+
+    "noFriendSelected": "No Friend Selected",
+    "searchAndSelectAFriend": "Search and select a friend to see their thoughts and albums.",
+    "experience": "Experience",
+    "album": "Album",
+
+    "thoughts": "Thoughts",
+    "noThoughts": "No thoughts!",
+
+    "noImages": "No images!",
+    "noDateAvailable": "No Date Available",
+
+    "pleaseSelectAnImage": "Please select an image",
+    "imageUploadFailed": "Image upload failed",
+    "uploadToAlbum": "Upload to Album",
+    "clickToSelectAnImage": "Click to select an image",
+    "imageUploadedSuccessfully": "Image uploaded successfully",
+    "uploading": "Uploading...",
+    "uploadImage": "Upload Image",
+
+    "shiftOverview": "Shift Overview",
+    "start": "Start",
+    "end": "End",
+    "shiftDone": "Shift Done",
+    "timeLeft": "Time Left",
+
+    "searchFriend": "Search Friend",
+    "startNewChat": "Start New Chat",
+    "cancel": "Cancel",
+    "startChat": "Start Chat",
+    "selectFriend": "Select Friend",
+    "searchByFriendName": "Search by friend's name",
+
+    "noConversationSelected": "No Conversation Selected",
+    "createAConversation": "Select or create a conversation to start chatting",
+    "typeYourMessage": "Type your message…"
 }

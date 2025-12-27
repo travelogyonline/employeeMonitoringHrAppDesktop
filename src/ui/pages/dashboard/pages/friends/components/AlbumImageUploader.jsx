@@ -3,10 +3,12 @@ import axios from "axios";
 import { Box, Typography, Button, CircularProgress, Alert, IconButton } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import ImageIcon from "@mui/icons-material/Image";
-import { ThemeStore, UserStore } from "../../../../../store/userStore";
+import { LanguageStore, ThemeStore, UserStore } from "../../../../../store/userStore";
 import { BASE_API_URL } from "../../../../../data";
+import translate from "../../../../../language/translate";
 
 export default function AlbumImageUploader({ refresh }) {
+  const [language] = useContext(LanguageStore);
   const [hostUser] = useContext(UserStore);
   const [theme] = useContext(ThemeStore);
   const [file, setFile] = useState(null);
@@ -27,7 +29,7 @@ export default function AlbumImageUploader({ refresh }) {
 
   const handleUpload = async () => {
     if (!file) {
-      setError("Please select an image");
+      setError("pleaseSelectAnImage");
       return;
     }
 
@@ -47,7 +49,7 @@ export default function AlbumImageUploader({ refresh }) {
       setFile(null);
       setPreview(null);
     } catch (err) {
-      setError("Image upload failed");
+      setError("imageUploadFailed");
     } finally {
       setLoading(false);
     }
@@ -69,7 +71,7 @@ export default function AlbumImageUploader({ refresh }) {
           variant="h6"
           sx={{ color: theme.dark, mb: 2, display: "flex", alignItems: "center", gap: 1 }}
         >
-          <ImageIcon fontSize="small" /> Upload to Album
+          <ImageIcon fontSize="small" /> {translate(language,"uploadToAlbum")}
         </Typography>
 
         <Box
@@ -90,7 +92,7 @@ export default function AlbumImageUploader({ refresh }) {
         >
           <CloudUploadIcon sx={{ mb: 1 }} />
           <Typography variant="body2" >
-            Click to select an image
+            {translate(language,"clickToSelectAnImage")}
           </Typography>
           <input hidden type="file" accept="image/*" onChange={handleFileChange} />
         </Box>
@@ -121,8 +123,8 @@ export default function AlbumImageUploader({ refresh }) {
           </Box>
         )}
 
-        {error && <Alert severity="error" sx={{ mt: 2 }}>{error}</Alert>}
-        {success && <Alert severity="success" sx={{ mt: 2 }}>Image uploaded successfully</Alert>}
+        {error && <Alert severity="error" sx={{ mt: 2 }}>{translate(language,error)}</Alert>}
+        {success && <Alert severity="success" sx={{ mt: 2 }}>{translate(language,"imageUploadedSuccessfully")}</Alert>}
 
         <Button
           fullWidth
@@ -139,7 +141,7 @@ export default function AlbumImageUploader({ refresh }) {
           }}
           startIcon={loading ? <CircularProgress size={18} color="inherit" /> : null}
         >
-          {loading ? "Uploading..." : "Upload Image"}
+          {loading ? translate(language,"uploading") : translate(language,"uploadImage")}
         </Button>
       </Box>
     </Box>

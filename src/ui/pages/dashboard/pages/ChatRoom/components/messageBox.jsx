@@ -13,10 +13,12 @@ import axios from "axios";
 import socket from "../functions/socket";
 import { BASE_API_URL } from "../../../../../data";
 import getDp from "../functions/getDp";
-import { ThemeStore } from "../../../../../store/userStore";
+import { LanguageStore, ThemeStore } from "../../../../../store/userStore";
+import translate from '../../../../../language/translate';
 
 function MessageBox({ activeUser, allUser }) {
   const [theme] = useContext(ThemeStore);
+  const [language] = useContext(LanguageStore);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const bottomRef = useRef(null);
@@ -99,17 +101,16 @@ function MessageBox({ activeUser, allUser }) {
         >
           <ChatBubbleOutlineIcon sx={{ fontSize: 56, mb: 1 }} />
           <Typography fontWeight={700}>
-            No Conversation Selected
+            {translate(language,"noConversationSelected")}
           </Typography>
           <Typography variant="body2">
-            Select or create a conversation to start chatting
+            {translate(language,"createAConversation")}
           </Typography>
         </Paper>
       </Box>
     );
   }
 
-  /* ---------------- CHAT UI ---------------- */
   return (
     <>
       {/* Header */}
@@ -150,7 +151,7 @@ function MessageBox({ activeUser, allUser }) {
       <Paper sx={{ mt: 2, p: 1, display: "flex", bgcolor: theme.light }}>
         <TextField
           fullWidth
-          placeholder="Type your message…"
+          placeholder={translate(language,"typeYourMessage")}
           variant="standard"
           InputProps={{ disableUnderline: true }}
           value={input}

@@ -31,13 +31,9 @@ function LandingPage() {
                     setProductivity={(e) => setProductivity(e)}
                 />
             </Box>
-
-            {/* Productivity Card */}
             <Box>
                 <Productivity value={productivity} />
             </Box>
-
-            {/* Shift Progress Card */}
             <Box>
                 <ShiftProgress shiftStartTime={hostUser.shiftStartTime} />
             </Box>

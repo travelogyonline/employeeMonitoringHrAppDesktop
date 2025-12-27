@@ -15,17 +15,17 @@ import EditNoteIcon from "@mui/icons-material/EditNote";
 import SaveIcon from '@mui/icons-material/Save';
 
 import { BASE_API_URL } from "../../../../../data";
-import { ThemeStore } from "../../../../../store/userStore";
+import { LanguageStore, ThemeStore } from "../../../../../store/userStore";
+import translate from "../../../../../language/translate";
 
 export default function MyThoughts({ user, updateUser }) {
+  const [language] = useContext(LanguageStore);
   const [theme] = useContext(ThemeStore)
   const [thought, setThought] = useState(user.myThoughts);
   const [editing, setEditing] = useState(false);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState("");
-
-  console.log("Theme: ", theme)
 
   // Save thoughts
   const handleSave = async () => {
@@ -70,7 +70,7 @@ export default function MyThoughts({ user, updateUser }) {
       }}
     >
       <Typography fontWeight={700} mb={1}>
-        Thoughts
+        {translate(language, "thoughts")}
       </Typography>
       {editing ? (<>
         <TextField

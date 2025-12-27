@@ -24,7 +24,8 @@ import formatBirthday from "./functions/formatBirthday";
 import getExperience from "./functions/getExperience";
 import BackupIcon from '@mui/icons-material/Backup';
 import FriendThought from "./components/FriendThought";
-import { ThemeStore } from "../../../../store/userStore";
+import { LanguageStore, ThemeStore } from "../../../../store/userStore";
+import translate from '../../../../language/translate';
 
 const modalStyle = {
     position: 'absolute',
@@ -39,6 +40,7 @@ const modalStyle = {
 
 export default function Friends({ friend, user }) {
     const [theme] = useContext(ThemeStore);
+    const [language] = useContext(LanguageStore);
 
     if (!friend) {
         return (
@@ -64,10 +66,10 @@ export default function Friends({ friend, user }) {
                         sx={{ fontSize: 56, color: theme.dark, mb: 1.5 }}
                     />
                     <Typography variant="h6" fontWeight={700} sx={{color: theme.dark}}>
-                        No Friend Selected
+                        {translate(language, "noFriendSelected")}
                     </Typography>
                     <Typography variant="body2" sx={{color: theme.medium}}>
-                        Search and select a friend to see their thoughts and albums.
+                        {translate(language, "searchAndSelectAFriend")}
                     </Typography>
                 </Paper>
             </Box>
@@ -168,14 +170,14 @@ export default function Friends({ friend, user }) {
                     <Box sx={{ display: "flex", alignItems: "center", mb: 1.2 }}>
                         <CakeIcon sx={{ fontSize: 18, mr: 1 }} />
                         <Typography variant="body2">
-                            Birthday: {formatBirthday(client?.dob)}
+                            {translate(language,"birthday")}: {formatBirthday(client?.dob)}
                         </Typography>
                     </Box>
 
                     <Box sx={{ display: "flex", alignItems: "center" }}>
                         <TimelineIcon sx={{ fontSize: 18, mr: 1 }} />
                         <Typography variant="body2">
-                            Experience: {getExperience(client?.doj)}
+                            {translate(language,"experience")}: {getExperience(client?.doj)}
                         </Typography>
                     </Box>
                 </Paper>
@@ -221,7 +223,7 @@ export default function Friends({ friend, user }) {
                     }}
                 >
                     <Typography variant="h5" sx={{ fontWeight: 600 }}>
-                        Album
+                        {translate(language, "album")}
                     </Typography>
 
                     {friend._id === user._id && (
