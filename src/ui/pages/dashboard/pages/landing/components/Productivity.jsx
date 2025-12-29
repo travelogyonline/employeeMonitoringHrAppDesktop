@@ -10,21 +10,30 @@ import numeralTranslator from "../../../../../language/numeralTranslate";
 function Productivity({ value = 0 }) {
   const [theme] = useContext(ThemeStore);
   const [language] = useContext(LanguageStore);
+  console.log("value: ", value)
+
+  // ✅ Clamp value between 0–100
+  const safeValue = Math.min(100, Math.max(0, Number(value) || 0));
+
   const getStatus = () => {
-    if (value >= 75)
+    if (safeValue >= 75) {
       return {
         colour: "#2e7d32",
         text: "goodJob",
         icon: <CheckCircleIcon fontSize="small" />,
         bg: "rgba(46,125,50,0.1)",
       };
-    if (value >= 40)
+    }
+
+    if (safeValue >= 40) {
       return {
         colour: "#ed6c02",
         text: "takeLessBreaks",
         icon: <WarningAmberIcon fontSize="small" />,
         bg: "rgba(237,108,2,0.1)",
       };
+    }
+
     return {
       colour: "#d32f2f",
       text: "concerning",
@@ -41,8 +50,7 @@ function Productivity({ value = 0 }) {
         p: 3,
         borderRadius: 4,
         width: 220,
-        background:
-          `linear-gradient(145deg, ${theme.light}, ${theme.text})`,
+        background: `linear-gradient(145deg, ${theme.light}, ${theme.text})`,
         boxShadow: "0 12px 32px rgba(0,0,0,0.12)",
         display: "flex",
         flexDirection: "column",
@@ -62,7 +70,7 @@ function Productivity({ value = 0 }) {
       <Box sx={{ position: "relative", display: "inline-flex" }}>
         <CircularProgress
           variant="determinate"
-          value={value}
+          value={safeValue}
           size={110}
           thickness={4.5}
           sx={{
@@ -70,6 +78,7 @@ function Productivity({ value = 0 }) {
             transition: "all 0.4s ease",
           }}
         />
+
         <Box
           sx={{
             position: "absolute",
@@ -84,14 +93,14 @@ function Productivity({ value = 0 }) {
             fontWeight={800}
             color={status.colour}
           >
-            {numeralTranslator(language,value)}%
+            {numeralTranslator(language, safeValue)}%
           </Typography>
         </Box>
       </Box>
 
       <Chip
         icon={status.icon}
-        label={translate(language,status.text)}
+        label={translate(language, status.text)}
         sx={{
           fontWeight: 600,
           color: status.colour,

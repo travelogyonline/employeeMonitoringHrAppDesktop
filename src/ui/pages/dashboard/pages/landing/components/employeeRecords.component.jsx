@@ -45,9 +45,11 @@ function EmployeeRecords({ user, setProductivity }) {
 
         const calculateStats = (logs) => {
             if (logs.length === 0) return;
+
             const sortedLogs = [...logs].sort(
                 (a, b) => new Date(a.login) - new Date(b.login)
             );
+
             const now = new Date();
             let totalMs = 0;
             let totalBreakMs = 0;
@@ -55,6 +57,7 @@ function EmployeeRecords({ user, setProductivity }) {
             sortedLogs.forEach((s, i) => {
                 const login = new Date(s.login);
                 const logout = s.logout ? new Date(s.logout) : now;
+
                 totalMs += Math.max(0, logout - login);
 
                 const nextSession = sortedLogs[i + 1];
@@ -69,21 +72,34 @@ function EmployeeRecords({ user, setProductivity }) {
             const last = sortedLogs[sortedLogs.length - 1];
             setLastLogin(new Date(last.login).toLocaleTimeString());
 
+            // Work time
             const totalSec = Math.floor(totalMs / 1000);
             const hrs = Math.floor(totalSec / 3600);
             const mins = Math.floor((totalSec % 3600) / 60);
             setTotalTime(`${hrs}h ${mins}m`);
 
+            // Break time
             const breakSec = Math.floor(totalBreakMs / 1000);
             const breakHrs = Math.floor(breakSec / 3600);
             const breakMins = Math.floor((breakSec % 3600) / 60);
             setTotalBreak(`${breakHrs}h ${breakMins}m`);
 
-            const totalEllipseTime = now - new Date(sortedLogs[0].login)
-            const productivity = (totalMs / totalEllipseTime) * 100;
-            setProductivity(productivity.toFixed(2))
+            // ===== Productivity Logic =====
+            const FREE_BREAK_MS = 60 * 60 * 1000; // 1 hour
 
+            const excessBreakMs = Math.max(0, totalBreakMs - FREE_BREAK_MS);
+
+            // If break <= 1 hour → productivity stays 100%
+            let productivity = 100;
+
+            if (excessBreakMs > 0) {
+                const effectiveElapsedMs = totalMs + excessBreakMs;
+                productivity = (totalMs / effectiveElapsedMs) * 100;
+            }
+
+            setProductivity(productivity.toFixed(2));
         };
+
 
         fetchLogs();
         const interval = setInterval(fetchLogs, 1000);
@@ -103,10 +119,10 @@ function EmployeeRecords({ user, setProductivity }) {
                                 <LoginIcon color="primary" />
                                 <Typography variant="subtitle1" fontWeight={600}>
                                     <Box component="span" sx={{ color: theme.dark }}>
-                                        {translate(language,"firstLoginToday")}:
+                                        {translate(language, "firstLoginToday")}:
                                     </Box>{" "}
                                     <Box component="span" sx={{ color: theme.medium }}>
-                                        {timeTranslator(language,firstLogin)}
+                                        {timeTranslator(language, firstLogin)}
                                     </Box>
                                 </Typography>
                             </Box>
@@ -114,10 +130,10 @@ function EmployeeRecords({ user, setProductivity }) {
                                 <LogoutIcon color="warning" />
                                 <Typography variant="subtitle1" fontWeight={600}>
                                     <Box component="span" sx={{ color: theme.dark }}>
-                                        {translate(language,"lastLoginToday")}:
+                                        {translate(language, "lastLoginToday")}:
                                     </Box>{" "}
                                     <Box component="span" sx={{ color: theme.medium }}>
-                                        {timeTranslator(language,lastLogin)}
+                                        {timeTranslator(language, lastLogin)}
                                     </Box>
                                 </Typography>
                             </Box>
@@ -125,10 +141,10 @@ function EmployeeRecords({ user, setProductivity }) {
                                 <AccessTimeIcon color="success" />
                                 <Typography variant="subtitle1" fontWeight={600}>
                                     <Box component="span" sx={{ color: theme.dark }}>
-                                        {translate(language,"totalTimeWorkedToday")}:
+                                        {translate(language, "totalTimeWorkedToday")}:
                                     </Box>{" "}
                                     <Box component="span" sx={{ color: theme.medium }}>
-                                        {timeTranslator(language,totalTime)}
+                                        {timeTranslator(language, totalTime)}
                                     </Box>
                                 </Typography>
                             </Box>
@@ -136,10 +152,10 @@ function EmployeeRecords({ user, setProductivity }) {
                                 <TimerIcon color="error" />
                                 <Typography variant="subtitle1" fontWeight={600}>
                                     <Box component="span" sx={{ color: theme.dark }}>
-                                        {translate(language,"totalBreakTakenToday")}:
+                                        {translate(language, "totalBreakTakenToday")}:
                                     </Box>{" "}
                                     <Box component="span" sx={{ color: theme.medium }}>
-                                        {timeTranslator(language,totalBreak)}
+                                        {timeTranslator(language, totalBreak)}
                                     </Box>
                                 </Typography>
                             </Box>
