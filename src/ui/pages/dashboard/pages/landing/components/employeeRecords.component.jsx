@@ -66,7 +66,6 @@ function EmployeeRecords({ user, setProductivity }) {
                     totalBreakMs += Math.max(0, nextLogin - logout);
                 }
             });
-
             setFirstLogin(new Date(sortedLogs[0].login).toLocaleTimeString());
 
             const last = sortedLogs[sortedLogs.length - 1];
@@ -84,12 +83,10 @@ function EmployeeRecords({ user, setProductivity }) {
             const breakMins = Math.floor((breakSec % 3600) / 60);
             setTotalBreak(`${breakHrs}h ${breakMins}m`);
 
-            // ===== Productivity Logic =====
-            const FREE_BREAK_MS = 60 * 60 * 1000; // 1 hour
+            const FREE_BREAK_MS = 60 * 60 * 1000;
 
             const excessBreakMs = Math.max(0, totalBreakMs - FREE_BREAK_MS);
 
-            // If break <= 1 hour → productivity stays 100%
             let productivity = 100;
 
             if (excessBreakMs > 0) {
@@ -112,8 +109,7 @@ function EmployeeRecords({ user, setProductivity }) {
                 <Grid item xs={12} sm={6}>
                     <Card elevation={3} sx={{ borderRadius: 3 }}>
                         <CardContent sx={{
-                            background:
-                                `linear-gradient(145deg, ${theme.light}, ${theme.text})`,
+                            background: theme.light
                         }}>
                             <Box display="flex" alignItems="center" gap={1}>
                                 <LoginIcon color="primary" />

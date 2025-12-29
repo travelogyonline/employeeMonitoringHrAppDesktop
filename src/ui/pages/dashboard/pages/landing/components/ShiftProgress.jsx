@@ -81,8 +81,7 @@ const ShiftProgress = ({ shiftStartTime }) => {
             elevation={6}
             sx={{
                 borderRadius: 4,
-                background:
-                    `linear-gradient(145deg, ${theme.light}, ${theme.text})`,
+                background: theme.light,
                 minWidth: 420
             }}
         >

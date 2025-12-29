@@ -24,9 +24,8 @@ function Album({ friend, user, imageRefresher }) {
                     setImages(response.data.data[0].album);
                 }
             })
-            .catch((error) => {
-                console.error(error);
-            });
+            .catch((error) => {}
+        );
     }, [friend, imageRefresher]);
 
     const handleDelete = async (imageId) => {

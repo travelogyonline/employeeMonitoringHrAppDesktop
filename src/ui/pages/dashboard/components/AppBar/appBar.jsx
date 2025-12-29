@@ -48,14 +48,12 @@ export default function AppBar({ setFriend, setPage }) {
                         }
                         handleFunction();
                     })
-                    .catch((error) => {
-                        // console.log(error);
-                    });
+                    .catch((error) => {}
+                );
                 setStatus(status === 'false' ? 'true' : 'false')
             })
-            .catch((error) => {
-                // console.log(error);
-            });
+            .catch((error) => {}
+        );
     }
     return (
         <div className={style.appBar}>

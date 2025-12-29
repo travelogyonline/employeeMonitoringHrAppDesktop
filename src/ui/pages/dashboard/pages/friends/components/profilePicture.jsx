@@ -27,9 +27,7 @@ export default function ProfileAvatar({ client, user }) {
                     setHostDp(res.data.data.profilePicture);
                     await window.electronStore.set("dp", res.data.data.profilePicture);
                 })
-        } catch (err) {
-            // console.log("DP upload error:", err);
-        }
+        } catch (err) {}
     };
 
     return (

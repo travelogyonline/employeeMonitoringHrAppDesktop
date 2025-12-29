@@ -19,7 +19,6 @@ export function useChatList(userId) {
         setChatlist(res);
       })
       .catch((err) => {
-        console.log(err)
         setChatlist([]);
       })
       .finally(() => {

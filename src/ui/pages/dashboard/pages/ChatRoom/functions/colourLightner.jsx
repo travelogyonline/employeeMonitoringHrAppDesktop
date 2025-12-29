@@ -1,6 +1,5 @@
 export default function lightenHex(hex, percent = 20) {
-    console.log("hex: ", hex);
-    // Remove #
+
     hex = hex.replace("#", "");
 
     // Support short hex (#fff)
@@ -26,8 +25,6 @@ export default function lightenHex(hex, percent = 20) {
         ((1 << 24) + (r << 16) + (g << 8) + b)
             .toString(16)
             .slice(1)
-    console.log("light: ", light)
-
     return (
         "#" +
         ((1 << 24) + (r << 16) + (g << 8) + b)

@@ -36,9 +36,7 @@ function CurrentSession() {
                 if (!Array.isArray(logs)) return;
 
                 calculateStats(logs);
-            } catch (err) {
-                // console.error("Fetch error:", err);
-            }
+            } catch (err) {}
         };
 
         const calculateStats = (logs) => {

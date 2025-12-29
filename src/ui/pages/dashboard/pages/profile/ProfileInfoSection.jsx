@@ -4,7 +4,6 @@ import { LanguageStore, ThemeStore } from "../../../../store/userStore";
 import translate from "../../../../language/translate";
 
 const ProfileInfoSection = ({ title, fields }) => {
-  console.log("title: ", title)
   const [theme] = useContext(ThemeStore);
   const [language] = useContext(LanguageStore);
 

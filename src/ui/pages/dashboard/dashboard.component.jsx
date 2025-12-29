@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import BugReportIcon from "@mui/icons-material/BugReport";
 import LogoutIcon from '@mui/icons-material/Logout';
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
@@ -28,6 +29,7 @@ import ForumIcon from "@mui/icons-material/Forum";
 import SettingsIcon from '@mui/icons-material/Settings';
 import Settings from './pages/Settings/settings.jsx';
 import translate from '../../language/translate.jsx';
+import TicketDashboard from './pages/TicketDashboard/ticketDashboard.jsx';
 
 function Dashboard({ setUser }) {
     const [language] = useContext(LanguageStore);
@@ -74,9 +76,7 @@ function Dashboard({ setUser }) {
 
             await upload.json();
 
-        } catch (err) {
-            console.error(err);
-        }
+        } catch (err) { }
     };
     const handleLogout = async () => {
         if (hostUser.login !== 'false') {
@@ -108,7 +108,8 @@ function Dashboard({ setUser }) {
                                 <DashboardIcon sx={{ color: theme.text }} />
                             </ListItemIcon>
                             <ListItemText
-                                primary={translate(language,"dashboard")}
+                                sx={{ color: theme.text }}
+                                primary={translate(language, "dashboard")}
                                 primaryTypographyProps={{ variant: "h6" }}
                             />
                         </ListItemButton>
@@ -121,7 +122,7 @@ function Dashboard({ setUser }) {
                             </ListItemIcon>
                             <ListItemText
                                 sx={{ color: theme.text }}
-                                primary={translate(language,"profile")}
+                                primary={translate(language, "profile")}
                                 primaryTypographyProps={{ variant: "h6" }}
                             />
                         </ListItemButton>
@@ -132,7 +133,7 @@ function Dashboard({ setUser }) {
                             </ListItemIcon>
                             <ListItemText
                                 sx={{ color: theme.text }}
-                                primary={translate(language,"friends")}
+                                primary={translate(language, "friends")}
                                 primaryTypographyProps={{ variant: "h6" }}
                             />
                         </ListItemButton>
@@ -145,23 +146,38 @@ function Dashboard({ setUser }) {
                             </ListItemIcon>
                             <ListItemText
                                 sx={{ color: theme.text }}
-                                primary={translate(language,"chatRoom")}
+                                primary={translate(language, "chatRoom")}
                                 primaryTypographyProps={{ variant: "h6" }}
                             />
                         </ListItemButton>
 
-
                         <Divider />
+
                         <ListItemButton onClick={() => setPage("settings")}>
                             <ListItemIcon>
                                 <SettingsIcon sx={{ color: theme.text }} />
                             </ListItemIcon>
                             <ListItemText
                                 sx={{ color: theme.text }}
-                                primary={translate(language,"settings")}
+                                primary={translate(language, "settings")}
                                 primaryTypographyProps={{ variant: "h6" }}
                             />
                         </ListItemButton>
+
+                        <Divider />
+
+                        <ListItemButton onClick={() => setPage("report-bug")}>
+                            <ListItemIcon>
+                                <BugReportIcon sx={{ color: theme.text }} />
+                            </ListItemIcon>
+                            <ListItemText
+                                sx={{ color: theme.text }}
+                                primary={translate(language, "reportBug")}
+                                primaryTypographyProps={{ variant: "h6" }}
+                            />
+                        </ListItemButton>
+
+                        <Divider />
 
                         <ListItemButton onClick={handleLogout}>
                             <ListItemIcon>
@@ -169,7 +185,7 @@ function Dashboard({ setUser }) {
                             </ListItemIcon>
                             <ListItemText
                                 sx={{ color: theme.text }}
-                                primary={translate(language,"logout")}
+                                primary={translate(language, "logout")}
                                 primaryTypographyProps={{ variant: "h6" }}
                             />
                         </ListItemButton>
@@ -183,6 +199,7 @@ function Dashboard({ setUser }) {
                     {page === 'chatRoom' && <ChatRoom />}
                     {page === 'friend' && <Friends friend={friend} user={hostUser} />}
                     {page === 'settings' && <Settings />}
+                    {page === 'report-bug' && <TicketDashboard />}
                 </div>
             </div>
         </div>

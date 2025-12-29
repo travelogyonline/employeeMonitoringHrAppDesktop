@@ -53,14 +53,11 @@ function Login({ setUser }) {
                                 setHostDp(null)
                                 await window.electronStore.set("dp", null);
                             }
-                        } catch (err) {
-                            // console.log("Error fetching profile pic:", err);
-                        }
+                        } catch (err) {}
                     }
                     handleFunction();
                 }
             })
-            // .catch(err => console.log(err));
     };
 
     return (

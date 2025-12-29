@@ -10,7 +10,6 @@ import numeralTranslator from "../../../../../language/numeralTranslate";
 function Productivity({ value = 0 }) {
   const [theme] = useContext(ThemeStore);
   const [language] = useContext(LanguageStore);
-  console.log("value: ", value)
 
   // ✅ Clamp value between 0–100
   const safeValue = Math.min(100, Math.max(0, Number(value) || 0));
@@ -50,7 +49,7 @@ function Productivity({ value = 0 }) {
         p: 3,
         borderRadius: 4,
         width: 220,
-        background: `linear-gradient(145deg, ${theme.light}, ${theme.text})`,
+        background: theme.light,
         boxShadow: "0 12px 32px rgba(0,0,0,0.12)",
         display: "flex",
         flexDirection: "column",
