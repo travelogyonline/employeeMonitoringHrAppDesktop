@@ -1,0 +1,116 @@
+{
+    "dashboard": "ডেচবৰ্ড",
+    "profile": "প্ৰফাইল",
+    "friends": "বন্ধু-বান্ধৱ",
+    "chatRoom": "বাৰ্তালাপ কক্ষ",
+    "settings": "সংহতি",
+    "logout": "প্ৰস্থান",
+    "reportBug": "ত্ৰুটিৰ প্ৰতিবেদন কৰক",
+
+
+    "goOnline": "অনলাইন হওক!",
+    "goOffline": "অফলাইন হওক!",
+
+    "currentActiveSession": "বৰ্তমানৰ সক্ৰিয় অধিবেশন",
+
+    "searchEmployeeByName": "নামৰ দ্বাৰা কৰ্মচাৰী বিচাৰক",
+
+    "welcome": "স্বাগতম",
+
+    "language": "ভাষা",
+    "theme": "থিম",
+
+    "selectLanguage": "ভাষা নিৰ্বাচন কৰক",
+
+    "changePassword": "পাছৱৰ্ড সলনি কৰক",
+
+    "currentPassword": "বৰ্তমানৰ পাছৱৰ্ড",
+    "newPassword": "নতুন পাছৱৰ্ড",
+    "confirmPassword": "পাছৱৰ্ড নিশ্চিত কৰক",
+    "updatePassword": "পাছৱৰ্ড নবীকৰণ কৰক",
+
+    "online": "অনলাইন",
+    "offline": "অফলাইন",
+    
+    "personalInformation": "ব্যক্তিগত তথ্য",
+    "firstName": "প্ৰথম নাম",
+    "birthday": "জন্মদিন",
+    "aadharNo": "আধাৰ নম্বৰ",
+    "bloodGroup": "তেজৰ গ্ৰুপ",
+    "phone": "ফোন",
+    "email": "ইমেইল",
+    "gender": "লিংগ",
+    "motherName": "মাতৃৰ নাম",
+    "fatherName": "পিতৃৰ নাম",
+    "spouseName": "স্বামী/পত্নীৰ নাম",
+    "pfNumber": "পি.এফ. নম্বৰ",
+    "esiNumber": "ই.এচ.আই. নম্বৰ",
+    "physicallyChallenged": "শাৰীৰিকভাৱে প্ৰত্যাহ্বানগ্ৰস্ত",
+
+    "professionalInformation": "পেছাদাৰী তথ্য",
+    "designation": "পদবী",
+    "role": "ভূমিকা",
+    "dateOfJoining": "যোগদানৰ তাৰিখ",
+    "staffType": "কৰ্মচাৰীৰ প্ৰকাৰ",
+    "staffStatus": "কৰ্মচাৰীৰ স্থিতি",
+    "loginStatus": "লগইন স্থিতি",
+    "uanNumber": "ইউ.এ.এন. নম্বৰ",
+
+    "addressInformation": "ঠিকনাৰ তথ্য",
+    "addressLine1Present": "ঠিকনাৰ শাৰী ১ (বৰ্তমান)",
+    "addressLine2Present": "ঠিকনাৰ শাৰী ২ (বৰ্তমান)",
+    "cityPresent": "চহৰ (বৰ্তমান)",
+    "statePresent": "ৰাজ্য (বৰ্তমান)",
+    "pinPresent": "পিন ক'ড (বৰ্তমান)",
+    "addressLine1Permanent": "ঠিকনাৰ শাৰী ১ (স্থায়ী)",
+    "addressLine2Permanent": "ঠিকনাৰ শাৰী ২ (স্থায়ী)",
+    "cityPermanent": "চহৰ (স্থায়ী)",
+    "statePermanent": "ৰাজ্য (স্থায়ী)",
+    "pinPermanent": "পিন ক'ড (স্থায়ী)",
+
+    "productivity": "উৎপাদনশীলতা",
+    "goodJob": "সুন্দৰ কাম!",
+    "takeLessBreaks": "কমকৈ বিৰতি লওক",
+    "concerning": "চিন্তাজনক",
+
+    "firstLoginToday": "আজিৰ প্ৰথম লগইন",
+    "lastLoginToday": "আজিৰ অন্তিম লগইন",
+    "totalTimeWorkedToday": "আজি কাম কৰা মুঠ সময়",
+    "totalBreakTakenToday": "আজি লোৱা মুঠ বিৰতি",
+
+    "noFriendSelected": "কোনো বন্ধু নিৰ্বাচন কৰা হোৱা নাই",
+    "searchAndSelectAFriend": "বন্ধুবৰ্গৰ চিন্তা-ভাৱনা আৰু এলবাম চাবলৈ তেওঁলোকক বিচাৰক আৰু নিৰ্বাচন কৰক।",
+    "experience": "অভিজ্ঞতা",
+    "album": "এলবাম",
+
+    "thoughts": "চিন্তা-ভাৱনা",
+    "noThoughts": "কোনো চিন্তা-ভাৱনা নাই!",
+
+    "noImages": "কোনো ছবি নাই!",
+    "noDateAvailable": "কোনো তাৰিখ উপলব্ধ নাই",
+
+    "pleaseSelectAnImage": "অনুগ্ৰহ কৰি এখন ছবি বাছনি কৰক",
+    "imageUploadFailed": "ছবি আপলোড বিফল হৈছে",
+    "uploadToAlbum": "এলবামত আপলোড কৰক",
+    "clickToSelectAnImage": "ছবি বাছনি কৰিবলৈ ক্লিক কৰক",
+    "imageUploadedSuccessfully": "ছবি সফলতাৰে আপলোড কৰা হৈছে",
+    "uploading": "আপলোড হৈ আছে...",
+    "uploadImage": "ছবি আপলোড কৰক",
+
+    "shiftOverview": "শ্বিফ্টৰ পৰ্যালোচনা",
+    "start": "আৰম্ভ",
+    "end": "সমাপ্ত",
+    "shiftDone": "শ্বিফ্ট সম্পূৰ্ণ হ’ল",
+    "timeLeft": "বাকী থকা সময়",
+
+    "searchFriend": "বন্ধু বিচাৰক",
+    "startNewChat": "নতুন চাট আৰম্ভ কৰক",
+    "cancel": "বাতিল কৰক",
+    "startChat": "চাট আৰম্ভ কৰক",
+    "selectFriend": "বন্ধু নিৰ্বাচন কৰক",
+    "searchByFriendName": "বন্ধুৰ নামেৰে বিচাৰক",
+
+    "noConversationSelected": "কোনো বাৰ্তালাপ নিৰ্বাচন কৰা হোৱা নাই",
+    "createAConversation": "কথা-বতৰা আৰম্ভ কৰিবলৈ এটা বাৰ্তালাপ নিৰ্বাচন কৰক বা সৃষ্টি কৰক",
+    "typeYourMessage": "আপোনাৰ বাৰ্তা লিখক…"
+}

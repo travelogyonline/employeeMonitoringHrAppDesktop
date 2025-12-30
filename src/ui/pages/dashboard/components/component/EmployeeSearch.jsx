@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import {
   Box,
@@ -9,8 +9,12 @@ import {
 } from "@mui/material";
 
 import { BASE_API_URL } from "../../../../data";
+import { LanguageStore, ThemeStore } from "../../../../store/userStore";
+import translate from '../../../../language/translate';
 
-export default function EmployeeSearch({setFriend}) {
+export default function EmployeeSearch({ setFriend }) {
+  const [theme] = useContext(ThemeStore);
+  const [language] = useContext(LanguageStore)
   const [employees, setEmployees] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -22,7 +26,6 @@ export default function EmployeeSearch({setFriend}) {
         setLoading(false);
       })
       .catch((err) => {
-        // console.log(err);
         setLoading(false);
       });
   }, []);
@@ -34,7 +37,7 @@ export default function EmployeeSearch({setFriend}) {
   };
 
   return (
-    <Box sx={{ flexShrink: 0, width: 250 }}>
+    <Box sx={{ flexShrink: 0, width: 250, color: 'green' }}>
 
       {loading ? (
         <CircularProgress />
@@ -44,10 +47,39 @@ export default function EmployeeSearch({setFriend}) {
           options={employees}
           getOptionLabel={(option) => option.staffName}
           onChange={handleSelect}
+          renderOption={(props, option) => (
+            <li {...props} key={props.key}>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  py: 0.5,
+                }}
+              >
+                <Typography variant="body1" fontWeight={500} sx={{color: theme.dark}}>
+                  {option.staffName}
+                </Typography>
+
+                <Typography variant="caption" color="text.secondary" sx={{color: theme.medium}}>
+                  {option.role}
+                </Typography>
+              </Box>
+            </li>
+          )}
+          ListboxProps={{
+            sx: {
+              maxHeight: 300,
+              overflowY: "auto",
+              scrollbarWidth: "none",          
+              "&::-webkit-scrollbar": {
+                display: "none",               
+              },
+            },
+          }}
           renderInput={(params) => (
             <TextField
               {...params}
-              label="Search employee by name"
+              label={translate(language,"searchEmployeeByName")}
               variant="outlined"
             />
           )}

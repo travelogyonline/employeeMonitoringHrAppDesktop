@@ -37,9 +37,8 @@ export function useAlluser() {
                     })
                 );
                 setAlluser(usersWithDp);
-            } catch (error) {
-                console.error(error);
-            } finally {
+            } catch (error) {} 
+            finally {
                 setLoading(false);
             }
         };

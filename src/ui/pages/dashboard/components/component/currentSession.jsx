@@ -3,17 +3,18 @@ import axios from "axios";
 import {
     Box,
     Typography,
-    Card,
-    CardContent,
-    Grid
 } from "@mui/material";
 
 import TimerIcon from "@mui/icons-material/Timer";
 import { BASE_API_URL } from "../../../../data";
-import { UserStore } from "../../../../store/userStore";
+import { LanguageStore, ThemeStore, UserStore } from "../../../../store/userStore";
+import translate from '../../../../language/translate'
+import numeralTranslator from "../../../../language/numeralTranslate";
 
 function CurrentSession() {
     const [hostUser, setHostUser] = useContext(UserStore);
+    const [theme] = useContext(ThemeStore);
+    const [language] = useContext(LanguageStore);
     const [firstLogin, setFirstLogin] = useState("--:--");
     const [lastLogin, setLastLogin] = useState("--:--");
     const [totalTime, setTotalTime] = useState("0h 0m");
@@ -35,9 +36,7 @@ function CurrentSession() {
                 if (!Array.isArray(logs)) return;
 
                 calculateStats(logs);
-            } catch (err) {
-                // console.error("Fetch error:", err);
-            }
+            } catch (err) {}
         };
 
         const calculateStats = (logs) => {
@@ -62,7 +61,6 @@ function CurrentSession() {
             const mins = Math.floor((totalSec % 3600) / 60);
             setTotalTime(`${hrs}h ${mins}m`);
 
-            // 🔥 Active session in hours, minutes, seconds
             if (!last.logout) {
                 const activeMs = now - new Date(last.login);
                 const s = Math.floor(activeMs / 1000);
@@ -86,8 +84,8 @@ function CurrentSession() {
         hostUser.login==='false'?<></>:
         <Box display="flex" alignItems="center" sx={{mr: '10px'}}>
             <TimerIcon color="secondary" />
-            <Typography variant="subtitle1" fontWeight={600} sx={{color: 'black'}}>
-                Current Active Session: {activeSession}
+            <Typography variant="subtitle1" fontWeight={600} sx={{color: theme.dark}}>
+                {translate(language,"currentActiveSession")}: {activeSession}
             </Typography>
         </Box>
     );

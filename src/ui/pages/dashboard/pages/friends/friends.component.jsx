@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
     Box,
     Typography,
@@ -24,6 +24,8 @@ import formatBirthday from "./functions/formatBirthday";
 import getExperience from "./functions/getExperience";
 import BackupIcon from '@mui/icons-material/Backup';
 import FriendThought from "./components/FriendThought";
+import { LanguageStore, ThemeStore } from "../../../../store/userStore";
+import translate from '../../../../language/translate';
 
 const modalStyle = {
     position: 'absolute',
@@ -37,17 +39,17 @@ const modalStyle = {
 
 
 export default function Friends({ friend, user }) {
+    const [theme] = useContext(ThemeStore);
+    const [language] = useContext(LanguageStore);
 
     if (!friend) {
         return (
             <Box
                 sx={{
                     display: "flex",
-                    alignItems: "center",
                     justifyContent: "center",
                     p: 4,
-                    backgroundColor: "#FFF7D6",
-                    height: "100%",
+                    backgroundColor: theme.light,
                 }}
             >
                 <Paper
@@ -56,18 +58,18 @@ export default function Friends({ friend, user }) {
                         p: 4,
                         textAlign: "center",
                         borderRadius: 4,
-                        backgroundColor: "#FFFFFF",
+                        backgroundColor: theme.text,
                         boxShadow: "0 10px 24px rgba(0,0,0,0.08)",
                     }}
                 >
                     <PersonSearchIcon
-                        sx={{ fontSize: 56, color: "#FFB300", mb: 1.5 }}
+                        sx={{ fontSize: 56, color: theme.dark, mb: 1.5 }}
                     />
-                    <Typography variant="h6" fontWeight={700}>
-                        No Friend Selected
+                    <Typography variant="h6" fontWeight={700} sx={{color: theme.dark}}>
+                        {translate(language, "noFriendSelected")}
                     </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                        Search and select a friend to see their thoughts and albums.
+                    <Typography variant="body2" sx={{color: theme.medium}}>
+                        {translate(language, "searchAndSelectAFriend")}
                     </Typography>
                 </Paper>
             </Box>
@@ -107,7 +109,7 @@ export default function Friends({ friend, user }) {
                 display: "flex",
                 gap: 3,
                 p: 2,
-                backgroundColor: "#FFF7D6",
+                backgroundColor: theme.light,
             }}
         >
             {/* LEFT — PROFILE */}
@@ -117,17 +119,17 @@ export default function Friends({ friend, user }) {
                     width: "32%",
                     p: 3,
                     borderRadius: 4,
-                    backgroundColor: "#FFF1B8",
+                    backgroundColor: theme.medium,
                 }}
             >
-                <Box sx={{ textAlign: "center", mb: 3 }}>
+                <Box sx={{ textAlign: "center", mb: 3, color: theme.text }}>
                     <ProfileAvatar client={client} user={user} />
 
                     <Typography variant="h6" fontWeight={700} sx={{ mt: 2 }}>
                         {client?.staffName}
                     </Typography>
 
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography variant="body2">
                         {client?.designation || "Employee"}
                     </Typography>
                 </Box>
@@ -137,44 +139,45 @@ export default function Friends({ friend, user }) {
                     sx={{
                         p: 2.5,
                         borderRadius: 3,
-                        backgroundColor: "#FFE082",
+                        backgroundColor: theme.dark,
+                        color: theme.text,
                         mb: 3,
                     }}
                 >
                     <Box sx={{ display: "flex", alignItems: "center", mb: 1.2 }}>
-                        <PhoneIcon sx={{ fontSize: 18, mr: 1, color: "#5D4037" }} />
+                        <PhoneIcon sx={{ fontSize: 18, mr: 1 }} />
                         <Typography variant="body2">
                             {client?.staffPhone}
                         </Typography>
                     </Box>
 
                     <Box sx={{ display: "flex", alignItems: "center", mb: 1.2 }}>
-                        <EmailIcon sx={{ fontSize: 18, mr: 1, color: "#5D4037" }} />
+                        <EmailIcon sx={{ fontSize: 18, mr: 1 }} />
                         <Typography variant="body2">
                             {client?.staffEmail}
                         </Typography>
                     </Box>
 
                     <Box sx={{ display: "flex", alignItems: "center", mb: 1.2 }}>
-                        <WorkIcon sx={{ fontSize: 18, mr: 1, color: "#5D4037" }} />
+                        <WorkIcon sx={{ fontSize: 18, mr: 1 }} />
                         <Typography variant="body2">
                             {client?.role}
                         </Typography>
                     </Box>
 
-                    <Divider sx={{ my: 1.5 }} />
+                    <Divider sx={{ my: 1.5, backgroundColor: theme.text }} />
 
                     <Box sx={{ display: "flex", alignItems: "center", mb: 1.2 }}>
-                        <CakeIcon sx={{ fontSize: 18, mr: 1, color: "#6A1B9A" }} />
+                        <CakeIcon sx={{ fontSize: 18, mr: 1 }} />
                         <Typography variant="body2">
-                            Birthday: {formatBirthday(client?.dob)}
+                            {translate(language,"birthday")}: {formatBirthday(client?.dob)}
                         </Typography>
                     </Box>
 
                     <Box sx={{ display: "flex", alignItems: "center" }}>
-                        <TimelineIcon sx={{ fontSize: 18, mr: 1, color: "#2E7D32" }} />
+                        <TimelineIcon sx={{ fontSize: 18, mr: 1 }} />
                         <Typography variant="body2">
-                            Experience: {getExperience(client?.doj)}
+                            {translate(language,"experience")}: {getExperience(client?.doj)}
                         </Typography>
                     </Box>
                 </Paper>
@@ -188,7 +191,8 @@ export default function Friends({ friend, user }) {
                             p: 2.5,
                             pb: 0,
                             borderRadius: 3,
-                            backgroundColor: "#FFE082",
+                            backgroundColor: theme.dark,
+                            color: theme.text,
                             textAlign: "center",
                         }}
                     >
@@ -204,7 +208,8 @@ export default function Friends({ friend, user }) {
                     flex: 1,
                     p: 3,
                     borderRadius: 4,
-                    backgroundColor: "#FFF1B8",
+                    backgroundColor: theme.medium,
+                    color: theme.text,
                     display: "flex",
                     flexDirection: "column",
                 }}
@@ -218,7 +223,7 @@ export default function Friends({ friend, user }) {
                     }}
                 >
                     <Typography variant="h5" sx={{ fontWeight: 600 }}>
-                        Album
+                        {translate(language, "album")}
                     </Typography>
 
                     {friend._id === user._id && (
@@ -228,14 +233,13 @@ export default function Friends({ friend, user }) {
                                 width: 46,
                                 height: 46,
                                 borderRadius: "50%",
-                                backgroundColor: "#FF9800",
-                                color: "#fff",
+                                backgroundColor: theme.dark,
+                                color: theme.text,
                                 display: "flex",
                                 alignItems: "center",
                                 justifyContent: "center",
                                 fontSize: 22,
                                 cursor: "pointer",
-                                '&:hover': { backgroundColor: "#e68900" } // Subtle hover effect
                             }}
                         >
                             <BackupIcon />

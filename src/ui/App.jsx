@@ -4,7 +4,7 @@ import Login from './pages/login/login.component.jsx'
 import Dashboard from './pages/dashboard/dashboard.component.jsx';
 import './App.css'
 import { BASE_API_URL, APP_VERSION } from './data.jsx';
-import { UserStore, DpStore, ThemeStore } from './store/userStore.jsx';
+import { UserStore, DpStore, ThemeStore, LanguageStore } from './store/userStore.jsx';
 import axios from 'axios';
 import quit from './assets/quit.png';
 import { Box, Paper, Typography, Button, Alert, AlertTitle, Divider } from "@mui/material";
@@ -26,15 +26,18 @@ function App() {
   const [hostUser, setHostUser] = useState(false);
   const [hostDp, setHostDp] = useState(null);
   const [theme, setTheme] = useState(defaultTheme);
+  const [language, setLanguage] = useState("english");
   const [doesVersionMatched, setDoesVersionMatched] = useState(false);
   useEffect(() => {
     async function getUser() {
       const user = await window.electronStore.get("user");
       const dp = await window.electronStore.get("dp");
       const theme = await window.electronStore.get("theme");
+      const language = await window.electronStore.get("language");
       if (user) setHostUser(user);
       if (dp) setHostDp(dp);
       if (theme) setTheme(theme);
+      if (language) setLanguage(language);
     }
     getUser();
   }, [window.electronStore.get("user")]);
@@ -51,16 +54,18 @@ function App() {
     <>
       {
         doesVersionMatched ?
-          <UserStore.Provider value={[hostUser, setHostUser]}>
-            <DpStore.Provider value={[hostDp, setHostDp]}>
-              <ThemeStore.Provider value={[theme, setTheme]}>
-                <Routes>
-                  <Route path="/" element={hostUser ? <Navigate to="/dashboard" /> : <Login setUser={user => { setHostUser(user) }} />} />
-                  <Route path="/dashboard" element={hostUser ? <Dashboard setUser={user => { setHostUser(user) }} /> : <Navigate to="/" />} />
-                </Routes>
-              </ThemeStore.Provider>
-            </DpStore.Provider>
-          </UserStore.Provider>
+          <LanguageStore.Provider value={[language, setLanguage]}>
+            <UserStore.Provider value={[hostUser, setHostUser]}>
+              <DpStore.Provider value={[hostDp, setHostDp]}>
+                <ThemeStore.Provider value={[theme, setTheme]}>
+                  <Routes>
+                    <Route path="/" element={hostUser ? <Navigate to="/dashboard" /> : <Login setUser={user => { setHostUser(user) }} />} />
+                    <Route path="/dashboard" element={hostUser ? <Dashboard setUser={user => { setHostUser(user) }} /> : <Navigate to="/" />} />
+                  </Routes>
+                </ThemeStore.Provider>
+              </DpStore.Provider>
+            </UserStore.Provider>
+          </LanguageStore.Provider>
           :
           <div className="oldversionContainer">
             <Box

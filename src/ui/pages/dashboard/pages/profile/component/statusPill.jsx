@@ -1,6 +1,9 @@
-import React from "react";
+import React, { useContext } from "react";
+import { LanguageStore } from "../../../../../store/userStore";
+import translate from "../../../../../language/translate";
 
 const StatusPill = ({ status }) => {
+    const [language] = useContext(LanguageStore);
     const isOnline = Boolean(status);
 
     return (
@@ -33,7 +36,7 @@ const StatusPill = ({ status }) => {
 
             {/* Label */}
             <span>
-                {isOnline ? "ONLINE" : "OFFLINE"}
+                {isOnline ? translate(language,"online") : translate(language,"offline")}
             </span>
         </div>
     );

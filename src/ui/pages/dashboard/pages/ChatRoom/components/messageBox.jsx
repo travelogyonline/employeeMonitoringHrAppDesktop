@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
 import {
   Box,
   Typography,
@@ -13,8 +13,12 @@ import axios from "axios";
 import socket from "../functions/socket";
 import { BASE_API_URL } from "../../../../../data";
 import getDp from "../functions/getDp";
+import { LanguageStore, ThemeStore } from "../../../../../store/userStore";
+import translate from '../../../../../language/translate';
 
 function MessageBox({ activeUser, allUser }) {
+  const [theme] = useContext(ThemeStore);
+  const [language] = useContext(LanguageStore);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const bottomRef = useRef(null);
@@ -92,25 +96,25 @@ function MessageBox({ activeUser, allUser }) {
             textAlign: "center",
             borderRadius: 4,
             maxWidth: 360,
+            color: theme.medium
           }}
         >
           <ChatBubbleOutlineIcon sx={{ fontSize: 56, mb: 1 }} />
           <Typography fontWeight={700}>
-            No Conversation Selected
+            {translate(language,"noConversationSelected")}
           </Typography>
-          <Typography variant="body2" color="text.secondary">
-            Select or create a conversation to start chatting
+          <Typography variant="body2">
+            {translate(language,"createAConversation")}
           </Typography>
         </Paper>
       </Box>
     );
   }
 
-  /* ---------------- CHAT UI ---------------- */
   return (
     <>
       {/* Header */}
-      <Paper sx={{ p: 2, mb: 2 }}>
+      <Paper sx={{ p: 2, mb: 2, bgcolor: theme.dark, color: theme.text }}>
         <Box display="flex" alignItems="center">
           <Avatar
             sx={{ bgcolor: "#2F5BFF", mr: 2 }}
@@ -135,7 +139,7 @@ function MessageBox({ activeUser, allUser }) {
             }
             mb={2}
           >
-            <Paper sx={{ p: 1.5, maxWidth: "60%" }}>
+            <Paper sx={{ p: 1.5, maxWidth: "60%", bgcolor: theme.light, color: theme.medium }}>
               <Typography>{msg.text}</Typography>
             </Paper>
           </Box>
@@ -144,17 +148,22 @@ function MessageBox({ activeUser, allUser }) {
       </Box>
 
       {/* Input */}
-      <Paper sx={{ mt: 2, p: 1, display: "flex" }}>
+      <Paper sx={{ mt: 2, p: 1, display: "flex", bgcolor: theme.light }}>
         <TextField
           fullWidth
-          placeholder="Type your message…"
+          placeholder={translate(language,"typeYourMessage")}
           variant="standard"
           InputProps={{ disableUnderline: true }}
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && sendMessage()}
+          sx={{
+            "& .MuiInputBase-input": {
+              color: theme.medium,
+            }
+          }}
         />
-        <IconButton onClick={sendMessage}>
+        <IconButton onClick={sendMessage} sx={{color: theme.medium}}>
           <SendIcon />
         </IconButton>
       </Paper>

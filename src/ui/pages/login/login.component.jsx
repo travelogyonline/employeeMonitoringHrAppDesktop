@@ -53,14 +53,11 @@ function Login({ setUser }) {
                                 setHostDp(null)
                                 await window.electronStore.set("dp", null);
                             }
-                        } catch (err) {
-                            // console.log("Error fetching profile pic:", err);
-                        }
+                        } catch (err) {}
                     }
                     handleFunction();
                 }
             })
-            // .catch(err => console.log(err));
     };
 
     return (
@@ -80,6 +77,7 @@ function Login({ setUser }) {
                             required
                             value={userid}
                             onChange={(e) => setUserid(e.target.value)}
+                            onKeyDown={(e) => e.key === "Enter" && handleOnSubmit()}
                         />
 
                         <TextField
@@ -90,6 +88,7 @@ function Login({ setUser }) {
                             required
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
+                            onKeyDown={(e) => e.key === "Enter" && handleOnSubmit()}
                         />
 
                         <Button

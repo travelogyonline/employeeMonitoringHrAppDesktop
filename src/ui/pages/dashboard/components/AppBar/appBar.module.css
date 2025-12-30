@@ -5,11 +5,6 @@
   justify-content: space-between;
 }
 
-.appBarText {
-  color: black;
-  padding-left: 10px;
-}
-
 .innerContainer {
   display: flex;
   justify-content: center;

@@ -1,10 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Box, Typography, Modal, Grid } from "@mui/material";
 import axios from "axios";
 import { BASE_API_URL } from "../../../../../data";
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import { LanguageStore, ThemeStore } from "../../../../../store/userStore";
+import translate from "../../../../../language/translate";
 
 function Album({ friend, user, imageRefresher }) {
+    const [language] = useContext(LanguageStore);
+    const [theme] = useContext(ThemeStore);
     const [images, setImages] = useState([]);
     const [zoomImage, setZoomImage] = useState(null);
 
@@ -20,9 +24,8 @@ function Album({ friend, user, imageRefresher }) {
                     setImages(response.data.data[0].album);
                 }
             })
-            .catch((error) => {
-                console.error(error);
-            });
+            .catch((error) => {}
+        );
     }, [friend, imageRefresher]);
 
     const handleDelete = async (imageId) => {
@@ -30,7 +33,6 @@ function Album({ friend, user, imageRefresher }) {
             await axios.delete(`${BASE_API_URL}api/album/${user._id}/pic/${imageId}`);
             setImages(prev => prev.filter(img => img._id !== imageId));
         } catch (err) {
-            console.error("Delete failed", err);
         }
     };
 
@@ -93,7 +95,7 @@ function Album({ friend, user, imageRefresher }) {
                         </Grid>
                     )) : (
                         <Typography sx={{ color: "#000000ff" }}>
-                            No images!
+                            {translate(language, "noImages")}
                         </Typography>
                     )}
                 </Grid>
@@ -125,11 +127,13 @@ function Album({ friend, user, imageRefresher }) {
                     />
                     <Typography
                         sx={{
-                            mt: 2,                  // Margin top to space it from the image
-                            textAlign: "center",    // Centers text horizontally
-                            fontWeight: "bold",     // Makes font bold
-                            fontSize: "1.5rem",     // Large font size
-                            width: "100%",          // Ensures it takes full width to allow centering
+                            mt: 2,                  
+                            textAlign: "center",    
+                            fontWeight: "bold",     
+                            fontSize: "1.5rem",     
+                            width: "100%",         
+                            bgcolor: theme.light,
+                            color: theme.dark
                         }}
                     >
                         {zoomImage?.timestamp
@@ -137,7 +141,7 @@ function Album({ friend, user, imageRefresher }) {
                                 dateStyle: 'long',
                                 timeStyle: 'short'
                             })
-                            : "No Date Available"}
+                            : translate(language, "noDateAvailable")}
                     </Typography>
                 </Box>
             </Modal>

@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "main": "dist-electron/main.js",
+  "main": "src/electron/main.js",
   "scripts": {
     "dev": "vite",
     "start-electron": "cross-env NODE_ENV=development electron .",
@@ -28,6 +28,7 @@
     "@mui/material": "^7.3.5",
     "auto-launch": "^5.0.6",
     "axios": "^1.13.2",
+    "dayjs": "^1.11.19",
     "electron-store": "^11.0.2",
     "fs": "^0.0.1-security",
     "lucide-react": "^0.561.0",

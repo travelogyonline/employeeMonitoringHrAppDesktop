@@ -2,25 +2,28 @@ import style from './appBar.module.css';
 import UserProfileBar from '../component/userBar';
 import EmployeeSearch from '../component/EmployeeSearch';
 import { useContext, useState, useEffect } from 'react';
-import { UserStore } from '../../../../store/userStore';
+import { LanguageStore, ThemeStore, UserStore } from '../../../../store/userStore';
 import axios from 'axios';
 import Button from "@mui/material/Button";
 import { BASE_API_URL } from '../../../../data';
 import CurrentSession from '../component/currentSession';
+import translate from '../../../../language/translate';
 
 export default function AppBar({ setFriend, setPage }) {
     const [hostUser, setHostUser] = useContext(UserStore);
+    const [language] = useContext(LanguageStore);
+    const [theme] = useContext(ThemeStore);
     const [status, setStatus] = useState('');
     useEffect(() => {
         setStatus(hostUser.login);
     }, []);
     useEffect(() => {
-            const cleanup = window.electronAPI.onUpdateData((data) => {
-                setStatus(hostUser.login);
-            });
-    
-            return cleanup;
-        }, []);
+        const cleanup = window.electronAPI.onUpdateData((data) => {
+            setStatus(hostUser.login);
+        });
+
+        return cleanup;
+    }, []);
     const handleWorkingStatus = async () => {
         const apiHelper = status !== 'false' ? "out" : "in";
         let config = {
@@ -45,28 +48,31 @@ export default function AppBar({ setFriend, setPage }) {
                         }
                         handleFunction();
                     })
-                    .catch((error) => {
-                        // console.log(error);
-                    });
+                    .catch((error) => {}
+                );
                 setStatus(status === 'false' ? 'true' : 'false')
             })
-            .catch((error) => {
-                // console.log(error);
-            });
+            .catch((error) => {}
+        );
     }
     return (
         <div className={style.appBar}>
-            <div className={style.appBarText} onClick={() => { setFriend(hostUser); setPage('friend') }}>
+            <div
+                onClick={() => { setFriend(hostUser); setPage('friend') }}
+                style={{
+                    color: theme.dark,
+                    paddingLeft: '10px'
+                }}
+            >
                 <UserProfileBar />
             </div>
             <div className={style.innerContainer}>
-                {status!=='false' && <CurrentSession />}
+                {status !== 'false' && <CurrentSession />}
                 <Button
                     variant="contained"
                     size="large"
                     className={style.button}
                     sx={{
-                        // mt: 4,
                         mr: 4,
                         px: 4,
                         fontWeight: 600,
@@ -75,7 +81,7 @@ export default function AppBar({ setFriend, setPage }) {
                     }}
                     onClick={handleWorkingStatus}
                 >
-                    {status !== "false" ? "Go Offline!" : "Go Online!"}
+                    {status !== "false" ? translate(language,"goOffline") : translate(language,"goOnline")}
                 </Button>
                 <EmployeeSearch setFriend={e => { setFriend(e); setPage('friend') }} />
             </div>

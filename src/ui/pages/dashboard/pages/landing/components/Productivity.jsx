@@ -2,26 +2,40 @@ import { Box, Typography, CircularProgress, Chip } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
+import { useContext } from "react";
+import { LanguageStore, ThemeStore } from "../../../../../store/userStore";
+import translate from "../../../../../language/translate";
+import numeralTranslator from "../../../../../language/numeralTranslate";
 
 function Productivity({ value = 0 }) {
+  const [theme] = useContext(ThemeStore);
+  const [language] = useContext(LanguageStore);
+
+  // ✅ Clamp value between 0–100
+  const safeValue = Math.min(100, Math.max(0, Number(value) || 0));
+
   const getStatus = () => {
-    if (value >= 75)
+    if (safeValue >= 75) {
       return {
         colour: "#2e7d32",
-        text: "Good Job!",
+        text: "goodJob",
         icon: <CheckCircleIcon fontSize="small" />,
         bg: "rgba(46,125,50,0.1)",
       };
-    if (value >= 40)
+    }
+
+    if (safeValue >= 40) {
       return {
         colour: "#ed6c02",
-        text: "Take less breaks",
+        text: "takeLessBreaks",
         icon: <WarningAmberIcon fontSize="small" />,
         bg: "rgba(237,108,2,0.1)",
       };
+    }
+
     return {
       colour: "#d32f2f",
-      text: "Concerning",
+      text: "concerning",
       icon: <ErrorOutlineIcon fontSize="small" />,
       bg: "rgba(211,47,47,0.1)",
     };
@@ -35,8 +49,7 @@ function Productivity({ value = 0 }) {
         p: 3,
         borderRadius: 4,
         width: 220,
-        background:
-          "linear-gradient(145deg, rgba(255,255,255,0.95), rgba(240,242,245,0.95))",
+        background: theme.light,
         boxShadow: "0 12px 32px rgba(0,0,0,0.12)",
         display: "flex",
         flexDirection: "column",
@@ -44,21 +57,19 @@ function Productivity({ value = 0 }) {
         gap: 2.5,
       }}
     >
-      {/* Header */}
       <Typography
         variant="subtitle2"
-        color="text.secondary"
+        color={theme.medium}
         fontWeight={600}
         letterSpacing={0.5}
       >
-        PRODUCTIVITY
+        {translate(language, "productivity")}
       </Typography>
 
-      {/* Circular Meter */}
       <Box sx={{ position: "relative", display: "inline-flex" }}>
         <CircularProgress
           variant="determinate"
-          value={value}
+          value={safeValue}
           size={110}
           thickness={4.5}
           sx={{
@@ -66,6 +77,7 @@ function Productivity({ value = 0 }) {
             transition: "all 0.4s ease",
           }}
         />
+
         <Box
           sx={{
             position: "absolute",
@@ -80,15 +92,14 @@ function Productivity({ value = 0 }) {
             fontWeight={800}
             color={status.colour}
           >
-            {value}%
+            {numeralTranslator(language, safeValue)}%
           </Typography>
         </Box>
       </Box>
 
-      {/* Status Indicator */}
       <Chip
         icon={status.icon}
-        label={status.text}
+        label={translate(language, status.text)}
         sx={{
           fontWeight: 600,
           color: status.colour,

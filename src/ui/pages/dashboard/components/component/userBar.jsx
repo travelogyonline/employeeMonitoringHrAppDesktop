@@ -2,11 +2,12 @@ import { useContext, useEffect, useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import axios from "axios";
-import { DpStore, UserStore } from "../../../../store/userStore";
+import { DpStore, LanguageStore, UserStore } from "../../../../store/userStore";
+import translate from '../../../../language/translate'
 
 export default function UserProfileBar() {
     const [hostUser, setHostUser] = useContext(UserStore);
+    const [language] = useContext(LanguageStore);
     const [hostDp, setHostDp] = useContext(DpStore);
     const name = hostUser?.staffName || "User";
 
@@ -46,7 +47,7 @@ export default function UserProfileBar() {
                         marginBottom: "-2px",
                     }}
                 >
-                    Welcome,
+                    {translate(language,"welcome")},
                 </Typography>
 
                 <Typography
