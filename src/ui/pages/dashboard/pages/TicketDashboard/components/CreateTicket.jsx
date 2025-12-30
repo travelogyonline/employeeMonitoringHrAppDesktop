@@ -11,12 +11,15 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import { BASE_API_URL } from "../../../../../data";
-import { UserStore } from "../../../../../store/userStore";
+import { LanguageStore, ThemeStore } from "../../../../../store/userStore";
+import translate from "../../../../../language/translate";
 
-const CreateTicket = () => {
-  const [hostUser] = useContext(UserStore);
+const CreateTicket = ({ userId, userName }) => {
+  const [theme] = useContext(ThemeStore);
+  const [language] = useContext(LanguageStore)
 
   const [form, setForm] = useState({
+    createdName: userName,
     title: "",
     category: "",
     priority: "Medium",
@@ -25,7 +28,6 @@ const CreateTicket = () => {
 
   const [loading, setLoading] = useState(false);
 
-  // Snackbar state
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: "",
@@ -45,20 +47,18 @@ const CreateTicket = () => {
       setLoading(true);
 
       const { data } = await axios.post(
-        `${BASE_API_URL}api/ticket/${hostUser._id}`,
+        `${BASE_API_URL}api/ticket/${userId}`,
         form
       );
 
       console.log("Ticket created:", data.ticket);
 
-      // Success popup
       setSnackbar({
         open: true,
         message: "Ticket created successfully",
         severity: "success"
       });
 
-      // Reset form
       setForm({
         title: "",
         category: "",
@@ -88,70 +88,114 @@ const CreateTicket = () => {
           maxWidth: 600,
           mx: "auto",
           p: 4,
-          borderRadius: 3
+          borderRadius: 3,
+          background: theme.medium
         }}
       >
-        <Typography variant="h5" fontWeight={700} textAlign="center" mb={3}>
-          Create Ticket
+        <Typography variant="h5" fontWeight={700} textAlign="center" mb={3} sx={{ color: theme.text }}>
+          {translate(language, "createTicket")}
         </Typography>
 
         <TextField
           fullWidth
-          label="Title"
+          label={translate(language, "title")}
           name="title"
           value={form.title}
           onChange={handleChange}
-          sx={{ mb: 2 }}
+          sx={{
+            mb: 2,
+            backgroundColor: theme.light,
+
+            "& .MuiInputLabel-root": {
+              color: theme.dark,
+            },
+
+            "& .MuiInputBase-input": {
+              color: theme.medium,
+            },
+          }}
         />
 
         <TextField
           select
           fullWidth
-          label="Category"
+          label={translate(language, "category")}
           name="category"
           value={form.category}
           onChange={handleChange}
-          sx={{ mb: 2 }}
+          sx={{
+            mb: 2,
+            backgroundColor: theme.light,
+
+            "& .MuiInputLabel-root": {
+              color: theme.dark,
+            },
+
+            "& .MuiInputBase-input": {
+              color: theme.medium,
+            },
+          }}
         >
-          <MenuItem value="Bug">Bug</MenuItem>
-          <MenuItem value="Feature">Feature</MenuItem>
-          <MenuItem value="Support">Support</MenuItem>
+          <MenuItem sx={{ color: theme.medium }} value="Bug">Bug</MenuItem>
+          <MenuItem sx={{ color: theme.medium }} value="Feature">Feature</MenuItem>
+          <MenuItem sx={{ color: theme.medium }} value="Support">Support</MenuItem>
         </TextField>
 
         <TextField
           select
           fullWidth
-          label="Priority"
+          label={translate(language, "priority")}
           name="priority"
           value={form.priority}
           onChange={handleChange}
-          sx={{ mb: 2 }}
+          sx={{
+            mb: 2,
+            backgroundColor: theme.light,
+
+            "& .MuiInputLabel-root": {
+              color: theme.dark,
+            },
+            "& .MuiInputBase-input": {
+              color: theme.medium,
+            },
+          }}
         >
-          <MenuItem value="Low">Low</MenuItem>
-          <MenuItem value="Medium">Medium</MenuItem>
-          <MenuItem value="High">High</MenuItem>
+          <MenuItem sx={{ color: theme.medium }} value="Low">Low</MenuItem>
+          <MenuItem sx={{ color: theme.medium }} value="Medium">Medium</MenuItem>
+          <MenuItem sx={{ color: theme.medium }} value="High">High</MenuItem>
         </TextField>
 
         <Button
           component="label"
           variant="outlined"
           fullWidth
-          sx={{ mb: 2 }}
-          disabled
+          sx={{
+            mb: 2,
+            background: theme.light,
+            color: theme.medium
+          }}
         >
-          Upload Screenshot (coming soon)
-          <input hidden type="file" />
+          {translate(language, "uploadScreenshot")}
         </Button>
 
         <TextField
           fullWidth
-          label="Description"
+          label={translate(language, "description")}
           name="description"
           value={form.description}
           onChange={handleChange}
           multiline
           rows={4}
-          sx={{ mb: 3 }}
+          sx={{
+            mb: 3,
+            background: theme.light,
+            "& .MuiInputLabel-root": {
+              color: theme.dark,
+            },
+            "& .MuiInputBase-input": {
+              color: theme.medium,
+            },
+          }}
         />
 
         <Button
@@ -160,12 +204,15 @@ const CreateTicket = () => {
           variant="contained"
           onClick={handleCreate}
           disabled={loading}
+          sx={{
+            backgroundColor: theme.dark,
+            color: theme.text,
+          }}
         >
-          {loading ? <CircularProgress size={24} /> : "Create Ticket"}
+          {loading ? <CircularProgress size={24} sx={{ color: theme.text }} /> : "Create Ticket"}
         </Button>
       </Paper>
 
-      {/* POPUP */}
       <Snackbar
         open={snackbar.open}
         autoHideDuration={4000}

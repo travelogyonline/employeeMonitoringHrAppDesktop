@@ -28,7 +28,7 @@ import { LanguageStore, ThemeStore } from "../../../../../store/userStore";
 import translate from "../../../../../language/translate";
 
 
-const PendingTicket = ({userId}) => {
+const InProgressTicket = ({userId}) => {
   const [theme] = useContext(ThemeStore);
   const [language] = useContext(LanguageStore)
   const [tickets, setTickets] = useState([]);
@@ -43,7 +43,7 @@ const PendingTicket = ({userId}) => {
     try {
       setLoading(true);
       const { data } = await axios.get(
-        `${BASE_API_URL}api/ticket/pending/${userId}`
+        `${BASE_API_URL}api/ticket/inprogress/${userId}`
       );
 
       setTickets(data.tickets || []);
@@ -60,7 +60,7 @@ const PendingTicket = ({userId}) => {
   return (
     <Box>
       <Typography variant="h5" fontWeight={700} textAlign="center" mb={3} sx={{color: theme.dark}}>
-        {translate(language,"pendingTickets")}
+        {translate(language,"inProgressTickets")}
       </Typography>
 
       <Paper elevation={3} sx={{ borderRadius: 3 }}>
@@ -194,4 +194,4 @@ const PendingTicket = ({userId}) => {
   );
 };
 
-export default PendingTicket;
+export default InProgressTicket;

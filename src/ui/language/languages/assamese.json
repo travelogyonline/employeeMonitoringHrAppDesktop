@@ -112,5 +112,24 @@
 
     "noConversationSelected": "কোনো বাৰ্তালাপ নিৰ্বাচন কৰা হোৱা নাই",
     "createAConversation": "কথা-বতৰা আৰম্ভ কৰিবলৈ এটা বাৰ্তালাপ নিৰ্বাচন কৰক বা সৃষ্টি কৰক",
-    "typeYourMessage": "আপোনাৰ বাৰ্তা লিখক…"
+    "typeYourMessage": "আপোনাৰ বাৰ্তা লিখক…",
+
+    "create": "সৃষ্টি কৰক",
+    "pending": "বাকী আছে",
+    "inProgress": "প্ৰক্ৰিয়াধীন",
+    "completed": "সম্পূৰ্ণ হ’ল",
+
+    "createTicket": "টিকট সৃষ্টি কৰক",
+    "title": "শীৰ্ষক",
+    "category": "বিভাগ",
+    "priority": "অগ্ৰাধিকাৰ",
+    "uploadScreenshot": "স্ক্ৰীণশ্বট আপলোড কৰক (শীঘ্ৰেই উপলব্ধ হ’ব)",
+    "description": "বিৱৰণ",
+
+    "pendingTickets": "বাকী থকা টিকটসমূহ",
+    "noPendingTicketsFound": "কোনো বাকী থকা টিকট পোৱা নগ’ল",
+    "createdAt": "সৃষ্টি কৰা তাৰিখ",
+    "lastUpdated": "শেহতীয়া আপডেট",
+
+    "inProgressTickets": "প্ৰক্ৰিয়াধীন টিকটসমূহ"
 }

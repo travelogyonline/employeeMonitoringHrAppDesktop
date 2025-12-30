@@ -110,5 +110,24 @@
 
     "noConversationSelected": "No Conversation Selected",
     "createAConversation": "Select or create a conversation to start chatting",
-    "typeYourMessage": "Type your message…"
+    "typeYourMessage": "Type your message…",
+
+    "create": "Create",
+    "pending": "Pending",
+    "inProgress": "In Progress",
+    "completed": "Completed",
+
+    "createTicket": "Create Ticket",
+    "title": "Title",
+    "category": "Category",
+    "priority": "Priority",
+    "uploadScreenshot": "Upload Screenshot (coming soon)",
+    "description": "Description",
+
+    "pendingTickets": "Pending Tickets",
+    "noPendingTicketsFound": "No pending tickets found",
+    "createdAt": "Created At",
+    "lastUpdated": "Last Updated",
+
+    "inProgressTickets": "In Progress Tickets"
 }
