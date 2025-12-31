@@ -111,5 +111,24 @@
 
   "noConversationSelected": "कोई बातचीत चयनित नहीं",
   "createAConversation": "चैट शुरू करने के लिए बातचीत चुनें या बनाएँ",
-  "typeYourMessage": "अपना संदेश लिखें…"
+  "typeYourMessage": "अपना संदेश लिखें…",
+
+  "create": "बनाएँ",
+  "pending": "लंबित",
+  "inProgress": "प्रगति में",
+  "completed": "पूर्ण",
+
+  "createTicket": "टिकट बनाएँ",
+  "title": "शीर्षक",
+  "category": "श्रेणी",
+  "priority": "प्राथमिकता",
+  "uploadScreenshot": "स्क्रीनशॉट अपलोड करें (जल्द आ रहा है)",
+  "description": "विवरण",
+
+  "pendingTickets": "लंबित टिकट",
+  "noPendingTicketsFound": "कोई लंबित टिकट नहीं मिला",
+  "createdAt": "निर्माण तिथि",
+  "lastUpdated": "अंतिम अपडेट",
+
+  "inProgressTickets": "प्रगति में टिकट"
 }
