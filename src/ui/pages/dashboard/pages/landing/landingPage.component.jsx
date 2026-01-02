@@ -9,6 +9,7 @@ import EmployeeRecords from "./components/employeeRecords.component.jsx";
 import Productivity from "./components/Productivity.jsx";
 import ShiftProgress from "./components/ShiftProgress.jsx";
 
+
 import { ThemeStore, UserStore } from "../../../../store/userStore.jsx";
 
 function LandingPage() {
@@ -18,17 +19,7 @@ function LandingPage() {
 
     return (
         <Box>
-            {hostUser.login==="false" && <Box
-                sx={{
-                    backgroundColor: theme.medium,
-                    margin: 4,
-                    padding: 2,
-                    borderRadius: 10,
-                    color: theme.dark
-                }}
-            >
-                <strong>YOU ARE ON BREAK!</strong>
-            </Box>}
+            
             <Box
                 sx={{
                     display: "flex",

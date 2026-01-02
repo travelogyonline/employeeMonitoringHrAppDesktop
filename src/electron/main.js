@@ -22,6 +22,33 @@ let tray = null;
 let win = null;
 let isResumedFromSleep = false;
 let isWindowFocused = true;
+let loginStatus = 'false';
+
+function updateWindowByLoginStatus(status) {
+    if (!win) return;
+
+    if (status === 'false') {
+        // 🔒 Force fullscreen when logged out
+        win.setFullScreen(true);
+        win.setAlwaysOnTop(true, 'screen-saver');
+        win.show();
+        win.focus();
+    } else {
+        // 🔓 Normal mode when logged in
+        win.setFullScreen(false);
+        win.setAlwaysOnTop(false);
+        win.maximize();
+    }
+}
+
+
+ipcMain.on("loginStatus", (event, msg) => {
+    loginStatus = msg;
+    console.log("Status from React UI:", msg);
+
+    updateWindowByLoginStatus(msg);
+});
+
 
 const store = new Store();
 
@@ -41,21 +68,18 @@ ipcMain.handle("store:delete", (event, key) => {
 
 function startIdleChecker() {
     const IDLE_LIMIT = 5 * 60; // 5 minutes (in seconds)
+    // const IDLE_LIMIT = 3; // 15 minutes (in seconds)
 
     setInterval(() => {
-        const idle = powerMonitor.getSystemIdleTime(); 
+        const idle = powerMonitor.getSystemIdleTime();
 
         if (idle >= IDLE_LIMIT) {
-            updateReactStateFromMain('false');
+            updateReactStateFromMain(`You are on break, because your system remain Idle for ${IDLE_LIMIT / 60} minutes`);
             handleLogout();
-
+            win.setFullScreen(true);
             win.setAlwaysOnTop(true, 'screen-saver');
             win.focus();
             win.show();
-
-            setTimeout(() => {
-                win.setAlwaysOnTop(false);
-            }, 100);
         }
     }, 5 * 1000); // check every 5 seconds
 }
@@ -119,19 +143,19 @@ ipcMain.handle('capture-screen', async () => {
 
 function createWindow() {
     win = new BrowserWindow({
-        // width: 900,
-        // height: 600,
-        // fullscreen: true,
         autoHideMenuBar: true,
         webPreferences: {
             preload: path.join(__dirname, 'preload.js'),
             nodeIntegration: false,
             contextIsolation: true,
-            // devTools: false,
         },
     });
 
-    win.maximize();
+    if (loginStatus === 'false') {
+        win.setFullScreen(true);
+    } else {
+        win.maximize();
+    }
 
     if (process.env.NODE_ENV === 'development') {
         win.loadURL('http://localhost:5173');
@@ -197,6 +221,31 @@ app.whenReady().then(async () => {
         win.show();
         win.focus();
     });
+
+    powerMonitor.on("shutdown", async (event) => {
+        console.log("System shutdown detected");
+
+        // Delay shutdown (VERY IMPORTANT)
+        event.preventDefault();
+
+        // Bring app to front
+        if (win) {
+            win.show();
+            win.focus();
+            win.setAlwaysOnTop(true, "screen-saver");
+        }
+
+        // Force logout
+        await handleLogout();
+        updateReactStateFromMain('false');
+
+        // Small delay so API completes
+        setTimeout(() => {
+            app.isQuiting = true;
+            app.quit(); // Allow shutdown to continue
+        }, 2000);
+    });
+
     powerMonitor.on("suspend", async () => {
         console.log("System is going to sleep");
         isResumedFromSleep = false;
@@ -213,11 +262,12 @@ app.whenReady().then(async () => {
         function isRendererResumed() {
             console.log("isResumedFromSleep: ", isResumedFromSleep)
             if (isResumedFromSleep) {
-                updateReactStateFromMain('false');
+                updateReactStateFromMain("You are on break, because your system went on Sleep");
                 console.log("Screen resumed from sleep");
+                win.setFullScreen(true);
                 win.setAlwaysOnTop(true, 'screen-saver');
-                win.focus();
                 win.show();
+                win.focus();
                 setTimeout(() => {
                     win.setAlwaysOnTop(false);
                 }, 100);
@@ -234,7 +284,7 @@ app.whenReady().then(async () => {
         const flag = store.get("pendingStatus");
         console.log("Screen unlocked: ", flag);
         if (flag) {
-            updateReactStateFromMain(false);
+            updateReactStateFromMain("You are on break, Because you locked your screen!");
             store.delete("pendingStatus");
         }
         win.show();

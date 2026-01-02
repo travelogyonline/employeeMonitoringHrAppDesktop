@@ -90,6 +90,7 @@ function Dashboard({ setUser }) {
         }
         async function handleResponse() {
             await window.electronStore.delete("user");
+            await window.electronAPI.status("false");
             setUser(false);
         }
         handleResponse();
