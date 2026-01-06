@@ -12,8 +12,14 @@ files:
 
 win:
   target:
-    - portable
+    - nsis
   icon: build/icon.ico
 
-portable:
-  artifactName: "TravelBuddy.exe"
+nsis:
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  runAfterFinish: true
+  deleteAppDataOnUninstall: true

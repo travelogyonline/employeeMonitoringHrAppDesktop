@@ -15,15 +15,15 @@ export default function AppBar({ setFriend, setPage }) {
     const [hostUser, setHostUser] = useContext(UserStore);
     const [language] = useContext(LanguageStore);
     const [theme] = useContext(ThemeStore);
-    const [breakMessage, setBreakMessage] = useState('Login ASAP');
+    // const [breakMessage, setBreakMessage] = useState('Login ASAP');
     const [status, setStatus] = useState('');
 
     useEffect(() => {
         setStatus(hostUser.login);
     }, []);
     useEffect(() => {
-        const cleanup = window.electronAPI.onUpdateData((data) => {
-            setBreakMessage(data);
+        const unsubscribe = window.electronAPI.onUpdateData((data) => {
+            // setBreakMessage(data || "You are on break");
             setHostUser({
                 ...hostUser,
                 login: "false"
@@ -31,7 +31,9 @@ export default function AppBar({ setFriend, setPage }) {
             window.electronAPI.status("false");
             setStatus('false');
         });
-        return cleanup;
+        return () => {
+            unsubscribe && unsubscribe();
+        };
     }, []);
     const handleWorkingStatus = async () => {
         const apiHelper = status !== 'false' ? "out" : "in";
@@ -55,11 +57,6 @@ export default function AppBar({ setFriend, setPage }) {
                             await window.electronStore.set("user", response.data.data);
                             await window.electronAPI.status(response.data.data.login);
                             setHostUser(response.data.data);
-                            setBreakMessage(false);
-                            await window.electronAPI.onUpdateData((data) => {
-                                setBreakMessage(data);
-                            });
-                            if(breakMessage===false) setBreakMessage("You are on break")
                         }
                         handleFunction();
                     })
@@ -108,7 +105,7 @@ export default function AppBar({ setFriend, setPage }) {
                         <WarningAmberIcon sx={{ fontSize: 32 }} />
 
                         <Typography variant="subtitle1" fontWeight={600}>
-                            {breakMessage}!
+                            You are on Break!
                         </Typography>
                     </Box>
                 }

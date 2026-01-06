@@ -24,5 +24,8 @@ contextBridge.exposeInMainWorld("electronStore", {
 });
 
 contextBridge.exposeInMainWorld("electron", {
-  notify: (data) => ipcRenderer.send("show-notification", data)
+  notify: (data) => ipcRenderer.send("show-notification", data),
+  ipcRenderer: {
+    send: (channel, data) => ipcRenderer.send(channel, data),
+  },
 });

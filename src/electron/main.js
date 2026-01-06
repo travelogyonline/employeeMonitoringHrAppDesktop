@@ -4,6 +4,56 @@ import { fileURLToPath } from 'url';
 import axios from 'axios';
 import Store from "electron-store";
 import { BASE_API_URL } from './data.js';
+import { exec } from "child_process";
+import os from "os";
+
+ipcMain.on("shutdown-pc", async () => {
+    console.log("Shutdown requested");
+
+    // 🔒 Logout user before shutdown
+    await handleLogout();
+
+    const platform = os.platform();
+
+    let command = "";
+
+    if (platform === "win32") {
+        command = "shutdown /s /t 0";
+    } 
+    else if (platform === "darwin") {
+        command = "sudo shutdown -h now";
+    } 
+    else if (platform === "linux") {
+        command = "shutdown now";
+    }
+
+    exec(command, (error) => {
+        if (error) {
+            console.error("Shutdown failed:", error.message);
+        }
+    });
+});
+
+const isUninstalling =
+    process.argv.some(arg => arg.includes("--uninstall")) ||
+    process.argv.some(arg => arg.includes("uninstall"));
+
+if (isUninstalling) {
+    app.setLoginItemSettings({
+        openAtLogin: false,
+        path: process.execPath
+    });
+    app.quit();
+}
+
+const isDev = !app.isPackaged;
+
+app.setLoginItemSettings({
+    openAtLogin: true,
+    openAsHidden: false,
+    path: process.execPath,
+    args: isDev ? [] : []
+});
 
 const gotTheLock = app.requestSingleInstanceLock();
 if (!gotTheLock) {
