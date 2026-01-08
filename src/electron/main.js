@@ -117,7 +117,7 @@ ipcMain.handle("store:delete", (event, key) => {
 });
 
 function startIdleChecker() {
-    const IDLE_LIMIT = 5 * 60; // 5 minutes (in seconds)
+    const IDLE_LIMIT = 15 * 60; // 5 minutes (in seconds)
     // const IDLE_LIMIT = 3; // 15 minutes (in seconds)
 
     setInterval(() => {
@@ -131,7 +131,7 @@ function startIdleChecker() {
             win.focus();
             win.show();
         }
-    }, 5 * 1000); // check every 5 seconds
+    }, 15 * 1000); // check every 5 seconds
 }
 
 
