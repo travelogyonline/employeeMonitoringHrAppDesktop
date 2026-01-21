@@ -19,10 +19,10 @@ ipcMain.on("shutdown-pc", async () => {
 
     if (platform === "win32") {
         command = "shutdown /s /t 0";
-    } 
+    }
     else if (platform === "darwin") {
         command = "sudo shutdown -h now";
-    } 
+    }
     else if (platform === "linux") {
         command = "shutdown now";
     }
@@ -117,8 +117,8 @@ ipcMain.handle("store:delete", (event, key) => {
 });
 
 function startIdleChecker() {
-    const IDLE_LIMIT = 15 * 60; // 5 minutes (in seconds)
-    // const IDLE_LIMIT = 3; // 15 minutes (in seconds)
+    const IDLE_LIMIT = 15 * 60; // 15 minutes (in seconds)
+    // const IDLE_LIMIT = 3; // 3 second
 
     setInterval(() => {
         const idle = powerMonitor.getSystemIdleTime();
@@ -131,12 +131,13 @@ function startIdleChecker() {
             win.focus();
             win.show();
         }
-    }, 15 * 1000); // check every 5 seconds
+    }, 1 * 1000); // check every 15 seconds
 }
 
 
 const handleLogout = async () => {
     const user = store.get('user');
+    console.log("user: ", user);
     if (!user || !user._id) {
         console.warn("Logout attempted, but user or user ID is missing in store.");
         return;
@@ -201,11 +202,11 @@ function createWindow() {
         },
     });
 
-    if (loginStatus === 'false') {
-        win.setFullScreen(true);
-    } else {
-        win.maximize();
-    }
+    // if (loginStatus === 'false') {
+    win.setFullScreen(false);
+    // } else {
+    win.maximize();
+    // }
 
     if (process.env.NODE_ENV === 'development') {
         win.loadURL('http://localhost:5173');
@@ -256,8 +257,9 @@ app.whenReady().then(async () => {
     const trayMenu = Menu.buildFromTemplate([
         { label: "Open App", click: () => win.show() },
         {
-            label: "Quit Completely", click: () => {
+            label: "Quit Completely", click: async () => {
                 app.isQuiting = true;
+                await handleLogout();
                 win.close();
             }
         }

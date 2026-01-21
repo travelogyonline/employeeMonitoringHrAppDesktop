@@ -19,15 +19,15 @@ export default function ProfileAvatar({ client, user }) {
         const data = new FormData();
         data.append("image", file);
 
-        try {
-            await axios.post(`${BASE_API_URL}api/dp/${clientUserId}`, data, {
-                headers: { "Content-Type": "multipart/form-data" },
-            })
-                .then(async res => {
-                    setHostDp(res.data.data.profilePicture);
-                    await window.electronStore.set("dp", res.data.data.profilePicture);
-                })
-        } catch (err) {}
+        // try {
+        //     await axios.post(`${BASE_API_URL}api/dp/${clientUserId}`, data, {
+        //         headers: { "Content-Type": "multipart/form-data" },
+        //     })
+        //         .then(async res => {
+        //             setHostDp(res.data.data.profilePicture);
+        //             await window.electronStore.set("dp", res.data.data.profilePicture);
+        //         })
+        // } catch (err) {}
     };
 
     return (

@@ -128,7 +128,7 @@ function Dashboard({ setUser }) {
                             />
                         </ListItemButton>
                         <Divider />
-                        <ListItemButton onClick={() => setPage('friend')}>
+                        {/* <ListItemButton onClick={() => setPage('friend')}>
                             <ListItemIcon>
                                 <PeopleIcon sx={{ color: theme.text }} />
                             </ListItemIcon>
@@ -150,7 +150,7 @@ function Dashboard({ setUser }) {
                                 primary={translate(language, "chatRoom")}
                                 primaryTypographyProps={{ variant: "h6" }}
                             />
-                        </ListItemButton>
+                        </ListItemButton> */}
 
                         <Divider />
 
@@ -165,7 +165,7 @@ function Dashboard({ setUser }) {
                             />
                         </ListItemButton>
 
-                        <Divider />
+                        {/* <Divider />
 
                         <ListItemButton onClick={() => setPage("report-bug")}>
                             <ListItemIcon>
@@ -176,7 +176,7 @@ function Dashboard({ setUser }) {
                                 primary={translate(language, "reportBug")}
                                 primaryTypographyProps={{ variant: "h6" }}
                             />
-                        </ListItemButton>
+                        </ListItemButton> */}
 
                         <Divider />
 

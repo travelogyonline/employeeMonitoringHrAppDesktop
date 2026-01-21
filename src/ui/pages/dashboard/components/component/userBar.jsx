@@ -27,7 +27,7 @@ export default function UserProfileBar() {
                 },
             }}
         >
-            <Avatar
+            {/* <Avatar
                 src={hostDp}
                 sx={{
                     width: 36,
@@ -37,7 +37,7 @@ export default function UserProfileBar() {
                 }}
             >
                 {!hostDp && name.charAt(0)}
-            </Avatar>
+            </Avatar> */}
 
             <Box sx={{ display: "flex", flexDirection: "column", lineHeight: 1 }}>
                 <Typography

@@ -99,8 +99,8 @@ function EmployeeRecords({ user, setProductivity }) {
 
 
         fetchLogs();
-        const interval = setInterval(fetchLogs, 1000);
-        return () => clearInterval(interval);
+        // const interval = setInterval(fetchLogs, 1000);
+        // return () => clearInterval(interval);
     }, [user]);
 
     return (

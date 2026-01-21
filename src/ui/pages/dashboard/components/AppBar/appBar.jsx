@@ -6,7 +6,6 @@ import { LanguageStore, ThemeStore, UserStore } from '../../../../store/userStor
 import axios from 'axios';
 import Button from "@mui/material/Button";
 import { BASE_API_URL } from '../../../../data';
-import CurrentSession from '../component/currentSession';
 import translate from '../../../../language/translate';
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import { Box, Typography } from "@mui/material";
@@ -20,7 +19,7 @@ export default function AppBar({ setFriend, setPage }) {
 
     useEffect(() => {
         setStatus(hostUser.login);
-    }, []);
+    }, [hostUser]);
     useEffect(() => {
         const unsubscribe = window.electronAPI.onUpdateData((data) => {
             // setBreakMessage(data || "You are on break");
@@ -45,6 +44,7 @@ export default function AppBar({ setFriend, setPage }) {
 
         await axios.request(config)
             .then((response) => {
+                console.log("response: ", response)
                 const config = {
                     method: 'get',
                     maxBodyLength: Infinity,
@@ -79,7 +79,7 @@ export default function AppBar({ setFriend, setPage }) {
                 <UserProfileBar />
             </div>
             <div className={style.innerContainer}>
-                {status !== 'false' ? <CurrentSession /> :
+                {status === 'false' &&
                     <Box
                         sx={{
                             mx: 1.5,
@@ -124,7 +124,7 @@ export default function AppBar({ setFriend, setPage }) {
                 >
                     {status !== "false" ? translate(language, "goOffline") : translate(language, "goOnline")}
                 </Button>
-                <EmployeeSearch setFriend={e => { setFriend(e); setPage('friend') }} />
+                {/* <EmployeeSearch setFriend={e => { setFriend(e); setPage('friend') }} /> */}
             </div>
         </div>
 

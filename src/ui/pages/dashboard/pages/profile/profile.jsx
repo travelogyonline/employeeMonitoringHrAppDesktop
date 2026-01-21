@@ -40,7 +40,7 @@ const Profile = () => {
         >
           {/* Left: Avatar + Name */}
           <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-            <Avatar
+            {/* <Avatar
               src={hostDp || undefined}
               sx={{
                 width: 70,
@@ -51,7 +51,7 @@ const Profile = () => {
               }}
             >
               {hostUser?.staffName?.charAt(0)?.toUpperCase()}
-            </Avatar>
+            </Avatar> */}
 
             <Box>
               <Typography variant="h5" fontWeight={600} sx={{ color: theme.dark }}>

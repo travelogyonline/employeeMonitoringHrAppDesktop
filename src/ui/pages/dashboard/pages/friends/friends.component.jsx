@@ -65,10 +65,10 @@ export default function Friends({ friend, user }) {
                     <PersonSearchIcon
                         sx={{ fontSize: 56, color: theme.dark, mb: 1.5 }}
                     />
-                    <Typography variant="h6" fontWeight={700} sx={{color: theme.dark}}>
+                    <Typography variant="h6" fontWeight={700} sx={{ color: theme.dark }}>
                         {translate(language, "noFriendSelected")}
                     </Typography>
-                    <Typography variant="body2" sx={{color: theme.medium}}>
+                    <Typography variant="body2" sx={{ color: theme.medium }}>
                         {translate(language, "searchAndSelectAFriend")}
                     </Typography>
                 </Paper>
@@ -86,15 +86,8 @@ export default function Friends({ friend, user }) {
     function refresh() {
         axios.get(`${BASE_API_URL}api/user/${friend._id}`)
             .then((response) => {
-                axios.get(`${BASE_API_URL}api/dp/${friend._id}`)
-                    .then((res) => {
-                        let newClient = { ...response.data.data };
-                        if (res.data.data[0]) {
-                            newClient.profilePicture =
-                                res.data.data[0].profilePicture;
-                        }
-                        setClient(newClient);
-                    });
+                let newClient = { ...response.data.data };
+                setClient(newClient);
             })
             .catch(() => { });
     }
@@ -170,14 +163,14 @@ export default function Friends({ friend, user }) {
                     <Box sx={{ display: "flex", alignItems: "center", mb: 1.2 }}>
                         <CakeIcon sx={{ fontSize: 18, mr: 1 }} />
                         <Typography variant="body2">
-                            {translate(language,"birthday")}: {formatBirthday(client?.dob)}
+                            {translate(language, "birthday")}: {formatBirthday(client?.dob)}
                         </Typography>
                     </Box>
 
                     <Box sx={{ display: "flex", alignItems: "center" }}>
                         <TimelineIcon sx={{ fontSize: 18, mr: 1 }} />
                         <Typography variant="body2">
-                            {translate(language,"experience")}: {getExperience(client?.doj)}
+                            {translate(language, "experience")}: {getExperience(client?.doj)}
                         </Typography>
                     </Box>
                 </Paper>
@@ -196,7 +189,7 @@ export default function Friends({ friend, user }) {
                             textAlign: "center",
                         }}
                     >
-                        {friend._id!==user._id? <FriendThought friend={friend} /> : <MyThoughts user={friend} updateUser={() => refresh()} />}
+                        {friend._id !== user._id ? <FriendThought friend={friend} /> : <MyThoughts user={friend} updateUser={() => refresh()} />}
                     </Paper>
                 )}
             </Paper>
@@ -267,7 +260,7 @@ export default function Friends({ friend, user }) {
                         <AlbumImageUploader
                             refresh={() => {
                                 setImageRefresh(Math.floor(Math.random() * 1000));
-                                handleClose(); 
+                                handleClose();
                             }}
                         />
                     </Box>

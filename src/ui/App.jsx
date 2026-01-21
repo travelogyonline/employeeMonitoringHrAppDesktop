@@ -27,7 +27,7 @@ function App() {
   const [hostDp, setHostDp] = useState(null);
   const [theme, setTheme] = useState(defaultTheme);
   const [language, setLanguage] = useState("english");
-  const [doesVersionMatched, setDoesVersionMatched] = useState(false);
+  const [doesVersionMatched, setDoesVersionMatched] = useState(true);
   useEffect(() => {
     async function getUser() {
       const user = await window.electronStore.get("user");
@@ -45,8 +45,10 @@ function App() {
   useEffect(() => {
     axios.get(BASE_API_URL + 'api/winHappyBuddy')
       .then((response) => {
-        if (response.data[0].version === APP_VERSION) {
-          setDoesVersionMatched(true)
+        if (response.data?.data?.version) {
+          console.log("version no: ", response.data?.data?.version)
+          // if (response.data?.data?.version === APP_VERSION) {
+          // setDoesVersionMatched(true)
         }
       })
   }, []);

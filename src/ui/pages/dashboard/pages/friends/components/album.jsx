@@ -20,8 +20,9 @@ function Album({ friend, user, imageRefresher }) {
         };
         axios.request(config)
             .then((response) => {
-                if (response.data.data.length > 0) {
-                    setImages(response.data.data[0].album);
+                console.log("Album response: ", response)
+                if (response?.data?.data && response?.data?.data?.length > 0) {
+                    setImages(response.data.data);
                 }
             })
             .catch((error) => {}
@@ -30,7 +31,7 @@ function Album({ friend, user, imageRefresher }) {
 
     const handleDelete = async (imageId) => {
         try {
-            await axios.delete(`${BASE_API_URL}api/album/${user._id}/pic/${imageId}`);
+            await axios.delete(`${BASE_API_URL}api/album/${imageId}`);
             setImages(prev => prev.filter(img => img._id !== imageId));
         } catch (err) {
         }

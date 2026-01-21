@@ -20,6 +20,7 @@ const SHIFT_DURATION_HOURS = 10;
 
 
 const ShiftProgress = ({ shiftStartTime }) => {
+    if (!shiftStartTime) return;
     const [theme] = useContext(ThemeStore);
     const [language] = useContext(LanguageStore);
     const [progress, setProgress] = useState(0);

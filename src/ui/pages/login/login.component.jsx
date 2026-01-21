@@ -1,4 +1,4 @@
-import React,{ useContext, useState } from 'react'
+import React, { useContext, useState } from 'react'
 import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
 import Stack from '@mui/material/Stack';
@@ -58,17 +58,18 @@ function Login({ setUser }) {
                     async function handleFunction() {
                         await window.electronStore.set("user", response.data.data);
                         setUser(response.data.data);
-                        try {
-                            const res = await axios.get(`${BASE_API_URL}api/dp/${response.data.data._id}`);
-
-                            if (res.data?.data?.length > 0) {
-                                setHostDp(res.data.data[0].profilePicture);
-                                await window.electronStore.set("dp", res.data.data[0].profilePicture);
-                            } else {
-                                setHostDp(null)
-                                await window.electronStore.set("dp", null);
-                            }
-                        } catch (err) { }
+                        // try {
+                        //     const res = await axios.get(`${BASE_API_URL}api/dp/${response.data.data._id}`);
+                        //     console.log("res: ", res);
+                        //     const profilePicture = res?.data?.data?.profilePicture;
+                        //     if (profilePicture) {
+                        //         setHostDp(profilePicture);
+                        //         await window.electronStore.set("dp", profilePicture);
+                        //     }
+                        // } catch (err) {
+                        //     setHostDp(null)
+                        //     await window.electronStore.set("dp", null);
+                        // }
                     }
                     handleFunction();
                 }
